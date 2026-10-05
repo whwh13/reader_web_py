@@ -44,9 +44,14 @@ def create_app() -> FastAPI:
 
     app.include_router(api_router)
 
-    # Docker 镜像内打包的前端（frontend 构建产物复制到 ./static；本地开发用 Vite dev）
-    static_dir = Path(__file__).resolve().parent.parent / "static"
-    if static_dir.exists():
+    # Docker 镜像内打包的前端（frontend 构建产物复制到镜像 /app/static；本地开发用 Vite dev）。
+    # pip 安装后 reader 包在 site-packages，__file__ 推不出 /app——优先找包同级，再找 cwd。
+    candidates = [
+        Path(__file__).resolve().parent.parent / "static",
+        Path.cwd() / "static",
+    ]
+    static_dir = next((p for p in candidates if p.is_dir()), None)
+    if static_dir:
         app.mount("/", StaticFiles(directory=static_dir, html=True), name="static")
     return app
 
