@@ -10,21 +10,31 @@
         highlight-current-row
         @current-change="(row: Book | null) => (selected = row)"
       >
-        <el-table-column prop="name" label="书名" min-width="160" show-overflow-tooltip />
-        <el-table-column prop="originName" label="书源" min-width="120" show-overflow-tooltip />
-        <el-table-column prop="latestChapterTitle" label="最新章节" min-width="140" show-overflow-tooltip />
+        <el-table-column prop="name" label="书名" min-width="150" show-overflow-tooltip />
+        <el-table-column label="书源" min-width="140" show-overflow-tooltip>
+          <template #default="{ row }">
+            <span>{{ row.originName }}</span>
+            <el-tag v-if="isCurrent(row)" size="small" type="info" class="current-tag">当前源</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="latestChapterTitle" label="最新章节" min-width="130" show-overflow-tooltip />
       </el-table>
     </div>
     <template #footer>
       <span v-if="switching" class="switching-tip">正在换源并迁移进度…</span>
+      <span v-else-if="isSelectedCurrent" class="switching-tip">已选中当前源</span>
       <el-button @click="visible = false">取消</el-button>
-      <el-button type="primary" :disabled="!selected || switching" @click="doSwitch">切换到选中源</el-button>
+      <el-button
+        type="primary"
+        :disabled="!selected || switching || isSelectedCurrent"
+        @click="doSwitch"
+      >切换到选中源</el-button>
     </template>
   </el-dialog>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { ElMessage } from "element-plus";
 import { booksApi } from "../api";
 import type { Book } from "../api/types";
@@ -34,6 +44,8 @@ const props = defineProps<{
   bookUrl: string;
   currentIndex: number;
   currentTitle?: string | null;
+  currentOrigin?: string | null;
+  currentOriginName?: string | null;
 }>();
 const emit = defineEmits<{
   switched: [payload: { newBookUrl: string; index: number; newSourceName: string }];
@@ -45,6 +57,13 @@ const switching = ref(false);
 const candidates = ref<Book[]>([]);
 const selected = ref<Book | null>(null);
 
+function isCurrent(b: Book): boolean {
+  if (props.currentOrigin) return b.origin === props.currentOrigin;
+  return b.bookUrl === props.bookUrl;
+}
+
+const isSelectedCurrent = computed(() => !!selected.value && isCurrent(selected.value));
+
 function open() {
   visible.value = true;
 }
@@ -55,10 +74,10 @@ async function loadSources() {
   selected.value = null;
   const r = await booksApi.getAvailableBookSource(props.bookUrl);
   if (r.isSuccess) {
-    // 排除当前源自身
-    candidates.value = (r.data.list || []).filter(
-      (b) => b.bookUrl && b.bookUrl !== props.bookUrl
-    );
+    // 当前源也保留在列表中（标记"当前源"，选中时禁用切换）
+    candidates.value = (r.data.list || []).filter((b) => b.bookUrl);
+    // 当前源排到最前面，方便一眼确认
+    candidates.value.sort((a, b) => Number(isCurrent(b)) - Number(isCurrent(a)));
   }
   loading.value = false;
 }
@@ -100,4 +119,5 @@ defineExpose({ open });
 
 <style scoped>
 .switching-tip { color: var(--el-text-color-secondary); margin-right: 12px; font-size: 12px; }
+.current-tag { margin-left: 6px; }
 </style>

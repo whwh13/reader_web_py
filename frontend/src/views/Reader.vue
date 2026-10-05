@@ -35,6 +35,8 @@
       :book-url="currentBookUrl"
       :current-index="index"
       :current-title="chapter?.title"
+      :current-origin="book?.origin"
+      :current-origin-name="book?.originName"
       @switched="onSourceSwitched"
     />
   </div>
