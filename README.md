@@ -21,6 +21,23 @@ KOReader 设备上直接阅读。
 
 砍掉了本地单用户不需要的东西：多用户、登录、WebDAV、RSS、TTS、webview 书源、license、MongoDB。
 
+## Docker 部署（NAS / 服务器 / Kindle 配套设备）
+
+镜像由 GitHub Actions 自动构建发布到 GHCR（amd64 + arm64，覆盖 x86 服务器与 ARM 设备）：
+
+```bash
+docker run -d --name reader-web-py \
+  -p 8081:8081 \
+  -v /你的路径/reader-data:/data \
+  ghcr.io/whwh13/reader_web_py:latest
+```
+
+或用 [docker-compose.yml](docker-compose.yml)：`docker compose up -d`。
+
+- **持久化**：宿主目录挂到容器 `/data` 即可——书源、书架、章节缓存、cookie、封面缓存全在这一个目录里，删容器/升级镜像数据不丢。
+- 界面：`http://<设备IP>:8081`；KOReader 插件：服务器地址 `http://<设备IP>:8081/reader3`（凭证留空）。
+- 版本：`GET /version` 返回当前版本；镜像 tag 与 `src/reader/version.py` 的版本号一一对应。
+
 ## 快速开始
 
 ```bash

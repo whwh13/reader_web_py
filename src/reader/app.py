@@ -10,6 +10,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
+from reader import __version__
 from reader.api import root_router
 from reader.config import settings
 
@@ -21,7 +22,7 @@ async def lifespan(app: FastAPI):
 
 
 def create_app() -> FastAPI:
-    app = FastAPI(title="reader-py", version="0.1.0", lifespan=lifespan)
+    app = FastAPI(title="reader-py", version=__version__, lifespan=lifespan)
 
     # 本地单用户工具：放开 CORS，方便前端 dev server 与 KOReader 插件调试
     app.add_middleware(
@@ -42,6 +43,11 @@ def create_app() -> FastAPI:
     from reader.api.routes import api_router
 
     app.include_router(api_router)
+
+    # Docker 镜像内打包的前端（frontend 构建产物复制到 ./static；本地开发用 Vite dev）
+    static_dir = Path(__file__).resolve().parent.parent / "static"
+    if static_dir.exists():
+        app.mount("/", StaticFiles(directory=static_dir, html=True), name="static")
     return app
 
 

@@ -1,0 +1,23 @@
+# 部署示例：docker compose
+#
+# 持久化：宿主 ./reader-data 挂载到容器 /data（书源、书架、章节缓存、cookie 都在这）
+# 镜像：ghcr.io/whwh13/reader_web_py（GitHub Actions 构建发布）
+#
+#   docker compose up -d
+#   界面: http://<设备IP>:8081
+#   KOReader 插件: 服务器地址 http://<设备IP>:8081/reader3（用户名密码留空）
+
+services:
+  reader:
+    image: ghcr.io/whwh13/reader_web_py:latest
+    container_name: reader-web-py
+    restart: unless-stopped
+    ports:
+      - "8081:8081"   # 宿主端口可自行修改
+    volumes:
+      - ./reader-data:/data   # 持久化数据（必须，删容器数据不丢）
+    environment:
+      - TZ=Asia/Shanghai
+      # 以下可选（默认值见 src/reader/config.py）
+      # - READER_PY_CACHE_CHAPTER_CONTENT=true   # 章节正文落盘缓存
+      # - READER_PY_CONCURRENT_SEARCH=36         # 多源搜索并发窗口
