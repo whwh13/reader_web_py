@@ -45,11 +45,11 @@ cd frontend && npm install && npm run dev   # http://localhost:5173
 |---|---|---|
 | [hectorqin/reader](https://github.com/hectorqin/reader)（「阅读」3.0 服务端） | GPL-3.0 | 被恢复/引用的上游产品 |
 | [warpdotsys/reader-dev](https://github.com/warpdotsys/reader-dev)（reader-pro 3.2.14 恢复工程） | GPL-3.0 | 书源规则引擎的移植基线（`legacy` 分支） |
-| [pengcw/legado.koplugin](https://github.com/pengcw/legado.koplugin)（KOReader 插件） | **AGPL-3.0** | API 契约来源；其源码快照随仓库 `reference/` 分发（保留原许可证） |
+| [pengcw/legado.koplugin](https://github.com/pengcw/legado.koplugin)（KOReader 插件） | **AGPL-3.0** | API 契约来源（`/reader3` 端点与 ReturnData 语义以其 `reader3_spec.lua` 为准） |
 
-因仓库包含 AGPL-3 许可证的 `legado.koplugin` 参考快照，本项目整体以
-**GNU Affero General Public License v3.0（AGPL-3.0）** 发布（AGPL-3 与 GPL-3 依
-GPL-3 第 13 条互相兼容）。详见 [LICENSE](LICENSE) 与 `reference/legado.koplugin/LICENSE`。
+本项目以 **GNU Affero General Public License v3.0（AGPL-3.0）** 发布——规则引擎移植自
+GPL-3 的 reader-dev，API 契约对齐 AGPL-3 的 legado.koplugin，AGPL-3 依 GPL-3 第 13 条
+与 GPL-3 互相兼容，对两者都是合规选择。详见 [LICENSE](LICENSE)。
 
 ## 测试
 
@@ -75,7 +75,7 @@ src/reader/
 └── store/                  # SQLite + 章节磁盘缓存
 frontend/                   # Vue3 + Vite + Pinia + Element Plus
 scripts/mock_book_source.py # 确定性书源夹具（移植自 reader-dev）
-reference/legado.koplugin/  # KOReader 插件源码快照（AGPL-3，只读参考）
+reference/                    # 插件契约参考快照（本地保留，不入 git）
 ```
 
 架构与踩坑记录见 [AGENTS.md](AGENTS.md)。

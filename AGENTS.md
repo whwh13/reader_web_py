@@ -39,7 +39,7 @@ cd frontend && npm run build    # 产物 frontend/dist
   - `{{}}` 与选择器混排时整段进入 REGEX 模式做字面重建（不是串联执行）；
   - `RuleAnalyzer` 只保护 `[...]`/`(...)` 平衡组，引号内的 `&&` 无括号保护时照样切割。
 - 契约测试 `tests/test_reader3_contract.py` 的调用序列就是 KOReader 插件的用法，改 API 前先跑它。
-- `reference/legado.koplugin/` 是去 .git 的只读快照（AGPL，保留其 LICENSE），勿修改。
+- `reference/legado.koplugin/` 是去 .git 的只读快照（AGPL），已移出 git 跟踪、仅本地保留；不要恢复进仓库。
 
 ## 修改后同步
 
