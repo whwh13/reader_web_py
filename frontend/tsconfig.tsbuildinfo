@@ -1,1 +1,0 @@
-{"root":["./src/main.ts","./src/api/index.ts","./src/api/request.ts","./src/api/types.ts","./src/router/index.ts","./src/utils/progressrelocate.ts","./src/app.vue","./src/components/changesourcedialog.vue","./src/views/bookshelf.vue","./src/views/reader.vue","./src/views/search.vue","./src/views/settings.vue","./src/views/sourcemanage.vue","./vite.config.ts"],"version":"5.8.3"}
