@@ -14,6 +14,8 @@ dependencies = [
     "pydantic-settings>=2.4",
     "quickjs>=1.19.4",
     "python-multipart>=0.0.9",
+    "pycryptodome>=3.20",
+    "charset-normalizer>=3.3",
 ]
 
 [dependency-groups]
