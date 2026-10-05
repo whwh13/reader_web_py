@@ -2,4 +2,7 @@
 
 from fastapi import APIRouter
 
+from reader.api.routes import reader3
+
 api_router = APIRouter()
+api_router.include_router(reader3.router)
