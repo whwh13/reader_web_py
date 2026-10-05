@@ -16,3 +16,4 @@ frontend/dist/
 *.log
 reference/
 *.tsbuildinfo
+Dockerfile.local

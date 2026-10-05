@@ -1,8 +1,12 @@
 # reader-py — 多阶段构建：前端 (Node) + 后端 (Python 3.12)
 # 构建上下文 = 仓库根目录
+# 基础镜像可用 --build-arg 覆盖：国内网络下拉不到 docker.io 时，
+# 先从镜像源拉（如 docker.m.daocloud.io/library/python:3.12-slim）再用
+#   container build --build-arg PY_BASE=<镜像源名> --build-arg NODE_BASE=<镜像源名> .
 
 # ---- 阶段 1：前端构建 ----
-FROM node:22-alpine AS frontend-build
+ARG NODE_BASE=node:22-alpine
+FROM ${NODE_BASE} AS frontend-build
 WORKDIR /build
 COPY frontend/package.json frontend/package-lock.json* ./
 # npmmirror 仅在 CI 网络不佳时使用；默认官方源
@@ -10,14 +14,10 @@ RUN npm ci --registry=https://registry.npmmirror.com
 COPY frontend/ ./
 RUN npm run build
 
-# ---- 阶段 2：后端运行时 ----
-FROM python:3.12-slim
-
-WORKDIR /app
-
-# 先装依赖（利用层缓存）。quickjs 在部分平台（arm64）无预编译轮，
-# 需要源码编译：构建工具链装在 builder 阶段，运行时镜像不携带。
-FROM python:3.12-slim AS pydeps
+# ---- 阶段 2：后端依赖编译 ----
+ARG PY_BASE=python:3.12-slim
+FROM ${PY_BASE} AS pydeps
+# quickjs 在部分平台（arm64）无预编译轮，需要源码编译：gcc 只装在本阶段
 RUN apt-get update && apt-get install -y --no-install-recommends gcc libc6-dev \
     && rm -rf /var/lib/apt/lists/*
 COPY pyproject.toml README.md ./
@@ -26,7 +26,9 @@ RUN pip install --no-cache-dir --prefix=/install \
     --index-url https://pypi.tuna.tsinghua.edu.cn/simple \
     .
 
-FROM python:3.12-slim
+# ---- 阶段 3：运行时 ----
+ARG PY_BASE=python:3.12-slim
+FROM ${PY_BASE}
 WORKDIR /app
 COPY --from=pydeps /install /usr/local
 
