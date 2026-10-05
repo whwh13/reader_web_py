@@ -1,0 +1,7 @@
+:root {
+  --reader-bg: #ffffff;
+  --reader-fg: #333333;
+}
+body {
+  font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+}
