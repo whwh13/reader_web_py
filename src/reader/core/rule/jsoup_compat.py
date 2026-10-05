@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import re
 
-from lxml import html as lhtml
+from lxml import etree, html as lhtml
 
 _WS = re.compile(r"\s+")
 
@@ -18,11 +18,46 @@ def norm_space(s: str | None) -> str:
 
 
 def parse_html(content) -> lhtml.HtmlElement:
-    """对照 jsoup.parse：总是返回完整 <html> 根。"""
+    """对照 jsoup.parse：总是返回完整 <html> 根。
+
+    libxml2 不自动创建 <tbody>（HTML5/jsoup 会），导致书源里大量
+    'tbody xxx' 选择器失配——解析后按 HTML5 语义补齐。
+    """
     if isinstance(content, lhtml.HtmlElement):
-        return content
-    text = content if isinstance(content, str) else str(content)
-    return lhtml.document_fromstring(text)
+        el = content
+    else:
+        text = content if isinstance(content, str) else str(content)
+        el = lhtml.document_fromstring(text)
+    _normalize_table(el)
+    return el
+
+
+def _normalize_table(tree) -> None:
+    """HTML5 表格语义补齐：table 补 tbody 包裹 tr；非行子元素 foster-parent 出 table。"""
+    for table in tree.iter("table"):
+        if not isinstance(table.tag, str):
+            continue
+        rows = [c for c in table if isinstance(c.tag, str) and c.tag == "tr"]
+        others = [
+            c for c in table
+            if isinstance(c.tag, str)
+            and c.tag not in ("tr", "tbody", "thead", "tfoot", "caption", "colgroup")
+        ]
+        if others:
+            # jsoup：table 的非行子元素 foster-parent 到 table 之前
+            parent = table.getparent()
+            anchor = table
+            for child_el in others:
+                table.remove(child_el)
+                if parent is not None:
+                    anchor.addnext(child_el)
+                    anchor = child_el
+        if rows:
+            tbody = etree.Element("tbody")
+            table.insert(0, tbody)
+            for tr in rows:
+                table.remove(tr)
+                tbody.append(tr)
 
 
 def element_text(el: lhtml.HtmlElement) -> str:
@@ -68,7 +103,22 @@ def select(el: lhtml.HtmlElement, css: str) -> list[lhtml.HtmlElement]:
 
 def select_strict(el: lhtml.HtmlElement, css: str) -> list[lhtml.HtmlElement]:
     """同 select，但选择器非法时抛错（对齐 jsoup 抛 SelectorParseException）。"""
-    return el.cssselect(css)
+    return el.cssselect(_translate_jsoup_pseudo(css))
+
+
+_LT_GT = re.compile(r":(lt|gt)\((\d+)\)")
+
+
+def _translate_jsoup_pseudo(css: str) -> str:
+    """jsoup 的 :lt(n)/:gt(n) → cssselect 的 nth-child（同为兄弟序）。"""
+
+    def repl(m: re.Match) -> str:
+        n = int(m.group(2))
+        if m.group(1) == "lt":
+            return f":nth-child(-n+{n})"
+        return f":nth-child(n+{n + 1})"
+
+    return _LT_GT.sub(repl, css)
 
 
 def get_elements_by_class(el: lhtml.HtmlElement, name: str) -> list[lhtml.HtmlElement]:

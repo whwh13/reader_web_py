@@ -60,6 +60,8 @@ class WebBook:
             chapter=chapter,
             header_map=self.source.get_header_map(True),
             js_engine=self.engine,
+            http_client=self.http,
+            cookie_store=self.http.cookie_store,
         )
 
     def _fetch(self, analyze_url: AnalyzeUrl) -> StrResponse:
@@ -67,7 +69,13 @@ class WebBook:
         return res
 
     def _new_rule(self, rule_data) -> AnalyzeRule:
-        return AnalyzeRule(rule_data, source=self.source, js_engine=self.engine)
+        return AnalyzeRule(
+            rule_data,
+            source=self.source,
+            js_engine=self.engine,
+            http_client=self.http,
+            cookie_store=self.http.cookie_store,
+        )
 
     # ---- 搜索 ----
 
@@ -210,6 +218,9 @@ class WebBook:
         search_book.author = format_book_author(analyze_rule.get_string_rules(rule_author))
         try:
             kinds = analyze_rule.get_string_rules(rule_kind)
+            # get_string_rules 可能返回字符串（dict 早退路径）——统一为列表再 join
+            if isinstance(kinds, str):
+                kinds = [kinds]
             search_book.kind = ",".join(kinds) if kinds else None
         except Exception:
             pass

@@ -165,9 +165,10 @@ class SourceRule:
                 elif rtype == _JS_RULE_TYPE:
                     js_code = self._rule_param[index]
                     if _is_rule(js_code):
+                        # Kotlin: getString(List<SourceRule>) 重载——对当前 content 求子规则
                         sub = SourceRule(Mode.DEFAULT)
                         sub.init_detail(js_code, host.is_json)
-                        info_val.insert(0, host.get_string([sub]))
+                        info_val.insert(0, host.get_string_rules([sub]))
                     else:
                         js_eval = host.eval_js(js_code, result)
                         if js_eval is None:
@@ -195,6 +196,16 @@ class SourceRule:
             self.replace_first = True
 
 
+def _js_safe(v):
+    """pydantic 模型 → dict（quickjs 只认 JSON 类型，模型会被降级成字符串）。"""
+    if hasattr(v, "model_dump"):
+        try:
+            return v.model_dump()
+        except Exception:
+            return str(v)
+    return v
+
+
 def _is_rule(rule_str: str) -> bool:
     return (
         rule_str.startswith("@")
@@ -210,11 +221,15 @@ class AnalyzeRule:
         rule_data: RuleData,
         source=None,
         js_engine: JsEngine | None = None,
+        http_client=None,
+        cookie_store=None,
     ) -> None:
         self.rule_data = rule_data
         self.source = source
         self.js_engine: JsEngine = js_engine or NullEngine()
-        self.book: RuleData | None = None
+        # 供 JS 桥（java.ajax 等）使用
+        self.http_client = http_client
+        self.cookie_store = cookie_store
         self.chapter: RuleData | None = None
         self.next_chapter_url: str | None = None
         self.content: Any = None
@@ -231,6 +246,11 @@ class AnalyzeRule:
         self._changed_xpath = True
 
     # ---- 内容与上下文 ----
+
+    @property
+    def book(self):
+        """对照 Kotlin val book get() = ruleData as? BaseBook。"""
+        return self.rule_data if self.rule_data is not None else None
 
     def set_content(self, content: Any, base_url: str | None = None) -> "AnalyzeRule":
         if content is None:
@@ -299,16 +319,16 @@ class AnalyzeRule:
             "java": self,
             "cookie": None,
             "cache": None,
-            "source": self.source,
-            "book": self.book,
+            "source": _js_safe(self.source),
+            "book": _js_safe(self.book),
             "result": result,
             "baseUrl": self.base_url,
-            "chapter": self.chapter,
+            "chapter": _js_safe(self.chapter),
             "title": getattr(self.chapter, "title", None) if self.chapter else None,
             "src": self.content,
             "nextChapterUrl": self.next_chapter_url,
         }
-        return self.js_engine.eval(js_str, bindings)
+        return self.js_engine.eval(js_str, bindings, host=self)
 
     # ---- 规则切分 ----
 
@@ -355,6 +375,26 @@ class AnalyzeRule:
         content = m_content if m_content is not None else self.content
         if content is not None and rule_list:
             result = content
+            # 对照 Kotlin NativeObject 分支：dict/JS 对象——$./$[ 开头走 JSONPath，否则直取键
+            if isinstance(content, dict):
+                first = rule_list[0]
+                first.make_up_rule(content, self)
+                if first.mode == Mode.JSON or first.rule.startswith(("$.", "$[")):
+                    if first.mode != Mode.JSON:
+                        first.mode = Mode.JSON
+                    result = self._get_json(content).get_string(first.rule)
+                else:
+                    result = content.get(first.rule)
+                for extra in rule_list[1:]:
+                    if result is None:
+                        break
+                    if extra.mode == Mode.JS:
+                        result = self.eval_js(extra.rule, result)
+                    else:
+                        result = str(extra.rule)
+                if result is not None and first.replace_regex:
+                    result = self._replace_regex(str(result), first)
+                return str(result) if result is not None else ""
             for source_rule in rule_list:
                 self._put_rule(source_rule.put_map)
                 source_rule.make_up_rule(result, self)
@@ -402,6 +442,25 @@ class AnalyzeRule:
         content = m_content if m_content is not None else self.content
         if content is not None and rule_list:
             result = content
+            if isinstance(content, dict):
+                first = rule_list[0]
+                first.make_up_rule(content, self)
+                if first.mode == Mode.JSON or first.rule.startswith(("$.", "$[")):
+                    if first.mode != Mode.JSON:
+                        first.mode = Mode.JSON
+                    result = self._get_json(content).get_string_list(first.rule)
+                else:
+                    result = [str(content.get(first.rule) or "")]
+                for extra in rule_list[1:]:
+                    if result is None:
+                        break
+                    if extra.mode == Mode.JS:
+                        result = self.eval_js(extra.rule, result)
+                    else:
+                        result = str(extra.rule)
+                if result and first.replace_regex:
+                    result = [self._replace_regex(str(item), first) for item in result]
+                return [str(r) if r is not None else "" for r in (result or [])]
             for source_rule in rule_list:
                 self._put_rule(source_rule.put_map)
                 source_rule.make_up_rule(result, self)

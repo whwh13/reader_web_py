@@ -35,6 +35,20 @@ CREATE TABLE IF NOT EXISTS book_groups (
     data TEXT NOT NULL,
     order_num INTEGER NOT NULL DEFAULT 0
 );
+CREATE TABLE IF NOT EXISTS book_source_subs (
+    link TEXT PRIMARY KEY,
+    name TEXT NOT NULL DEFAULT '',
+    last_sync_time INTEGER NOT NULL DEFAULT 0,
+    source_count INTEGER NOT NULL DEFAULT 0,
+    last_error TEXT
+);
+"""
+
+# sources 表的校验结果列（增量迁移）
+_SOURCE_CHECK_COLUMNS = """
+ALTER TABLE sources ADD COLUMN last_check_time INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE sources ADD COLUMN last_check_ok INTEGER;
+ALTER TABLE sources ADD COLUMN last_check_error TEXT;
 """
 
 
@@ -45,6 +59,11 @@ class Database:
         self._lock = threading.Lock()
         self._conn = sqlite3.connect(data_dir / "reader.db", check_same_thread=False)
         self._conn.executescript(_SCHEMA)
+        for stmt in _SOURCE_CHECK_COLUMNS.strip().splitlines():
+            try:
+                self._conn.execute(stmt)
+            except sqlite3.OperationalError:
+                pass  # 列已存在
         self._conn.commit()
 
     def _exec(self, sql: str, params: tuple = ()) -> None:
@@ -80,6 +99,53 @@ class Database:
     def delete_sources(self, keys: list[str]) -> None:
         for key in keys:
             self._exec("DELETE FROM sources WHERE key=?", (key,))
+
+    def set_check_result(self, key: str, ok: bool, error: str | None) -> None:
+        import time as _time
+
+        self._exec(
+            "UPDATE sources SET last_check_time=?, last_check_ok=?, last_check_error=? WHERE key=?",
+            (int(_time.time() * 1000), 1 if ok else 0, error, key),
+        )
+
+    def get_check_result(self, key: str) -> tuple[int, int | None, str | None]:
+        rows = self._query(
+            "SELECT last_check_time, last_check_ok, last_check_error FROM sources WHERE key=?",
+            (key,),
+        )
+        if not rows:
+            return 0, None, None
+        return rows[0][0], rows[0][1], rows[0][2]
+
+    def list_invalid_sources(self) -> list[str]:
+        rows = self._query(
+            "SELECT key FROM sources WHERE last_check_ok=0 AND last_check_time>0 ORDER BY key"
+        )
+        return [r[0] for r in rows]
+
+    # ---- 书源订阅 ----
+
+    def save_sub(self, link: str, name: str, last_sync_time: int, source_count: int, last_error: str | None) -> None:
+        self._exec(
+            "INSERT INTO book_source_subs(link, name, last_sync_time, source_count, last_error) "
+            "VALUES(?,?,?,?,?) ON CONFLICT(link) DO UPDATE SET name=excluded.name, "
+            "last_sync_time=excluded.last_sync_time, source_count=excluded.source_count, "
+            "last_error=excluded.last_error",
+            (link, name, last_sync_time, source_count, last_error),
+        )
+
+    def list_subs(self) -> list[dict]:
+        rows = self._query(
+            "SELECT link, name, last_sync_time, source_count, last_error FROM book_source_subs "
+            "ORDER BY last_sync_time DESC"
+        )
+        return [
+            {"link": r[0], "name": r[1], "lastSyncTime": r[2], "sourceCount": r[3], "lastError": r[4]}
+            for r in rows
+        ]
+
+    def delete_sub(self, link: str) -> None:
+        self._exec("DELETE FROM book_source_subs WHERE link=?", (link,))
 
     # ---- 书架 ----
 

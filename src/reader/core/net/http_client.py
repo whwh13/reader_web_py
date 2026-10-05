@@ -8,6 +8,7 @@
 from __future__ import annotations
 
 import asyncio
+import ssl
 import time
 from dataclasses import dataclass, field
 
@@ -60,11 +61,16 @@ class HttpClient:
                     last_error = e
                     if attempt + 1 < attempts:
                         time.sleep(0.5)
+            if isinstance(last_error, ssl.SSLError) or "CERTIFICATE" in str(last_error).upper():
+                try:
+                    return self._do_request_sync(spec, source_key, verify=False)
+                except (httpx.HTTPError, OSError) as e2:
+                    last_error = e2
             raise ConnectionError(f"请求失败 {spec.url}: {last_error}")
         finally:
             analyze_url.fetch_end(record)
 
-    def _do_request_sync(self, spec: RequestSpec, source_key: str) -> StrResponse:
+    def _do_request_sync(self, spec: RequestSpec, source_key: str, verify: bool = True) -> StrResponse:
         headers = dict(spec.headers)
         cookies = self.cookie_store.load_for_request(source_key, spec.url)
         with httpx.Client(
@@ -72,26 +78,35 @@ class HttpClient:
             timeout=20.0,
             cookies=cookies,
             headers=headers,
+            verify=verify,
         ) as client:
             if spec.method == "POST":
+                # 对照 legacy：fieldMap 优先（analyzeFields 已预编码），body 其次
                 body = spec.body
                 content_type = headers.get("Content-Type") or headers.get("content-type")
-                if spec.fields and (body is None or not body.strip()):
-                    response = client.post(spec.url_no_query, data=spec.fields)
-                elif body is not None and content_type:
+                if spec.fields:
+                    form = "&".join(f"{k}={v}" for k, v in spec.fields.items())
+                    response = client.post(
+                        spec.url_no_query, content=form.encode("utf-8"),
+                        headers={"Content-Type": content_type or "application/x-www-form-urlencoded"},
+                    )
+                elif body is None or not body.strip():
+                    response = client.post(
+                        spec.url_no_query,
+                        headers={"Content-Type": "application/x-www-form-urlencoded"},
+                    )
+                elif content_type:
                     response = client.post(
                         spec.url_no_query, content=body.encode("utf-8"),
                         headers={"Content-Type": content_type},
                     )
-                elif body is not None and _is_json_text(body):
+                elif _is_json_text(body):
                     response = client.post(
                         spec.url_no_query, content=body.encode("utf-8"),
                         headers={"Content-Type": "application/json"},
                     )
-                elif body is not None:
-                    response = client.post(spec.url_no_query, data=body.encode("utf-8"))
                 else:
-                    response = client.post(spec.url_no_query, data=spec.fields)
+                    response = client.post(spec.url_no_query, content=body.encode("utf-8"))
             else:
                 response = client.get(_final_url(spec))
             self.cookie_store.save_from_response(source_key, response)
@@ -113,9 +128,15 @@ class HttpClient:
                 last_error = e
                 if attempt + 1 < attempts:
                     await asyncio.sleep(0.5)
+        # SSL 证书问题的站点降级不校验再试一次（自签/过期证书的活站）
+        if isinstance(last_error, ssl.SSLError) or "CERTIFICATE" in str(last_error).upper():
+            try:
+                return await self._do_request(spec, source_key, verify=False)
+            except (httpx.HTTPError, OSError) as e2:
+                last_error = e2
         raise ConnectionError(f"请求失败 {spec.url}: {last_error}")
 
-    async def _do_request(self, spec: RequestSpec, source_key: str) -> StrResponse:
+    async def _do_request(self, spec: RequestSpec, source_key: str, verify: bool = True) -> StrResponse:
         headers = dict(spec.headers)
         cookies = self.cookie_store.load_for_request(source_key, spec.url)
         async with httpx.AsyncClient(
@@ -123,26 +144,34 @@ class HttpClient:
             timeout=20.0,
             cookies=cookies,
             headers=headers,
+            verify=verify,
         ) as client:
             if spec.method == "POST":
                 body = spec.body
                 content_type = headers.get("Content-Type") or headers.get("content-type")
-                if spec.fields and (body is None or not body.strip()):
-                    response = await client.post(spec.url_no_query, data=spec.fields)
-                elif body is not None and content_type:
+                if spec.fields:
+                    form = "&".join(f"{k}={v}" for k, v in spec.fields.items())
+                    response = await client.post(
+                        spec.url_no_query, content=form.encode("utf-8"),
+                        headers={"Content-Type": content_type or "application/x-www-form-urlencoded"},
+                    )
+                elif body is None or not body.strip():
+                    response = await client.post(
+                        spec.url_no_query,
+                        headers={"Content-Type": "application/x-www-form-urlencoded"},
+                    )
+                elif content_type:
                     response = await client.post(
                         spec.url_no_query, content=body.encode("utf-8"),
                         headers={"Content-Type": content_type},
                     )
-                elif body is not None and _is_json_text(body):
+                elif _is_json_text(body):
                     response = await client.post(
                         spec.url_no_query, content=body.encode("utf-8"),
                         headers={"Content-Type": "application/json"},
                     )
-                elif body is not None:
-                    response = await client.post(spec.url_no_query, data=body.encode("utf-8"))
                 else:
-                    response = await client.post(spec.url_no_query, data=spec.fields)
+                    response = await client.post(spec.url_no_query, content=body.encode("utf-8"))
             else:
                 response = await client.get(_final_url(spec))
 

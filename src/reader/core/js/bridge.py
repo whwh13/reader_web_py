@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import base64
 import hashlib
+import hmac
 import json
 import time
 import uuid
@@ -73,6 +74,8 @@ class JsBridge:
             "cacheFile", "get", "post", "log", "toast",
             "getCookie", "getZipStringContent", "getZipByteArrayContent",
             "importScript", "queryTTF", "queryBase64TTF", "replaceFont",
+            "put", "getString", "getElements", "toNumChapter",
+            "longToast", "setContent", "HMacHex", "HMacBase64", "t2s",
             "webView", "getFile", "readFile", "readTxtFile", "deleteFile",
             "downloadFile", "unzipFile", "getTxtInFolder",
         ]
@@ -80,16 +83,30 @@ class JsBridge:
         self.cache_methods = ["put", "get", "getInt", "putInt", "putLong", "getLong", "delete", "putFile", "getFile"]
         self._cache: dict[str, str] = {}
         self._cache_file: dict[str, str] = {}
+        self._soup_docs: dict[str, Any] = {}
 
     # ---- 派发 ----
 
+    def dispatch_for(self, host: Any = None) -> Callable[[str, str], str | None]:
+        """返回绑定到指定宿主的派发函数（每次 eval 一个）。"""
+
+        def _dispatch(full_name: str, args_json: str) -> str | None:
+            return self._dispatch_with(host, full_name, args_json)
+
+        return _dispatch
+
     def dispatch(self, full_name: str, args_json: str) -> str | None:
+        return self._dispatch_with(self._host_provider(), full_name, args_json)
+
+    def _dispatch_with(self, host: Any, full_name: str, args_json: str) -> str | None:
+        if full_name.startswith("jsoup."):
+            return self._jsoup_dispatch(full_name[6:], args_json)
         kind, _, method = full_name.partition(".")
         args = json.loads(args_json) if args_json else []
         table = {
-            "java": self._java_table(),
-            "cookie": self._cookie_table(),
-            "cache": self._cache_table(),
+            "java": self._java_table(host),
+            "cookie": self._cookie_table(host),
+            "cache": self._cache_table(host),
         }[kind]
         fn = table.get(method)
         if fn is None:
@@ -99,20 +116,51 @@ class JsBridge:
             return None
         return json.dumps(result, ensure_ascii=False, default=str)
 
+    # ---- jsoup.*（QuickJS 无 Java import，HTML 解析回调到 Python 端）----
+
+    def _jsoup_dispatch(self, method: str, args_json: str) -> str | None:
+        from reader.core.rule import jsoup_compat as jc
+
+        args = json.loads(args_json) if args_json else []
+        if method == "parse":
+            doc = jc.parse_html(args[0])
+            handle = f"doc{len(self._soup_docs)}"
+            self._soup_docs[handle] = doc
+            return json.dumps(handle)
+        if method == "select":
+            doc = self._soup_docs.get(args[0])
+            if doc is None:
+                return "[]"
+            results = []
+            for el in jc.select(doc, args[1]):
+                results.append({
+                    "text": jc.element_text(el),
+                    "html": jc.outer_html(el),
+                    "ownText": jc.element_own_text(el),
+                })
+            return json.dumps(results, ensure_ascii=False)
+        if method == "text":
+            doc = self._soup_docs.get(args[0])
+            return json.dumps(jc.element_text(doc) if doc is not None else "")
+        if method == "outerHtml":
+            doc = self._soup_docs.get(args[0])
+            return json.dumps(jc.outer_html(doc) if doc is not None else "")
+        return None
+
     # ---- java.* ----
 
-    def _host(self):
-        return self._host_provider()
+    def _host(self, host: Any = None):
+        return host if host is not None else self._host_provider()
 
     def _http(self) -> Any:
         host = self._host()
         return host.http_client if hasattr(host, "http_client") else host
 
-    def _ajax_spec(self, url_str: str, headers: dict | None = None):
+    def _ajax_spec(self, url_str: str, headers: dict | None = None, host: Any = None):
         """用 AnalyzeUrl 解析 ajax URL（同步 httpx 在 JS 线程内阻塞执行）。"""
         from reader.core.rule.analyze_url import AnalyzeUrl
 
-        host = self._host()
+        host = self._host(host)
         base = getattr(host, "base_url", "") or ""
         source = getattr(host, "source", None)
         analyze = AnalyzeUrl(
@@ -126,23 +174,65 @@ class JsBridge:
             analyze.header_map.update({str(k): str(v) for k, v in headers.items()})
         return analyze
 
-    def _fetch_sync(self, url_str: str, headers: dict | None = None) -> StrResponse | None:
-        host = self._host()
-        analyze = self._ajax_spec(url_str, headers)
-        return host.http_client.fetch_str_sync(analyze)
+    def _fetch_sync(self, url_str: str, headers: dict | None = None, host: Any = None) -> StrResponse | None:
+        host = self._host(host)
+        analyze = self._ajax_spec(url_str, headers, host)
+        client = getattr(host, "http_client", None)
+        if client is None:
+            raise RuntimeError("java.ajax 需要宿主提供 http_client（AnalyzeRule/AnalyzeUrl 上下文）")
+        return client.fetch_str_sync(analyze)
 
-    def _ajax(self, url_str: str, headers: dict | None = None) -> str | None:
-        resp = self._fetch_sync(url_str, headers)
+    def _ajax(self, url_str: str, headers: dict | None = None, host: Any = None) -> str | None:
+        resp = self._fetch_sync(url_str, headers, host)
         return resp.body if resp else None
 
-    def _java_table(self) -> dict[str, Callable]:
+    def _host_get_var(self, host: Any, key: str) -> str:
+        get = getattr(host, "get", None)
+        if get is None:
+            raise RuntimeError("java.get(key) 需要规则宿主上下文")
+        return get(str(key))
+
+    def _host_set_content(self, host: Any, content):
+        set_content = getattr(host, "set_content", None)
+        if set_content is None:
+            raise RuntimeError("java.setContent 需要规则宿主上下文")
+        host.set_content(content)
+        return ""
+
+    def _host_put(self, host: Any, key: str, value: str) -> str:
+        put = getattr(host, "put", None)
+        if put is None:
+            raise RuntimeError("java.put 需要规则宿主上下文")
+        return put(str(key), str(value))
+
+    def _host_get_string(self, host: Any, rule: str) -> str:
+        get_string = getattr(host, "get_string", None)
+        if get_string is None:
+            raise RuntimeError("java.getString 需要规则宿主上下文")
+        return get_string(str(rule))
+
+    def _host_get_elements(self, host: Any, rule: str):
+        get_elements = getattr(host, "get_elements", None)
+        if get_elements is None:
+            raise RuntimeError("java.getElements 需要规则宿主上下文")
+        elements = get_elements(str(rule))
+        # JSON 元素（dict/list）可直接序列化；lxml 元素无法跨桥，转字符串占位
+        return [
+            e if isinstance(e, (dict, list, str, int, float, bool)) or e is None else str(e)
+            for e in elements
+        ]
+
+    def _java_table(self, host: Any = None) -> dict[str, Callable]:
         return {
-            "ajax": lambda url, *rest: self._ajax(url),
-            "ajaxAll": lambda urls, *rest: [self._ajax(u) for u in urls],
-            "connect": self._connect,
-            "get": self._get,
-            "post": self._post,
-            "head": self._head,
+            "ajax": lambda url, *rest: self._ajax(url, host=host),
+            "ajaxAll": lambda urls, *rest: [self._ajax(u, host=host) for u in urls],
+            "connect": lambda url, *rest: self._connect(url, rest[0] if rest else None, host),
+            "get": lambda *a: (
+                self._host_get_var(host, a[0]) if len(a) == 1
+                else self._connect(a[0], a[1] if len(a) > 1 else None, host)
+            ),
+            "post": lambda url, body, *rest: self._post(url, body, rest[0] if rest else None, host),
+            "head": lambda url, *rest: self._connect(url, rest[0] if rest else None, host),
             "base64Decode": lambda s, *a: _try_decode(_b64decode(s)),
             "base64Encode": lambda s, *a: _to_b64(str(s).encode("utf-8")),
             "base64DecodeToByteArray": lambda s, *a: list(_b64decode(s)),
@@ -171,15 +261,27 @@ class JsBridge:
             "timeFormatUTC": lambda t, f, sh, *a: time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
             "randomUUID": lambda: str(uuid.uuid4()),
             "androidId": lambda: "",
-            "cacheFile": self._cache_file_get,
-            "get": self._ajax,
-            "post": self._post,
+            "cacheFile": lambda url, *rest: self._cache_file_get(url, host=host),
+            "getCookie": lambda tag, *rest: self._cookie_get(tag, host=host),
             "log": lambda *a: None,
             "toast": lambda *a: None,
-            "getCookie": self._cookie_get,
-            "getZipStringContent": self._zip_string,
-            "getZipByteArrayContent": self._zip_bytes,
-            "importScript": self._import_script,
+            "getZipStringContent": lambda url, path, *rest: self._zip_string(url, path, host=host),
+            "getZipByteArrayContent": lambda url, path, *rest: self._zip_bytes(url, path, host=host),
+            "importScript": lambda url, *rest: self._import_script(url, host=host),
+            # AnalyzeRule 自身暴露给 JS 的能力（对照 AnalyzeRule : JsExtensions）
+            "put": lambda key, value, *rest: self._host_put(host, key, value),
+            "longToast": lambda *rest: None,
+            "setContent": lambda c, *rest: self._host_set_content(host, c),
+            "HMacHex": lambda data, algo, key, *rest: hmac.new(
+                _as_bytes(key), _as_bytes(data),
+                str(algo).replace("-", "").lower()).hexdigest(),
+            "HMacBase64": lambda data, algo, key, *rest: _to_b64(hmac.new(
+                _as_bytes(key), _as_bytes(data),
+                str(algo).replace("-", "").lower()).digest()),
+            "t2s": lambda s, *rest: str(s),
+            "getString": lambda rule, *rest: self._host_get_string(host, rule),
+            "getElements": lambda rule, *rest: self._host_get_elements(host, rule),
+            "toNumChapter": lambda s, *rest: str(s),
             "queryTTF": lambda s, *a: str(s),
             "queryBase64TTF": lambda s, *a: str(s),
             "replaceFont": lambda s, *a: str(s),
@@ -193,8 +295,8 @@ class JsBridge:
             "getTxtInFolder": lambda *a: None,
         }
 
-    def _connect(self, url_str: str, headers: dict | None = None) -> dict | None:
-        resp = self._fetch_sync(url_str, headers)
+    def _connect(self, url_str: str, headers: dict | None = None, host: Any = None) -> dict | None:
+        resp = self._fetch_sync(url_str, headers, host)
         if resp is None:
             return None
         return {"url": resp.url, "body": resp.body, "headers": resp.headers, "code": resp.code}
@@ -202,7 +304,7 @@ class JsBridge:
     def _get(self, url_str: str, headers: dict | None = None, *a) -> dict | None:
         return self._connect(url_str, headers)
 
-    def _post(self, url_str: str, body: str, headers: dict | None = None) -> dict | None:
+    def _post(self, url_str: str, body: str, headers: dict | None = None, host: Any = None) -> dict | None:
         if isinstance(headers, str):
             try:
                 headers = json.loads(headers)
@@ -212,15 +314,15 @@ class JsBridge:
         url_part, _, option = url_str.partition(",{")
         if option:
             merged.setdefault("Content-Type", "application/json")
-            return self._connect(url_str, merged)
+            return self._connect(url_str, merged, host)
         merged.setdefault("Content-Type", "application/x-www-form-urlencoded")
-        return self._connect(url_str, merged)
+        return self._connect(url_str, merged, host)
 
     def _head(self, url_str: str, headers: dict | None = None) -> dict | None:
         return self._connect(url_str, headers)
 
-    def _cookie_get(self, tag: str, key: str | None = None) -> str:
-        host = self._host()
+    def _cookie_get(self, tag: str, key: str | None = None, host: Any = None) -> str:
+        host = self._host(host)
         store = getattr(host, "cookie_store", None)
         if store is None:
             return ""
@@ -229,13 +331,13 @@ class JsBridge:
     def _cache_get(self, key: str) -> str | None:
         return self._cache.get(str(key))
 
-    def _zip_string(self, url: str, path: str, charset: str = "utf-8") -> str | None:
-        data = self._zip_bytes(url, path)
+    def _zip_string(self, url: str, path: str, charset: str = "utf-8", host: Any = None) -> str | None:
+        data = self._zip_bytes(url, path, host)
         if data is None:
             return None
         return bytes(data).decode(charset, errors="replace")
 
-    def _zip_bytes(self, url: str, path: str) -> list[int] | None:
+    def _zip_bytes(self, url: str, path: str, host: Any = None) -> list[int] | None:
         import httpx
 
         if url.startswith("hex://"):
@@ -245,24 +347,24 @@ class JsBridge:
         with zipfile.ZipFile(io.BytesIO(raw)) as zf:
             return list(zf.read(path))
 
-    def _import_script(self, url: str) -> str | None:
+    def _import_script(self, url: str, host: Any = None) -> str | None:
         if url.startswith("http"):
-            return self._ajax(url)
+            return self._ajax(url, host=host)
         return None
 
-    def _cache_file_get(self, url: str, save_time: int = 0) -> str | None:
+    def _cache_file_get(self, url: str, save_time: int = 0, host: Any = None) -> str | None:
         key = hashlib.md5(url.encode()).hexdigest()
         if url in self._cache_file:
             return self._cache_file[url]
-        body = self._ajax(url)
+        body = self._ajax(url, host=host)
         if body is not None:
             self._cache_file[url] = body
         return body
 
     # ---- cookie.* / cache.* ----
 
-    def _cookie_table(self) -> dict[str, Callable]:
-        host = self._host()
+    def _cookie_table(self, host: Any = None) -> dict[str, Callable]:
+        host = self._host(host)
         store = getattr(host, "cookie_store", None)
 
         def _domain() -> str:
@@ -307,7 +409,7 @@ class JsBridge:
             "mapToCookie": map_to_cookie,
         }
 
-    def _cache_table(self) -> dict[str, Callable]:
+    def _cache_table(self, host: Any = None) -> dict[str, Callable]:
         def put(key: str, value: str, *a):
             self._cache[str(key)] = str(value)
             return True

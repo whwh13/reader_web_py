@@ -175,6 +175,10 @@ def _combine(results: list[list[str]], elements_type: str, out: list[str]) -> No
 
 def _adapt_path(path: str) -> str:
     """jayway → jsonpath-ng 语法适配。"""
+    # jayway 的 .* 同时迭代对象值与数组元素；jsonpath-ng 的 .* 只匹配对象键，
+    # 数组须用 [*]
+    if ".*" in path:
+        path = path.replace(".*", "[*]")
     # jayway 允许省略根 $.（如 "store.book"），jsonpath-ng 需要显式根
     if not path.startswith(("$", "{")):
         return "$." + path

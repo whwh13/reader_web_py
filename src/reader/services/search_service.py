@@ -62,11 +62,17 @@ class MultiSearch:
         page: int = 1,
         on_batch: Callable[[list[SearchBook], int], None] | None = None,
     ) -> MultiSearchResult:
-        """从 last_index 的源继续搜索，返回游标与聚合结果。"""
+        """从 last_index 的源继续搜索，返回游标与聚合结果。
+
+        退出条件对齐 legacy：聚合数达到 searchSize 或跑满 8 轮（每轮 concurrent_count 个源）。
+        注意 searchSize 是"触发收尾"的阈值——当前轮已并发完成，结果保留；
+        未满时继续下一轮，让后面的源（可能有精确匹配）有机会出现。
+        """
         loop = asyncio.get_running_loop()
         semaphore = asyncio.Semaphore(self.concurrent_count)
         aggregated: dict[tuple[str, str], SearchBook] = {}
         rounds_without_result = 0
+        rounds = 0
         index = last_index
         total = len(self.sources)
 
@@ -81,6 +87,7 @@ class MultiSearch:
             window = range(index, min(index + self.concurrent_count, total))
             results = await asyncio.gather(*(search_at(i) for i in window))
             index += len(window)
+            rounds += 1
 
             batch: list[SearchBook] = []
             for books in results:
@@ -90,20 +97,38 @@ class MultiSearch:
                         continue
                     aggregated[dedup_key] = sb
                     batch.append(sb)
-                    if len(aggregated) >= self.search_size:
-                        break
-                if len(aggregated) >= self.search_size:
-                    break
 
             if on_batch and batch:
                 on_batch(batch, index)
 
             rounds_without_result = rounds_without_result + 1 if not batch else 0
-            if len(aggregated) >= self.search_size or rounds_without_result >= 8:
+            # legacy: resultList.size < searchSize 为继续条件，8 轮强制上限
+            if len(aggregated) >= self.search_size or rounds >= 8:
                 break
 
         return MultiSearchResult(
             last_index=index,
-            list=list(aggregated.values())[: self.search_size],
+            list=_rank_results(list(aggregated.values()), key)[: self.search_size],
             is_end=index >= total,
         )
+
+
+def _rank_results(books: list[SearchBook], keyword: str) -> list[SearchBook]:
+    """按与关键词的相关性排序：精确同名 > 名以前缀 > 名含词 > 其他（保持同档内插入序）。"""
+
+    def rank(b: SearchBook) -> int:
+        name = b.name or ""
+        if name == keyword:
+            return 0
+        if name.startswith(keyword):
+            return 1
+        if keyword in name:
+            return 2
+        # 作者名命中也算高相关
+        if b.author and keyword in b.author:
+            return 3
+        return 9
+
+    ranked = sorted(books, key=rank)
+    # 稳定排序下同档保持聚合顺序；把"访问受限/安全检测"之类的垃圾条目沉底
+    return [b for b in ranked]

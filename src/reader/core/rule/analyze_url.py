@@ -99,6 +99,8 @@ class AnalyzeUrl:
         chapter: RuleData | None = None,
         header_map: dict[str, str] | None = None,
         js_engine: JsEngine | None = None,
+        http_client=None,
+        cookie_store=None,
     ) -> None:
         self.m_url = m_url
         self.key = key
@@ -124,6 +126,9 @@ class AnalyzeUrl:
         self.use_web_view = False
         self.web_js: str | None = None
         self.enabled_cookie_jar = bool(getattr(source, "enabled_cookie_jar", False))
+        # 供 JS 桥（java.ajax 等）使用：构造期就绪（searchUrl 的 JS 在 _init_url 里即可能调 ajax）
+        self.http_client = http_client
+        self.cookie_store = cookie_store
 
         if m_url.startswith("data:"):
             return
@@ -169,11 +174,11 @@ class AnalyzeUrl:
             "key": self.key,
             "speakText": None,
             "speakSpeed": None,
-            "book": self.rule_data,
-            "source": self.source,
+            "book": _js_safe(self.rule_data),
+            "source": _js_safe(self.source),
             "result": result,
         }
-        return self.js_engine.eval(js_str, bindings)
+        return self.js_engine.eval(js_str, bindings, host=self)
 
     # ---- URL 处理 ----
 
@@ -389,6 +394,15 @@ class AnalyzeUrl:
 class _Wait(Exception):
     def __init__(self, ms: int) -> None:
         self.ms = ms
+
+
+def _js_safe(v):
+    if hasattr(v, "model_dump"):
+        try:
+            return v.model_dump()
+        except Exception:
+            return str(v)
+    return v
 
 
 def _clean(v: Any) -> str | None:

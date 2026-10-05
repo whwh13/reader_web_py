@@ -13,7 +13,7 @@ from reader.core.rule.rule_data import RuleData
 class FakeEngine:
     """极简 JS 引擎替身：只支持 result/key/page 等绑定直取与字符串拼接。"""
 
-    def eval(self, js: str, bindings: dict):
+    def eval(self, js: str, bindings: dict, host=None):
         js = js.strip()
         if js in bindings and not js.startswith('"'):
             return bindings[js]

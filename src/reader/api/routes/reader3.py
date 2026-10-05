@@ -299,7 +299,8 @@ async def set_book_source(request: Request):
 @router.get("/getBookSources")
 async def get_book_sources(request: Request):
     p = await read_params(request)
-    sources = get_service().list_sources()
+    svc = get_service()
+    sources = svc.list_sources()
     if p.get_bool("simple"):
         return ok(
             [
@@ -313,7 +314,16 @@ async def get_book_sources(request: Request):
                 for s in sources
             ]
         )
-    return ok([s.model_dump(exclude_none=True) for s in sources])
+    out = []
+    for s in sources:
+        item = s.model_dump(exclude_none=True)
+        _, check_ok, check_err = svc.db.get_check_result(s.bookSourceUrl)
+        if check_ok is not None:
+            item["lastCheckOk"] = bool(check_ok)
+            if check_err:
+                item["error"] = check_err
+        out.append(item)
+    return ok(out)
 
 
 @router.post("/getBookSource")
@@ -422,3 +432,84 @@ async def get_system_info():
 async def explore_book(request: Request):
     """发现页（backlog）：返回空列表。"""
     return ok([])
+
+
+# ---- 书源订阅 ----
+
+
+@router.get("/getBookSourceSubs")
+async def get_book_source_subs():
+    from reader.services.subscription_service import SubscriptionService
+
+    return ok(SubscriptionService(get_service().db).list_subs())
+
+
+@router.post("/saveBookSourceSub")
+async def save_book_source_sub(request: Request):
+    """添加订阅并立即拉取导入。"""
+    p = await read_params(request)
+    link = p.get_str("link") or p.get_str("url")
+    if not link:
+        return fail("缺少订阅链接")
+    from reader.services.subscription_service import SubscriptionService
+
+    result = await asyncio.to_thread(
+        SubscriptionService(get_service().db).add_sub, link, p.get_str("name")
+    )
+    if result["ok"]:
+        return ok(result)
+    return fail(result.get("error", "订阅导入失败"), result)
+
+
+@router.post("/deleteBookSourceSub")
+async def delete_book_source_sub(request: Request):
+    p = await read_params(request)
+    link = p.get_str("link") or p.get_str("url")
+    if not link:
+        return fail("缺少订阅链接")
+    from reader.services.subscription_service import SubscriptionService
+
+    SubscriptionService(get_service().db).remove_sub(link)
+    return ok(True)
+
+
+@router.post("/refreshBookSourceSub")
+async def refresh_book_source_sub(request: Request):
+    """刷新订阅（带 link 刷新单个，不带刷新全部）。"""
+    p = await read_params(request)
+    from reader.services.subscription_service import SubscriptionService
+
+    svc = SubscriptionService(get_service().db)
+    link = p.get_str("link") or p.get_str("url")
+    if link:
+        results = [await asyncio.to_thread(svc.refresh_one, link)]
+    else:
+        results = await asyncio.to_thread(svc.refresh_all)
+    return ok(results)
+
+
+@router.get("/getInvalidBookSources")
+async def get_invalid_book_sources():
+    """失效书源列表（最近一次校验失败者，legacy 同名端点语义）。"""
+    return ok(get_service().db.list_invalid_sources())
+
+
+# ---- 书源批量校验 ----
+
+
+@router.get("/validateBookSourcesSSE")
+async def validate_book_sources_sse(request: Request):
+    """SSE 逐源校验：data 帧 {bookSourceUrl, ok, count, error, done, total}，end 帧汇总。"""
+    from reader.services.validate_service import validate_all_sse
+
+    p = await read_params(request)
+    keyword = p.get_str("keyword") or "我的"
+    concurrency = min(max(p.get_int("concurrency", 12), 1), 24)
+
+    async def gen():
+        async for frame in validate_all_sse(
+            get_service(), keyword=keyword, concurrency=concurrency
+        ):
+            yield frame
+
+    return StreamingResponse(gen(), media_type="text/event-stream")

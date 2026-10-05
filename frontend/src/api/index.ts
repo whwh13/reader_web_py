@@ -3,6 +3,8 @@
 import { get, post } from "./request";
 import type { Book, BookChapter, BookSourceSimple } from "./types";
 
+export type { Book, BookChapter, BookSourceSimple } from "./types";
+
 export const shelfApi = {
   getBookshelf: (refresh = false) =>
     get<Book[]>("/getBookshelf", { refresh: refresh ? 1 : 0, v: Date.now() }),
@@ -43,3 +45,68 @@ export const sourcesApi = {
   deleteBookSource: (bookSourceUrl: string) =>
     post<unknown>("/deleteBookSources", { bookSourceUrls: [bookSourceUrl] }),
 };
+
+export interface BookSourceSub {
+  link: string;
+  name: string;
+  lastSyncTime: number;
+  sourceCount: number;
+  lastError?: string | null;
+}
+
+export const subsApi = {
+  list: () => get<BookSourceSub[]>("/getBookSourceSubs"),
+  add: (link: string, name = "") => post<{ count: number }>("/saveBookSourceSub", { link, name }),
+  remove: (link: string) => post<unknown>("/deleteBookSourceSub", { link }),
+  refresh: (link?: string) => post<unknown>("/refreshBookSourceSub", link ? { link } : {}),
+};
+
+export interface ValidateFrame {
+  bookSourceUrl: string;
+  bookSourceName: string;
+  ok: boolean;
+  count: number;
+  elapsed: number;
+  error?: string;
+  done: number;
+  total: number;
+}
+
+export interface ValidateSummary {
+  total: number;
+  ok: number;
+  failed: number;
+  rate: number;
+}
+
+/** 批量校验 SSE：逐源回调，end 时 resolve 汇总。 */
+export function validateSources(
+  opts: { keyword?: string; concurrency?: number },
+  onFrame: (frame: ValidateFrame) => void
+): Promise<ValidateSummary | null> {
+  return new Promise((resolve) => {
+    const qs = new URLSearchParams(
+      Object.entries({ keyword: opts.keyword || "我的", concurrency: String(opts.concurrency || 12) })
+    ).toString();
+    const es = new EventSource(`/reader3/validateBookSourcesSSE?${qs}`);
+    es.addEventListener("end", (ev) => {
+      es.close();
+      try {
+        resolve(JSON.parse((ev as MessageEvent).data));
+      } catch {
+        resolve(null);
+      }
+    });
+    es.addEventListener("error", () => {
+      es.close();
+      resolve(null);
+    });
+    es.onmessage = (ev) => {
+      try {
+        onFrame(JSON.parse(ev.data));
+      } catch {
+        /* 忽略坏帧 */
+      }
+    };
+  });
+}
