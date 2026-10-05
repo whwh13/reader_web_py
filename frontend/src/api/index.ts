@@ -30,6 +30,16 @@ export const booksApi = {
     post<BookChapter[]>("/getChapterList", { url, refresh: refresh ? 1 : 0, bookSourceUrl }),
   getBookContent: (url: string, index: number, refresh = false, bookSourceUrl?: string) =>
     post<string>("/getBookContent", { url, index, refresh: refresh ? 1 : 0, bookSourceUrl }),
+  /** 换源：getAvailableBookSource 返回 {lastIndex, list}；全源精搜较慢（1-3 分钟） */
+  getAvailableBookSource: (url: string, refresh = false) =>
+    post<{ lastIndex: number; list: Book[] }>(
+      "/getAvailableBookSource",
+      { url, refresh: refresh ? 1 : 0 },
+      undefined,
+      300000
+    ),
+  setBookSource: (bookUrl: string, bookSourceUrl: string, newUrl: string) =>
+    post<unknown>("/setBookSource", { bookUrl, bookSourceUrl, newUrl }),
 };
 
 export const searchApi = {

@@ -58,11 +58,42 @@ class ReaderService:
         last_index: int = 0,
         page: int = 1,
         on_batch=None,
+        max_rounds: int | None = 8,
     ):
         sources = [s for s in self.list_sources() if s.enabled]
         searcher = SourceSearcher(self.http, self.engine)
         ms = MultiSearch(sources, searcher, concurrent_count, search_size)
-        return await ms.run(key, last_index, page, on_batch)
+        return await ms.run(key, last_index, page, on_batch, max_rounds=max_rounds)
+
+    async def search_accurate_all(self, name: str, author: str, concurrent_count: int = 48):
+        """换源候选：全源精搜，**不做跨源去重**——同名同作者的书每个源各留一条
+        （MultiSearch 的 (name,author) 去重会吞掉其他源的条目，恰好是换源要的对象）。"""
+        import asyncio as _asyncio
+        from concurrent.futures import ThreadPoolExecutor
+
+        sources = [s for s in self.list_sources() if s.enabled and s.searchUrl]
+        loop = _asyncio.get_running_loop()
+        semaphore = _asyncio.Semaphore(concurrent_count)
+        pool = ThreadPoolExecutor(max_workers=concurrent_count, thread_name_prefix="accsearch")
+
+        async def search_one(src) -> Book | None:
+            async with semaphore:
+                try:
+                    books = await loop.run_in_executor(
+                        pool, lambda: WebBook(src, self.http, self.engine).search_book(name, 1)
+                    )
+                except Exception:
+                    return None
+                for b in books:
+                    if b.name == name and (not author or b.author == author):
+                        return b
+                return None
+
+        try:
+            results = await _asyncio.gather(*(search_one(s) for s in sources))
+        finally:
+            pool.shutdown(wait=False, cancel_futures=True)
+        return [b for b in results if b is not None]
 
     # ---- 详情 / 目录 / 正文 ----
 
@@ -160,7 +191,29 @@ class ReaderService:
         return self.db.get_book(url)
 
     def get_bookshelf(self, refresh: bool = False) -> list[Book]:
-        return self.db.list_books()
+        books = self.db.list_books()
+        if not refresh:
+            return books
+        # refresh=1：逐本补齐封面/简介（详情页信息），并发抓取
+        from concurrent.futures import ThreadPoolExecutor
+
+        def _refresh_one(book: Book) -> Book:
+            try:
+                source = self.get_source(book.origin)
+                if source is None:
+                    return book
+                WebBook(source, self.http, self.engine).get_book_info(
+                    book, can_re_name=False
+                )
+            except Exception:
+                pass  # 单本失败不影响书架展示
+            return book
+
+        with ThreadPoolExecutor(max_workers=6) as pool:
+            books = list(pool.map(_refresh_one, books))
+        for b in books:
+            self.db.save_book(b)
+        return books
 
     def save_progress(
         self,

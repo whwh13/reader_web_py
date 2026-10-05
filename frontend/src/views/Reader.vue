@@ -5,6 +5,7 @@
       <el-button @click="drawer = true">目录</el-button>
       <span class="reader-title">{{ book?.name }} · {{ chapter?.title }}</span>
       <div class="reader-tools">
+        <el-button size="small" @click="changeSource?.open()">换源</el-button>
         <el-button size="small" @click="prevChapter" :disabled="index <= 0">上一章</el-button>
         <el-button size="small" @click="nextChapter" :disabled="index >= chapters.length - 1">下一章</el-button>
         <el-button size="small" @click="fontSize--; applyStyle()">A-</el-button>
@@ -28,6 +29,14 @@
     <div class="reader-content" v-loading="loading">
       <pre class="reader-text" :style="textStyle">{{ content }}</pre>
     </div>
+
+    <ChangeSourceDialog
+      ref="changeSource"
+      :book-url="currentBookUrl"
+      :current-index="index"
+      :current-title="chapter?.title"
+      @switched="onSourceSwitched"
+    />
   </div>
 </template>
 
@@ -36,6 +45,7 @@ import { computed, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { booksApi, shelfApi } from "../api";
 import type { Book, BookChapter } from "../api/types";
+import ChangeSourceDialog from "../components/ChangeSourceDialog.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -49,6 +59,8 @@ const loading = ref(false);
 const drawer = ref(false);
 const night = ref(false);
 const fontSize = ref(18);
+const changeSource = ref<InstanceType<typeof ChangeSourceDialog> | null>(null);
+const currentBookUrl = computed(() => String(route.query.url || ""));
 
 const readerStyle = computed(() => ({
   background: night.value ? "#1a1a1a" : "#f7f3e8",
@@ -130,9 +142,26 @@ function goBack() {
   router.push("/");
 }
 
+/** 换源完成：书架记录已由后端改写（bookUrl/origin），跳到新地址并定位迁移后的章节 */
+function onSourceSwitched(p: { newBookUrl: string; index: number; newSourceName: string }) {
+  router.replace({
+    path: "/reader",
+    query: { url: p.newBookUrl, jump: String(p.index) },
+  });
+}
+
 onMounted(() => {
   fontSize.value = Number(localStorage.getItem("reader_font") || 18);
-  loadBook();
+  const jump = route.query.jump;
+  loadBook().then(() => {
+    if (jump !== undefined) {
+      const i = Number(jump);
+      if (Number.isInteger(i) && i >= 0 && i < chapters.value.length) {
+        index.value = i;
+        loadContent();
+      }
+    }
+  });
 });
 </script>
 

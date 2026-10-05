@@ -70,6 +70,11 @@ async function addToShelf(b: Book) {
     origin: b.origin,
     originName: b.originName,
     originOrder: b.originOrder ?? 0,
+    coverUrl: b.coverUrl,
+    intro: b.intro,
+    kind: b.kind,
+    totalChapterNum: b.totalChapterNum ?? 0,
+    latestChapterTitle: b.latestChapterTitle,
   });
   if (r.isSuccess) ElMessage.success(`《${b.name}》已加入书架`);
 }

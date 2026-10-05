@@ -227,23 +227,16 @@ async def search_book_multi_sse(request: Request):
 
 @router.post("/getAvailableBookSource")
 async def get_available_book_source(request: Request):
-    """对书名做全源搜索，返回可用源候选（对照 legacy：返回 {lastIndex, list}）。"""
+    """换源候选：全源精搜（name+author 精确匹配），每个源各留一条，不做跨源去重。"""
     p = await read_params(request)
     try:
         shelf = get_service().get_shelf_book(p.get_str("url"))
-        key = shelf.name if shelf else p.get_str("name")
-        if not key:
+        name = shelf.name if shelf else p.get_str("name")
+        if not name:
             return ok({"lastIndex": 0, "list": []})
-        result = await get_service().search_multi(
-            key=key,
-            concurrent_count=p.get_int("concurrentCount", 36),
-            search_size=30,
-        )
-        if shelf:
-            result.list = [
-                b for b in result.list if b.name == shelf.name and b.author == shelf.author
-            ]
-        return ok({"lastIndex": result.last_index, "list": [b.model_dump(exclude_none=True) for b in result.list]})
+        author = shelf.author if shelf else p.get_str("author")
+        books = await get_service().search_accurate_all(name, author)
+        return ok({"lastIndex": 0, "list": [b.model_dump(exclude_none=True) for b in books]})
     except Exception as e:
         return _err(e)
 

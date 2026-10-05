@@ -61,12 +61,13 @@ class MultiSearch:
         last_index: int = 0,
         page: int = 1,
         on_batch: Callable[[list[SearchBook], int], None] | None = None,
+        max_rounds: int | None = 8,
     ) -> MultiSearchResult:
         """从 last_index 的源继续搜索，返回游标与聚合结果。
 
-        退出条件对齐 legacy：聚合数达到 searchSize 或跑满 8 轮（每轮 concurrent_count 个源）。
-        注意 searchSize 是"触发收尾"的阈值——当前轮已并发完成，结果保留；
-        未满时继续下一轮，让后面的源（可能有精确匹配）有机会出现。
+        退出条件对齐 legacy：聚合数达到 searchSize 或跑满轮数上限
+        （每轮 concurrent_count 个源）。max_rounds=None 表示跑完全部源
+        （换源候选场景——慢源排后也不能漏）。
         """
         loop = asyncio.get_running_loop()
         semaphore = asyncio.Semaphore(self.concurrent_count)
@@ -102,8 +103,11 @@ class MultiSearch:
                 on_batch(batch, index)
 
             rounds_without_result = rounds_without_result + 1 if not batch else 0
-            # legacy: resultList.size < searchSize 为继续条件，8 轮强制上限
-            if len(aggregated) >= self.search_size or rounds >= 8:
+            # legacy: resultList.size < searchSize 为继续条件，8 轮强制上限；
+            # max_rounds=None 表示跑完全部源（换源候选场景）
+            if len(aggregated) >= self.search_size:
+                break
+            if max_rounds is not None and rounds >= max_rounds:
                 break
 
         return MultiSearchResult(

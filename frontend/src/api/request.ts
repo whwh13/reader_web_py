@@ -22,9 +22,13 @@ export async function get<T>(url: string, params?: Record<string, unknown>): Pro
 export async function post<T>(
   url: string,
   data?: unknown,
-  params?: Record<string, unknown>
+  params?: Record<string, unknown>,
+  timeoutMs?: number
 ): Promise<ReturnData<T>> {
-  const resp = await instance.post<ReturnData<T>>(url, data, { params });
+  const resp = await instance.post<ReturnData<T>>(url, data, {
+    params,
+    timeout: timeoutMs,
+  });
   return unpack(resp.data);
 }
 
