@@ -1,8 +1,0 @@
-2026-10-05T17:59:35.2390000Z Evaluating test.if
-2026-10-05T17:59:35.2390000Z Evaluating: success()
-2026-10-05T17:59:35.2390000Z Result: true
-2026-10-05T17:59:35.2400000Z Requested labels: ubuntu-latest
-2026-10-05T17:59:35.2400000Z Job defined at: whwh13/reader_web_py/.github/workflows/ci.yml@refs/tags/v1.0.0
-2026-10-05T17:59:35.2400000Z Waiting for a runner to pick up this job...
-2026-10-05T17:59:35.4700000Z Job is waiting for a hosted runner to come online.
-2026-10-05T17:59:35.4710000Z Job is about to start running on the hosted runner: GitHub Actions 1000000035
