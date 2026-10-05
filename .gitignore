@@ -1,0 +1,16 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+
+# 运行时数据（SQLite、章节缓存、cookie）
+data/
+
+# 前端
+node_modules/
+frontend/dist/
+
+# 日志
+*.log
