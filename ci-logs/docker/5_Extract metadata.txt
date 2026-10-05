@@ -1,0 +1,160 @@
+﻿2026-10-05T18:00:14.5744077Z ##[group]Run docker/metadata-action@v5
+2026-10-05T18:00:14.5744406Z with:
+2026-10-05T18:00:14.5744633Z   images: ghcr.io/whwh13/reader_web_py
+2026-10-05T18:00:14.5745121Z   tags: type=semver,pattern={{version}}
+type=semver,pattern={{major}}.{{minor}}
+type=raw,value=latest
+
+2026-10-05T18:00:14.5745609Z   context: workflow
+2026-10-05T18:00:14.5748700Z   github-token: ***
+2026-10-05T18:00:14.5748949Z env:
+2026-10-05T18:00:14.5749154Z   REGISTRY: ghcr.io
+2026-10-05T18:00:14.5749389Z   IMAGE_NAME: whwh13/reader_web_py
+2026-10-05T18:00:14.5749668Z ##[endgroup]
+2026-10-05T18:00:14.9614741Z (node:2814) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-05T18:00:14.9615789Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-05T18:00:15.3702172Z ##[group]Context info
+2026-10-05T18:00:15.3702898Z eventName: push
+2026-10-05T18:00:15.3704808Z sha: a4ee6bf74b79e41d4dc52d5d3e656e1368d61222
+2026-10-05T18:00:15.3705335Z ref: refs/tags/v1.0.0
+2026-10-05T18:00:15.3706007Z workflow: ci
+2026-10-05T18:00:15.3706654Z action: meta
+2026-10-05T18:00:15.3707261Z actor: whwh13
+2026-10-05T18:00:15.3707992Z runNumber: 2
+2026-10-05T18:00:15.3708951Z runId: 37352581045
+2026-10-05T18:00:15.3709694Z commitDate: Mon Oct 05 2026 17:59:13 GMT+0000 (Coordinated Universal Time)
+2026-10-05T18:00:15.3710845Z ##[endgroup]
+2026-10-05T18:00:15.3713836Z ##[group]Processing images input
+2026-10-05T18:00:15.3714440Z name=ghcr.io/whwh13/reader_web_py,enable=true
+2026-10-05T18:00:15.3715487Z ##[endgroup]
+2026-10-05T18:00:15.3739164Z ##[group]Processing tags input
+2026-10-05T18:00:15.3740204Z type=semver,pattern={{version}},value=,match=,enable=true,priority=900
+2026-10-05T18:00:15.3741362Z type=semver,pattern={{major}}.{{minor}},value=,match=,enable=true,priority=900
+2026-10-05T18:00:15.3742486Z type=raw,value=latest,enable=true,priority=200
+2026-10-05T18:00:15.3743705Z ##[endgroup]
+2026-10-05T18:00:15.3744602Z ##[group]Processing flavor input
+2026-10-05T18:00:15.3745271Z latest=auto
+2026-10-05T18:00:15.3745782Z prefix=
+2026-10-05T18:00:15.3746312Z prefixLatest=false
+2026-10-05T18:00:15.3746893Z suffix=
+2026-10-05T18:00:15.3747424Z suffixLatest=false
+2026-10-05T18:00:15.3748491Z ##[endgroup]
+2026-10-05T18:00:15.3846537Z ##[group]Docker image version
+2026-10-05T18:00:15.3847008Z 1.0.0
+2026-10-05T18:00:15.3847600Z ##[endgroup]
+2026-10-05T18:00:15.3852230Z ##[group]Docker tags
+2026-10-05T18:00:15.3852671Z ghcr.io/whwh13/reader_web_py:1.0.0
+2026-10-05T18:00:15.3853141Z ghcr.io/whwh13/reader_web_py:1.0
+2026-10-05T18:00:15.3853638Z ghcr.io/whwh13/reader_web_py:latest
+2026-10-05T18:00:15.3854122Z ghcr.io/whwh13/reader_web_py:latest
+2026-10-05T18:00:15.3854834Z ##[endgroup]
+2026-10-05T18:00:15.3975453Z ##[group]Docker labels
+2026-10-05T18:00:15.3976295Z org.opencontainers.image.created=2026-10-05T18:00:15.373Z
+2026-10-05T18:00:15.3977981Z org.opencontainers.image.description=用AI重写的python版本的阅读网页版
+2026-10-05T18:00:15.3978914Z org.opencontainers.image.licenses=AGPL-3.0
+2026-10-05T18:00:15.3979769Z org.opencontainers.image.revision=a4ee6bf74b79e41d4dc52d5d3e656e1368d61222
+2026-10-05T18:00:15.3980837Z org.opencontainers.image.source=https://github.com/whwh13/reader_web_py
+2026-10-05T18:00:15.3981655Z org.opencontainers.image.title=reader_web_py
+2026-10-05T18:00:15.3982419Z org.opencontainers.image.url=https://github.com/whwh13/reader_web_py
+2026-10-05T18:00:15.3983171Z org.opencontainers.image.version=1.0.0
+2026-10-05T18:00:15.3984065Z ##[endgroup]
+2026-10-05T18:00:15.3984818Z ##[group]Annotations
+2026-10-05T18:00:15.3985761Z manifest:org.opencontainers.image.created=2026-10-05T18:00:15.373Z
+2026-10-05T18:00:15.3986822Z manifest:org.opencontainers.image.description=用AI重写的python版本的阅读网页版
+2026-10-05T18:00:15.3987653Z manifest:org.opencontainers.image.licenses=AGPL-3.0
+2026-10-05T18:00:15.3988756Z manifest:org.opencontainers.image.revision=a4ee6bf74b79e41d4dc52d5d3e656e1368d61222
+2026-10-05T18:00:15.3989904Z manifest:org.opencontainers.image.source=https://github.com/whwh13/reader_web_py
+2026-10-05T18:00:15.3991057Z manifest:org.opencontainers.image.title=reader_web_py
+2026-10-05T18:00:15.3991923Z manifest:org.opencontainers.image.url=https://github.com/whwh13/reader_web_py
+2026-10-05T18:00:15.3992764Z manifest:org.opencontainers.image.version=1.0.0
+2026-10-05T18:00:15.3993593Z ##[endgroup]
+2026-10-05T18:00:15.3994451Z ##[group]JSON output
+2026-10-05T18:00:15.3994905Z {
+2026-10-05T18:00:15.3995265Z   "tags": [
+2026-10-05T18:00:15.3995619Z     "ghcr.io/whwh13/reader_web_py:1.0.0",
+2026-10-05T18:00:15.3996134Z     "ghcr.io/whwh13/reader_web_py:1.0",
+2026-10-05T18:00:15.3996636Z     "ghcr.io/whwh13/reader_web_py:latest",
+2026-10-05T18:00:15.3997142Z     "ghcr.io/whwh13/reader_web_py:latest"
+2026-10-05T18:00:15.3997621Z   ],
+2026-10-05T18:00:15.3997938Z   "tag-names": [
+2026-10-05T18:00:15.4010066Z     "1.0.0",
+2026-10-05T18:00:15.4010398Z     "1.0",
+2026-10-05T18:00:15.4010696Z     "latest",
+2026-10-05T18:00:15.4011003Z     "latest"
+2026-10-05T18:00:15.4011300Z   ],
+2026-10-05T18:00:15.4011571Z   "labels": {
+2026-10-05T18:00:15.4012044Z     "org.opencontainers.image.created": "2026-10-05T18:00:15.373Z",
+2026-10-05T18:00:15.4012972Z     "org.opencontainers.image.description": "用AI重写的python版本的阅读网页版",
+2026-10-05T18:00:15.4013772Z     "org.opencontainers.image.licenses": "AGPL-3.0",
+2026-10-05T18:00:15.4014575Z     "org.opencontainers.image.revision": "a4ee6bf74b79e41d4dc52d5d3e656e1368d61222",
+2026-10-05T18:00:15.4015623Z     "org.opencontainers.image.source": "https://github.com/whwh13/reader_web_py",
+2026-10-05T18:00:15.4016516Z     "org.opencontainers.image.title": "reader_web_py",
+2026-10-05T18:00:15.4017230Z     "org.opencontainers.image.url": "https://github.com/whwh13/reader_web_py",
+2026-10-05T18:00:15.4018037Z     "org.opencontainers.image.version": "1.0.0"
+2026-10-05T18:00:15.4018849Z   },
+2026-10-05T18:00:15.4019183Z   "annotations": [
+2026-10-05T18:00:15.4019726Z     "manifest:org.opencontainers.image.created=2026-10-05T18:00:15.373Z",
+2026-10-05T18:00:15.4020482Z     "manifest:org.opencontainers.image.description=用AI重写的python版本的阅读网页版",
+2026-10-05T18:00:15.4021018Z     "manifest:org.opencontainers.image.licenses=AGPL-3.0",
+2026-10-05T18:00:15.4021547Z     "manifest:org.opencontainers.image.revision=a4ee6bf74b79e41d4dc52d5d3e656e1368d61222",
+2026-10-05T18:00:15.4022171Z     "manifest:org.opencontainers.image.source=https://github.com/whwh13/reader_web_py",
+2026-10-05T18:00:15.4022695Z     "manifest:org.opencontainers.image.title=reader_web_py",
+2026-10-05T18:00:15.4023187Z     "manifest:org.opencontainers.image.url=https://github.com/whwh13/reader_web_py",
+2026-10-05T18:00:15.4023680Z     "manifest:org.opencontainers.image.version=1.0.0"
+2026-10-05T18:00:15.4023987Z   ]
+2026-10-05T18:00:15.4024174Z }
+2026-10-05T18:00:15.4024530Z ##[endgroup]
+2026-10-05T18:00:15.4025108Z ##[group]Bake file definition (tags)
+2026-10-05T18:00:15.4025518Z {
+2026-10-05T18:00:15.4025788Z   "target": {
+2026-10-05T18:00:15.4026119Z     "docker-metadata-action": {
+2026-10-05T18:00:15.4026520Z       "tags": [
+2026-10-05T18:00:15.4027007Z         "ghcr.io/whwh13/reader_web_py:1.0.0",
+2026-10-05T18:00:15.4027611Z         "ghcr.io/whwh13/reader_web_py:1.0",
+2026-10-05T18:00:15.4028405Z         "ghcr.io/whwh13/reader_web_py:latest",
+2026-10-05T18:00:15.4029024Z         "ghcr.io/whwh13/reader_web_py:latest"
+2026-10-05T18:00:15.4029513Z       ],
+2026-10-05T18:00:15.4029846Z       "args": {
+2026-10-05T18:00:15.4030296Z         "DOCKER_META_IMAGES": "ghcr.io/whwh13/reader_web_py",
+2026-10-05T18:00:15.4030905Z         "DOCKER_META_VERSION": "1.0.0"
+2026-10-05T18:00:15.4031605Z       }
+2026-10-05T18:00:15.4031941Z     }
+2026-10-05T18:00:15.4032260Z   }
+2026-10-05T18:00:15.4032572Z }
+2026-10-05T18:00:15.4033182Z ##[endgroup]
+2026-10-05T18:00:15.4033850Z ##[group]Bake file definition (labels)
+2026-10-05T18:00:15.4034355Z {
+2026-10-05T18:00:15.4034680Z   "target": {
+2026-10-05T18:00:15.4035055Z     "docker-metadata-action": {
+2026-10-05T18:00:15.4035478Z       "labels": {
+2026-10-05T18:00:15.4036031Z         "org.opencontainers.image.created": "2026-10-05T18:00:15.373Z",
+2026-10-05T18:00:15.4037232Z         "org.opencontainers.image.description": "用AI重写的python版本的阅读网页版",
+2026-10-05T18:00:15.4038051Z         "org.opencontainers.image.licenses": "AGPL-3.0",
+2026-10-05T18:00:15.4039141Z         "org.opencontainers.image.revision": "a4ee6bf74b79e41d4dc52d5d3e656e1368d61222",
+2026-10-05T18:00:15.4040239Z         "org.opencontainers.image.source": "https://github.com/whwh13/reader_web_py",
+2026-10-05T18:00:15.4041108Z         "org.opencontainers.image.title": "reader_web_py",
+2026-10-05T18:00:15.4041948Z         "org.opencontainers.image.url": "https://github.com/whwh13/reader_web_py",
+2026-10-05T18:00:15.4042807Z         "org.opencontainers.image.version": "1.0.0"
+2026-10-05T18:00:15.4043376Z       }
+2026-10-05T18:00:15.4043678Z     }
+2026-10-05T18:00:15.4044003Z   }
+2026-10-05T18:00:15.4044325Z }
+2026-10-05T18:00:15.4044951Z ##[endgroup]
+2026-10-05T18:00:15.4045628Z ##[group]Bake file definition (annotations)
+2026-10-05T18:00:15.4046166Z {
+2026-10-05T18:00:15.4046611Z   "target": {
+2026-10-05T18:00:15.4047009Z     "docker-metadata-action": {
+2026-10-05T18:00:15.4047465Z       "annotations": [
+2026-10-05T18:00:15.4048081Z         "manifest:org.opencontainers.image.created=2026-10-05T18:00:15.373Z",
+2026-10-05T18:00:15.4049500Z         "manifest:org.opencontainers.image.description=用AI重写的python版本的阅读网页版",
+2026-10-05T18:00:15.4050504Z         "manifest:org.opencontainers.image.licenses=AGPL-3.0",
+2026-10-05T18:00:15.4051593Z         "manifest:org.opencontainers.image.revision=a4ee6bf74b79e41d4dc52d5d3e656e1368d61222",
+2026-10-05T18:00:15.4052759Z         "manifest:org.opencontainers.image.source=https://github.com/whwh13/reader_web_py",
+2026-10-05T18:00:15.4053751Z         "manifest:org.opencontainers.image.title=reader_web_py",
+2026-10-05T18:00:15.4054690Z         "manifest:org.opencontainers.image.url=https://github.com/whwh13/reader_web_py",
+2026-10-05T18:00:15.4055587Z         "manifest:org.opencontainers.image.version=1.0.0"
+2026-10-05T18:00:15.4056192Z       ]
+2026-10-05T18:00:15.4056534Z     }
+2026-10-05T18:00:15.4056871Z   }
+2026-10-05T18:00:15.4057199Z }
+2026-10-05T18:00:15.4057811Z ##[endgroup]

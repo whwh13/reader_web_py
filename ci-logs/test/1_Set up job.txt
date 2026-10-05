@@ -1,0 +1,33 @@
+﻿2026-10-05T17:59:37.3597863Z Current runner version: '2.337.0'
+2026-10-05T17:59:37.3614598Z ##[group]Runner Image Provisioner
+2026-10-05T17:59:37.3615119Z Hosted Compute Agent
+2026-10-05T17:59:37.3615521Z Version: 20260901.588
+2026-10-05T17:59:37.3615889Z Commit: f88ec8081b781fac6c440065ac7ff9e710ce3d0b
+2026-10-05T17:59:37.3616288Z Build Date: 2026-09-01T19:56:44Z
+2026-10-05T17:59:37.3616777Z Worker ID: {70fd6028-77ae-4255-bef9-a6ef72989437}
+2026-10-05T17:59:37.3617175Z Azure Region: westus3
+2026-10-05T17:59:37.3617535Z ##[endgroup]
+2026-10-05T17:59:37.3618312Z ##[group]Operating System
+2026-10-05T17:59:37.3618649Z Ubuntu
+2026-10-05T17:59:37.3619030Z 24.04.5
+2026-10-05T17:59:37.3619357Z LTS
+2026-10-05T17:59:37.3619678Z ##[endgroup]
+2026-10-05T17:59:37.3620024Z ##[group]Runner Image
+2026-10-05T17:59:37.3620378Z Image: ubuntu-24.04
+2026-10-05T17:59:37.3620812Z Version: 20260927.320.1
+2026-10-05T17:59:37.3621561Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260927.320/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-05T17:59:37.3622569Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260927.320
+2026-10-05T17:59:37.3623104Z ##[endgroup]
+2026-10-05T17:59:37.3623843Z ##[group]GITHUB_TOKEN Permissions
+2026-10-05T17:59:37.3625162Z Contents: read
+2026-10-05T17:59:37.3625555Z Metadata: read
+2026-10-05T17:59:37.3625880Z Packages: read
+2026-10-05T17:59:37.3626256Z ##[endgroup]
+2026-10-05T17:59:37.3627474Z Secret source: Actions
+2026-10-05T17:59:37.3628257Z Cache mode: write
+2026-10-05T17:59:37.3628719Z Prepare workflow directory
+2026-10-05T17:59:37.3917950Z Prepare all required actions
+2026-10-05T17:59:37.3947920Z Getting action download info
+2026-10-05T17:59:37.6984725Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-10-05T17:59:37.7626370Z Download action repository 'astral-sh/setup-uv@v5' (SHA:d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86)
+2026-10-05T17:59:38.7129804Z Complete job name: test

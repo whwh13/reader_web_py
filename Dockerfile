@@ -15,12 +15,20 @@ FROM python:3.12-slim
 
 WORKDIR /app
 
-# 先装依赖（利用层缓存）
+# 先装依赖（利用层缓存）。quickjs 在部分平台（arm64）无预编译轮，
+# 需要源码编译：构建工具链装在 builder 阶段，运行时镜像不携带。
+FROM python:3.12-slim AS pydeps
+RUN apt-get update && apt-get install -y --no-install-recommends gcc libc6-dev \
+    && rm -rf /var/lib/apt/lists/*
 COPY pyproject.toml README.md ./
 COPY src/ ./src/
-RUN pip install --no-cache-dir \
+RUN pip install --no-cache-dir --prefix=/install \
     --index-url https://pypi.tuna.tsinghua.edu.cn/simple \
     .
+
+FROM python:3.12-slim
+WORKDIR /app
+COPY --from=pydeps /install /usr/local
 
 # 前端产物由后端静态托管
 COPY --from=frontend-build /build/dist ./static

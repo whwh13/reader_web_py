@@ -1,0 +1,1374 @@
+﻿2026-10-05T18:00:04.6970276Z Current runner version: '2.337.0'
+2026-10-05T18:00:04.6999902Z ##[group]Runner Image Provisioner
+2026-10-05T18:00:04.7000858Z Hosted Compute Agent
+2026-10-05T18:00:04.7001457Z Version: 20260901.588
+2026-10-05T18:00:04.7002120Z Commit: f88ec8081b781fac6c440065ac7ff9e710ce3d0b
+2026-10-05T18:00:04.7002866Z Build Date: 2026-09-01T19:56:44Z
+2026-10-05T18:00:04.7003583Z Worker ID: {8a466a71-6647-47fc-b7ce-99f25369512d}
+2026-10-05T18:00:04.7004377Z Azure Region: eastus2
+2026-10-05T18:00:04.7004940Z ##[endgroup]
+2026-10-05T18:00:04.7006410Z ##[group]Operating System
+2026-10-05T18:00:04.7007078Z Ubuntu
+2026-10-05T18:00:04.7007630Z 24.04.5
+2026-10-05T18:00:04.7008392Z LTS
+2026-10-05T18:00:04.7008937Z ##[endgroup]
+2026-10-05T18:00:04.7009475Z ##[group]Runner Image
+2026-10-05T18:00:04.7010174Z Image: ubuntu-24.04
+2026-10-05T18:00:04.7010773Z Version: 20260927.320.1
+2026-10-05T18:00:04.7012069Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260927.320/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-05T18:00:04.7013618Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260927.320
+2026-10-05T18:00:04.7014655Z ##[endgroup]
+2026-10-05T18:00:04.7016213Z ##[group]GITHUB_TOKEN Permissions
+2026-10-05T18:00:04.7018666Z Contents: read
+2026-10-05T18:00:04.7019294Z Metadata: read
+2026-10-05T18:00:04.7019933Z Packages: write
+2026-10-05T18:00:04.7020529Z ##[endgroup]
+2026-10-05T18:00:04.7022958Z Secret source: Actions
+2026-10-05T18:00:04.7024535Z Cache mode: write
+2026-10-05T18:00:04.7025673Z Prepare workflow directory
+2026-10-05T18:00:04.7745025Z Prepare all required actions
+2026-10-05T18:00:04.7793830Z Getting action download info
+2026-10-05T18:00:05.0706200Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-10-05T18:00:05.1807477Z Download action repository 'docker/setup-buildx-action@v3' (SHA:8d2750c68a42422c14e847fe6c8ac0403b4cbd6f)
+2026-10-05T18:00:05.4475910Z Download action repository 'docker/login-action@v3' (SHA:c94ce9fb468520275223c153574b00df6fe4bcc9)
+2026-10-05T18:00:05.7270805Z Download action repository 'docker/metadata-action@v5' (SHA:c299e40c65443455700f0fdfc63efafe5b349051)
+2026-10-05T18:00:06.0453588Z Download action repository 'docker/build-push-action@v6' (SHA:10e90e3645eae34f1e60eeb005ba3a3d33f178e8)
+2026-10-05T18:00:06.4283576Z Complete job name: docker
+2026-10-05T18:00:06.5174417Z ##[group]Run actions/checkout@v4
+2026-10-05T18:00:06.5175980Z with:
+2026-10-05T18:00:06.5177042Z   repository: whwh13/reader_web_py
+2026-10-05T18:00:06.5186616Z   token: ***
+2026-10-05T18:00:06.5187624Z   ssh-strict: true
+2026-10-05T18:00:06.5188814Z   ssh-user: git
+2026-10-05T18:00:06.5189803Z   persist-credentials: true
+2026-10-05T18:00:06.5190978Z   clean: true
+2026-10-05T18:00:06.5191965Z   sparse-checkout-cone-mode: true
+2026-10-05T18:00:06.5193155Z   fetch-depth: 1
+2026-10-05T18:00:06.5194165Z   fetch-tags: false
+2026-10-05T18:00:06.5195129Z   show-progress: true
+2026-10-05T18:00:06.5196147Z   lfs: false
+2026-10-05T18:00:06.5197084Z   submodules: false
+2026-10-05T18:00:06.5198051Z   set-safe-directory: true
+2026-10-05T18:00:06.5199496Z   allow-unsafe-pr-checkout: false
+2026-10-05T18:00:06.5200951Z env:
+2026-10-05T18:00:06.5201955Z   REGISTRY: ghcr.io
+2026-10-05T18:00:06.5202972Z   IMAGE_NAME: whwh13/reader_web_py
+2026-10-05T18:00:06.5204062Z ##[endgroup]
+2026-10-05T18:00:06.6274303Z Syncing repository: whwh13/reader_web_py
+2026-10-05T18:00:06.6279474Z ##[group]Getting Git version info
+2026-10-05T18:00:06.6282124Z Working directory is '/home/runner/work/reader_web_py/reader_web_py'
+2026-10-05T18:00:06.6286069Z [command]/usr/bin/git version
+2026-10-05T18:00:06.6331996Z git version 2.55.0
+2026-10-05T18:00:06.6359583Z ##[endgroup]
+2026-10-05T18:00:06.6376267Z Temporarily overriding HOME='/home/runner/work/_temp/4725443d-e9fb-4249-9985-2c838b9dc7fe' before making global git config changes
+2026-10-05T18:00:06.6381666Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-05T18:00:06.6386266Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/reader_web_py/reader_web_py
+2026-10-05T18:00:06.6444988Z Deleting the contents of '/home/runner/work/reader_web_py/reader_web_py'
+2026-10-05T18:00:06.6449968Z ##[group]Initializing the repository
+2026-10-05T18:00:06.6454649Z [command]/usr/bin/git init /home/runner/work/reader_web_py/reader_web_py
+2026-10-05T18:00:06.6590096Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-05T18:00:06.6593666Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-05T18:00:06.6596743Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-05T18:00:06.6599521Z hint: call:
+2026-10-05T18:00:06.6600980Z hint:
+2026-10-05T18:00:06.6602835Z hint: 	git config --global init.defaultBranch <name>
+2026-10-05T18:00:06.6604943Z hint:
+2026-10-05T18:00:06.6607111Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-05T18:00:06.6610252Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-05T18:00:06.6611887Z hint:
+2026-10-05T18:00:06.6613605Z hint: 	git branch -m <name>
+2026-10-05T18:00:06.6615260Z hint:
+2026-10-05T18:00:06.6617494Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-05T18:00:06.6622309Z Initialized empty Git repository in /home/runner/work/reader_web_py/reader_web_py/.git/
+2026-10-05T18:00:06.6628480Z [command]/usr/bin/git remote add origin https://github.com/whwh13/reader_web_py
+2026-10-05T18:00:06.6679038Z ##[endgroup]
+2026-10-05T18:00:06.6682245Z ##[group]Disabling automatic garbage collection
+2026-10-05T18:00:06.6685108Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-05T18:00:06.6744699Z ##[endgroup]
+2026-10-05T18:00:06.6747412Z ##[group]Setting up auth
+2026-10-05T18:00:06.6750655Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-05T18:00:06.6786457Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-05T18:00:06.7219798Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-05T18:00:06.7303468Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-05T18:00:06.7586136Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-05T18:00:06.7628985Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-05T18:00:06.7895621Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-05T18:00:06.7945394Z ##[endgroup]
+2026-10-05T18:00:06.7946895Z ##[group]Fetching the repository
+2026-10-05T18:00:06.7956317Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +a4ee6bf74b79e41d4dc52d5d3e656e1368d61222:refs/tags/v1.0.0
+2026-10-05T18:00:07.6648393Z From https://github.com/whwh13/reader_web_py
+2026-10-05T18:00:07.6650880Z  * [new ref]         a4ee6bf74b79e41d4dc52d5d3e656e1368d61222 -> v1.0.0
+2026-10-05T18:00:07.6654720Z ##[endgroup]
+2026-10-05T18:00:07.6655683Z ##[group]Determining the checkout info
+2026-10-05T18:00:07.6657882Z ##[endgroup]
+2026-10-05T18:00:07.6665886Z [command]/usr/bin/git sparse-checkout disable
+2026-10-05T18:00:07.6723392Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-05T18:00:07.6757575Z ##[group]Checking out the ref
+2026-10-05T18:00:07.6762908Z [command]/usr/bin/git checkout --progress --force refs/tags/v1.0.0
+2026-10-05T18:00:07.6890524Z Note: switching to 'refs/tags/v1.0.0'.
+2026-10-05T18:00:07.6891230Z 
+2026-10-05T18:00:07.6891748Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-05T18:00:07.6893830Z changes and commit them, and you can discard any commits you make in this
+2026-10-05T18:00:07.6895474Z state without impacting any branches by switching back to a branch.
+2026-10-05T18:00:07.6896493Z 
+2026-10-05T18:00:07.6897309Z If you want to create a new branch to retain commits you create, you may
+2026-10-05T18:00:07.6898665Z do so (now or later) by using -c with the switch command. Example:
+2026-10-05T18:00:07.6899071Z 
+2026-10-05T18:00:07.6899258Z   git switch -c <new-branch-name>
+2026-10-05T18:00:07.6899510Z 
+2026-10-05T18:00:07.6899688Z Or undo this operation with:
+2026-10-05T18:00:07.6899913Z 
+2026-10-05T18:00:07.6900062Z   git switch -
+2026-10-05T18:00:07.6900266Z 
+2026-10-05T18:00:07.6900581Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-05T18:00:07.6901006Z 
+2026-10-05T18:00:07.6902570Z HEAD is now at a4ee6bf Docker 部署：多阶段 Dockerfile（amd64+arm64）、数据持久化卷 /data、版本号 1.0.0 统一（version.py 单一来源）、/version 接口、GitHub Actions（测试 + GHCR 镜像发布）、compose 示例
+2026-10-05T18:00:07.6904187Z ##[endgroup]
+2026-10-05T18:00:07.6948436Z [command]/usr/bin/git log -1 --format=%H
+2026-10-05T18:00:07.6975089Z a4ee6bf74b79e41d4dc52d5d3e656e1368d61222
+2026-10-05T18:00:07.7237309Z ##[group]Run docker/setup-buildx-action@v3
+2026-10-05T18:00:07.7237764Z with:
+2026-10-05T18:00:07.7238409Z   driver: docker-container
+2026-10-05T18:00:07.7238883Z   use: true
+2026-10-05T18:00:07.7239184Z   keep-state: false
+2026-10-05T18:00:07.7239506Z   cache-binary: true
+2026-10-05T18:00:07.7239826Z   cleanup: true
+2026-10-05T18:00:07.7240131Z   install: false
+2026-10-05T18:00:07.7240425Z env:
+2026-10-05T18:00:07.7240718Z   REGISTRY: ghcr.io
+2026-10-05T18:00:07.7241063Z   IMAGE_NAME: whwh13/reader_web_py
+2026-10-05T18:00:07.7241438Z ##[endgroup]
+2026-10-05T18:00:07.9720644Z (node:2312) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-05T18:00:07.9722408Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-05T18:00:07.9775442Z ##[group]Docker info
+2026-10-05T18:00:07.9803140Z [command]/usr/bin/docker version
+2026-10-05T18:00:08.1112019Z Client: Docker Engine - Community
+2026-10-05T18:00:08.1113028Z  Version:           28.0.4
+2026-10-05T18:00:08.1113686Z  API version:       1.48
+2026-10-05T18:00:08.1114320Z  Go version:        go1.23.7
+2026-10-05T18:00:08.1114963Z  Git commit:        b8034c0
+2026-10-05T18:00:08.1115608Z  Built:             Tue Mar 25 15:07:16 2025
+2026-10-05T18:00:08.1116311Z  OS/Arch:           linux/amd64
+2026-10-05T18:00:08.1116919Z  Context:           default
+2026-10-05T18:00:08.1117308Z 
+2026-10-05T18:00:08.1117585Z Server: Docker Engine - Community
+2026-10-05T18:00:08.1118486Z  Engine:
+2026-10-05T18:00:08.1119033Z   Version:          28.0.4
+2026-10-05T18:00:08.1119725Z   API version:      1.48 (minimum version 1.24)
+2026-10-05T18:00:08.1120487Z   Go version:       go1.23.7
+2026-10-05T18:00:08.1121166Z   Git commit:       6430e49
+2026-10-05T18:00:08.1121868Z   Built:            Tue Mar 25 15:07:16 2025
+2026-10-05T18:00:08.1122675Z   OS/Arch:          linux/amd64
+2026-10-05T18:00:08.1123378Z   Experimental:     false
+2026-10-05T18:00:08.1124032Z  containerd:
+2026-10-05T18:00:08.1124638Z   Version:          v2.3.6
+2026-10-05T18:00:08.1125625Z   GitCommit:        ee2735368117d2eb259779949d5e75cdafec9761
+2026-10-05T18:00:08.1126465Z  runc:
+2026-10-05T18:00:08.1127042Z   Version:          1.5.1
+2026-10-05T18:00:08.1127728Z   GitCommit:        v1.5.1-0-g8f2685a4
+2026-10-05T18:00:08.1128758Z  docker-init:
+2026-10-05T18:00:08.1129429Z   Version:          0.19.0
+2026-10-05T18:00:08.1130412Z   GitCommit:        de40ad0
+2026-10-05T18:00:08.1186290Z [command]/usr/bin/docker info
+2026-10-05T18:00:10.6814357Z Client: Docker Engine - Community
+2026-10-05T18:00:10.6815603Z  Version:    28.0.4
+2026-10-05T18:00:10.6826994Z  Context:    default
+2026-10-05T18:00:10.6827739Z  Debug Mode: false
+2026-10-05T18:00:10.6829025Z  Plugins:
+2026-10-05T18:00:10.6830013Z   buildx: Docker Buildx (Docker Inc.)
+2026-10-05T18:00:10.6831115Z     Version:  v0.37.1
+2026-10-05T18:00:10.6831689Z     Path:     /usr/libexec/docker/cli-plugins/docker-buildx
+2026-10-05T18:00:10.6832368Z   compose: Docker Compose (Docker Inc.)
+2026-10-05T18:00:10.6832851Z     Version:  v2.38.2
+2026-10-05T18:00:10.6833245Z     Path:     /usr/libexec/docker/cli-plugins/docker-compose
+2026-10-05T18:00:10.6833555Z 
+2026-10-05T18:00:10.6833722Z Server:
+2026-10-05T18:00:10.6834080Z  Containers: 0
+2026-10-05T18:00:10.6834574Z   Running: 0
+2026-10-05T18:00:10.6835003Z   Paused: 0
+2026-10-05T18:00:10.6835294Z   Stopped: 0
+2026-10-05T18:00:10.6835642Z  Images: 6
+2026-10-05T18:00:10.6835986Z  Server Version: 28.0.4
+2026-10-05T18:00:10.6836321Z  Storage Driver: overlay2
+2026-10-05T18:00:10.6836705Z   Backing Filesystem: extfs
+2026-10-05T18:00:10.6837041Z   Supports d_type: true
+2026-10-05T18:00:10.6837527Z   Using metacopy: false
+2026-10-05T18:00:10.6838089Z   Native Overlay Diff: false
+2026-10-05T18:00:10.6839103Z   userxattr: false
+2026-10-05T18:00:10.6839809Z  Logging Driver: json-file
+2026-10-05T18:00:10.6840413Z  Cgroup Driver: systemd
+2026-10-05T18:00:10.6840991Z  Cgroup Version: 2
+2026-10-05T18:00:10.6841626Z  Plugins:
+2026-10-05T18:00:10.6842514Z   Volume: local
+2026-10-05T18:00:10.6843095Z   Network: bridge host ipvlan macvlan null overlay
+2026-10-05T18:00:10.6843897Z   Log: awslogs fluentd gcplogs gelf journald json-file local splunk syslog
+2026-10-05T18:00:10.6844599Z  Swarm: inactive
+2026-10-05T18:00:10.6845065Z  Runtimes: io.containerd.runc.v2 runc
+2026-10-05T18:00:10.6845582Z  Default Runtime: runc
+2026-10-05T18:00:10.6846004Z  Init Binary: docker-init
+2026-10-05T18:00:10.6846573Z  containerd version: ee2735368117d2eb259779949d5e75cdafec9761
+2026-10-05T18:00:10.6847212Z  runc version: v1.5.1-0-g8f2685a4
+2026-10-05T18:00:10.6847681Z  init version: de40ad0
+2026-10-05T18:00:10.6848090Z  Security Options:
+2026-10-05T18:00:10.6848746Z   apparmor
+2026-10-05T18:00:10.6849104Z   seccomp
+2026-10-05T18:00:10.6849466Z    Profile: builtin
+2026-10-05T18:00:10.6849888Z   cgroupns
+2026-10-05T18:00:10.6850278Z  Kernel Version: 6.17.0-1022-azure
+2026-10-05T18:00:10.6850793Z  Operating System: Ubuntu 24.04.5 LTS
+2026-10-05T18:00:10.6851292Z  OSType: linux
+2026-10-05T18:00:10.6851684Z  Architecture: x86_64
+2026-10-05T18:00:10.6852076Z  CPUs: 4
+2026-10-05T18:00:10.6852431Z  Total Memory: 15.61GiB
+2026-10-05T18:00:10.6852853Z  Name: runnervm8df0l
+2026-10-05T18:00:10.6853280Z  ID: 96bc9d58-7015-4b4a-8357-8e592f0b19b5
+2026-10-05T18:00:10.6853789Z  Docker Root Dir: /var/lib/docker
+2026-10-05T18:00:10.6854257Z  Debug Mode: false
+2026-10-05T18:00:10.6854713Z  Username: githubactions
+2026-10-05T18:00:10.6855134Z  Experimental: false
+2026-10-05T18:00:10.6855537Z  Insecure Registries:
+2026-10-05T18:00:10.6860449Z   ::1/128
+2026-10-05T18:00:10.6860821Z   127.0.0.0/8
+2026-10-05T18:00:10.6861249Z  Live Restore Enabled: false
+2026-10-05T18:00:10.6861592Z 
+2026-10-05T18:00:10.6862232Z ##[endgroup]
+2026-10-05T18:00:10.7983696Z ##[group]Buildx version
+2026-10-05T18:00:10.8011900Z [command]/usr/bin/docker buildx version
+2026-10-05T18:00:10.8538992Z github.com/docker/buildx v0.37.1 0b265a9f62db554fa9aba6dd19e1bd5704bc7d8a
+2026-10-05T18:00:10.8569276Z ##[endgroup]
+2026-10-05T18:00:10.8728898Z ##[group]Inspecting default docker context
+2026-10-05T18:00:10.8866948Z [
+2026-10-05T18:00:10.8867540Z   {
+2026-10-05T18:00:10.8867984Z     "Name": "default",
+2026-10-05T18:00:10.8869057Z     "Metadata": {},
+2026-10-05T18:00:10.8869537Z     "Endpoints": {
+2026-10-05T18:00:10.8869926Z       "docker": {
+2026-10-05T18:00:10.8870360Z         "Host": "unix:///var/run/docker.sock",
+2026-10-05T18:00:10.8870886Z         "SkipTLSVerify": false
+2026-10-05T18:00:10.8871326Z       }
+2026-10-05T18:00:10.8871640Z     },
+2026-10-05T18:00:10.8871990Z     "TLSMaterial": {},
+2026-10-05T18:00:10.8872256Z     "Storage": {
+2026-10-05T18:00:10.8872526Z       "MetadataPath": "<IN MEMORY>",
+2026-10-05T18:00:10.8872938Z       "TLSPath": "<IN MEMORY>"
+2026-10-05T18:00:10.8873267Z     }
+2026-10-05T18:00:10.8873494Z   }
+2026-10-05T18:00:10.8874014Z ]
+2026-10-05T18:00:10.8876262Z ##[endgroup]
+2026-10-05T18:00:10.8876748Z ##[group]Creating a new builder instance
+2026-10-05T18:00:11.0316505Z [command]/usr/bin/docker buildx create --name builder-289a4962-76bb-4b6c-bf22-ed92c87366b4 --driver docker-container --buildkitd-flags --allow-insecure-entitlement security.insecure --allow-insecure-entitlement network.host --use
+2026-10-05T18:00:11.1450724Z builder-289a4962-76bb-4b6c-bf22-ed92c87366b4
+2026-10-05T18:00:11.1483468Z ##[endgroup]
+2026-10-05T18:00:11.1484430Z ##[group]Booting builder
+2026-10-05T18:00:11.1529437Z [command]/usr/bin/docker buildx inspect --bootstrap --builder builder-289a4962-76bb-4b6c-bf22-ed92c87366b4
+2026-10-05T18:00:11.2132679Z #1 [internal] booting buildkit
+2026-10-05T18:00:11.3638586Z #1 pulling image moby/buildkit:buildx-stable-1
+2026-10-05T18:00:13.4819575Z #1 pulling image moby/buildkit:buildx-stable-1 2.3s done
+2026-10-05T18:00:13.6328988Z #1 creating container buildx_buildkit_builder-289a4962-76bb-4b6c-bf22-ed92c87366b40
+2026-10-05T18:00:13.8164687Z #1 creating container buildx_buildkit_builder-289a4962-76bb-4b6c-bf22-ed92c87366b40 0.3s done
+2026-10-05T18:00:13.8532356Z #1 DONE 2.6s
+2026-10-05T18:00:13.8928871Z Name:          builder-289a4962-76bb-4b6c-bf22-ed92c87366b4
+2026-10-05T18:00:13.8929848Z Driver:        docker-container
+2026-10-05T18:00:13.8930632Z Last Activity: 2026-10-05 18:00:11 +0000 UTC
+2026-10-05T18:00:13.8931315Z 
+2026-10-05T18:00:13.8931638Z Nodes:
+2026-10-05T18:00:13.8939206Z Name:                  builder-289a4962-76bb-4b6c-bf22-ed92c87366b40
+2026-10-05T18:00:13.8940920Z Endpoint:              unix:///var/run/docker.sock
+2026-10-05T18:00:13.8941680Z Status:                running
+2026-10-05T18:00:13.8942783Z BuildKit daemon flags: --allow-insecure-entitlement security.insecure --allow-insecure-entitlement network.host
+2026-10-05T18:00:13.8943921Z BuildKit version:      v0.33.1
+2026-10-05T18:00:13.8944697Z Platforms:             linux/amd64, linux/amd64/v2, linux/amd64/v3, linux/386
+2026-10-05T18:00:13.8945499Z Labels:
+2026-10-05T18:00:13.8946154Z  org.mobyproject.buildkit.worker.executor:         oci
+2026-10-05T18:00:13.8947145Z  org.mobyproject.buildkit.worker.hostname:         830b50722e75
+2026-10-05T18:00:13.8948090Z  org.mobyproject.buildkit.worker.network:          host
+2026-10-05T18:00:13.8949290Z  org.mobyproject.buildkit.worker.oci.process-mode: sandbox
+2026-10-05T18:00:13.8950263Z  org.mobyproject.buildkit.worker.selinux.enabled:  false
+2026-10-05T18:00:13.8951210Z  org.mobyproject.buildkit.worker.snapshotter:      overlayfs
+2026-10-05T18:00:13.8952039Z GC Policy rule#0:
+2026-10-05T18:00:13.8952646Z  All:            false
+2026-10-05T18:00:13.8953513Z  Filters:        type==source.local type==exec.cachemount type==source.git.checkout
+2026-10-05T18:00:13.8954514Z  Keep Duration:  48h0m0s
+2026-10-05T18:00:13.8955041Z  Max Used Space: 488.3MiB
+2026-10-05T18:00:13.8955620Z GC Policy rule#1:
+2026-10-05T18:00:13.8955987Z  All:            false
+2026-10-05T18:00:13.8956356Z  Keep Duration:  1440h0m0s
+2026-10-05T18:00:13.8957189Z  Reserved Space: 9.313GiB
+2026-10-05T18:00:13.8958291Z  Max Used Space: 93.13GiB
+2026-10-05T18:00:13.8958974Z  Min Free Space: 27.01GiB
+2026-10-05T18:00:13.8959587Z GC Policy rule#2:
+2026-10-05T18:00:13.8960216Z  All:            false
+2026-10-05T18:00:13.8960836Z  Reserved Space: 9.313GiB
+2026-10-05T18:00:13.8961476Z  Max Used Space: 93.13GiB
+2026-10-05T18:00:13.8962596Z  Min Free Space: 27.01GiB
+2026-10-05T18:00:13.8963235Z GC Policy rule#3:
+2026-10-05T18:00:13.8963880Z  All:            true
+2026-10-05T18:00:13.8964514Z  Reserved Space: 9.313GiB
+2026-10-05T18:00:13.8965187Z  Max Used Space: 93.13GiB
+2026-10-05T18:00:13.8965876Z  Min Free Space: 27.01GiB
+2026-10-05T18:00:13.9000229Z ##[endgroup]
+2026-10-05T18:00:13.9941994Z ##[group]Inspect builder
+2026-10-05T18:00:13.9943432Z {
+2026-10-05T18:00:13.9943752Z   "nodes": [
+2026-10-05T18:00:13.9944082Z     {
+2026-10-05T18:00:13.9944523Z       "name": "builder-289a4962-76bb-4b6c-bf22-ed92c87366b40",
+2026-10-05T18:00:13.9945216Z       "endpoint": "unix:///var/run/docker.sock",
+2026-10-05T18:00:13.9945523Z       "status": "running",
+2026-10-05T18:00:13.9946078Z       "buildkitd-flags": "--allow-insecure-entitlement security.insecure --allow-insecure-entitlement network.host",
+2026-10-05T18:00:13.9946645Z       "buildkit": "v0.33.1",
+2026-10-05T18:00:13.9947114Z       "platforms": "linux/amd64,linux/amd64/v2,linux/amd64/v3,linux/386",
+2026-10-05T18:00:13.9947734Z       "features": {
+2026-10-05T18:00:13.9948581Z         "Automatically load images to the Docker Engine image store": true,
+2026-10-05T18:00:13.9949114Z         "Cache export": true,
+2026-10-05T18:00:13.9949368Z         "Direct push": true,
+2026-10-05T18:00:13.9949622Z         "Docker exporter": true,
+2026-10-05T18:00:13.9949888Z         "Multi-platform build": true,
+2026-10-05T18:00:13.9950156Z         "OCI exporter": true
+2026-10-05T18:00:13.9950382Z       },
+2026-10-05T18:00:13.9950575Z       "labels": {
+2026-10-05T18:00:13.9951048Z         "org.mobyproject.buildkit.worker.executor": "oci",
+2026-10-05T18:00:13.9951775Z         "org.mobyproject.buildkit.worker.hostname": "830b50722e75",
+2026-10-05T18:00:13.9952377Z         "org.mobyproject.buildkit.worker.network": "host",
+2026-10-05T18:00:13.9952820Z         "org.mobyproject.buildkit.worker.oci.process-mode": "sandbox",
+2026-10-05T18:00:13.9953287Z         "org.mobyproject.buildkit.worker.selinux.enabled": "false",
+2026-10-05T18:00:13.9953765Z         "org.mobyproject.buildkit.worker.snapshotter": "overlayfs"
+2026-10-05T18:00:13.9954107Z       },
+2026-10-05T18:00:13.9954321Z       "gcPolicy": [
+2026-10-05T18:00:13.9954525Z         {
+2026-10-05T18:00:13.9954719Z           "all": false,
+2026-10-05T18:00:13.9954938Z           "filter": [
+2026-10-05T18:00:13.9955288Z             "type==source.local type==exec.cachemount type==source.git.checkout"
+2026-10-05T18:00:13.9955674Z           ],
+2026-10-05T18:00:13.9955887Z           "keepDuration": "48h0m0s",
+2026-10-05T18:00:13.9956173Z           "maxUsedSpace": "488.3MiB"
+2026-10-05T18:00:13.9956426Z         },
+2026-10-05T18:00:13.9956610Z         {
+2026-10-05T18:00:13.9956823Z           "all": false,
+2026-10-05T18:00:13.9957078Z           "keepDuration": "1440h0m0s",
+2026-10-05T18:00:13.9957375Z           "reservedSpace": "9.313GiB",
+2026-10-05T18:00:13.9957659Z           "maxUsedSpace": "93.13GiB",
+2026-10-05T18:00:13.9957920Z           "minFreeSpace": "27.01GiB"
+2026-10-05T18:00:13.9958465Z         },
+2026-10-05T18:00:13.9958701Z         {
+2026-10-05T18:00:13.9958889Z           "all": false,
+2026-10-05T18:00:13.9959121Z           "reservedSpace": "9.313GiB",
+2026-10-05T18:00:13.9959438Z           "maxUsedSpace": "93.13GiB",
+2026-10-05T18:00:13.9959736Z           "minFreeSpace": "27.01GiB"
+2026-10-05T18:00:13.9959994Z         },
+2026-10-05T18:00:13.9960191Z         {
+2026-10-05T18:00:13.9960394Z           "all": true,
+2026-10-05T18:00:13.9960639Z           "reservedSpace": "9.313GiB",
+2026-10-05T18:00:13.9960920Z           "maxUsedSpace": "93.13GiB",
+2026-10-05T18:00:13.9961172Z           "minFreeSpace": "27.01GiB"
+2026-10-05T18:00:13.9961442Z         }
+2026-10-05T18:00:13.9961637Z       ]
+2026-10-05T18:00:13.9961819Z     }
+2026-10-05T18:00:13.9962012Z   ],
+2026-10-05T18:00:13.9962282Z   "name": "builder-289a4962-76bb-4b6c-bf22-ed92c87366b4",
+2026-10-05T18:00:13.9962641Z   "driver": "docker-container",
+2026-10-05T18:00:13.9962930Z   "lastActivity": "2026-10-05T18:00:11.000Z"
+2026-10-05T18:00:13.9963233Z }
+2026-10-05T18:00:13.9963661Z ##[endgroup]
+2026-10-05T18:00:13.9964011Z ##[group]BuildKit version
+2026-10-05T18:00:13.9964297Z builder-289a4962-76bb-4b6c-bf22-ed92c87366b40: v0.33.1
+2026-10-05T18:00:13.9964772Z ##[endgroup]
+2026-10-05T18:00:14.0111475Z ##[group]Run docker/login-action@v3
+2026-10-05T18:00:14.0111766Z with:
+2026-10-05T18:00:14.0111965Z   registry: ghcr.io
+2026-10-05T18:00:14.0112187Z   username: whwh13
+2026-10-05T18:00:14.0114980Z   password: ***
+2026-10-05T18:00:14.0115214Z   logout: true
+2026-10-05T18:00:14.0115415Z env:
+2026-10-05T18:00:14.0115607Z   REGISTRY: ghcr.io
+2026-10-05T18:00:14.0116017Z   IMAGE_NAME: whwh13/reader_web_py
+2026-10-05T18:00:14.0116276Z ##[endgroup]
+2026-10-05T18:00:14.3272348Z Logging into ghcr.io...
+2026-10-05T18:00:14.3301177Z (node:2794) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-05T18:00:14.3302434Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-05T18:00:14.5499263Z Login Succeeded!
+2026-10-05T18:00:14.5744087Z ##[group]Run docker/metadata-action@v5
+2026-10-05T18:00:14.5744409Z with:
+2026-10-05T18:00:14.5744635Z   images: ghcr.io/whwh13/reader_web_py
+2026-10-05T18:00:14.5745126Z   tags: type=semver,pattern={{version}}
+type=semver,pattern={{major}}.{{minor}}
+type=raw,value=latest
+
+2026-10-05T18:00:14.5745612Z   context: workflow
+2026-10-05T18:00:14.5748707Z   github-token: ***
+2026-10-05T18:00:14.5748958Z env:
+2026-10-05T18:00:14.5749156Z   REGISTRY: ghcr.io
+2026-10-05T18:00:14.5749392Z   IMAGE_NAME: whwh13/reader_web_py
+2026-10-05T18:00:14.5749671Z ##[endgroup]
+2026-10-05T18:00:14.9614765Z (node:2814) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-05T18:00:14.9615792Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-05T18:00:15.3702214Z ##[group]Context info
+2026-10-05T18:00:15.3702907Z eventName: push
+2026-10-05T18:00:15.3704819Z sha: a4ee6bf74b79e41d4dc52d5d3e656e1368d61222
+2026-10-05T18:00:15.3705536Z ref: refs/tags/v1.0.0
+2026-10-05T18:00:15.3706013Z workflow: ci
+2026-10-05T18:00:15.3706661Z action: meta
+2026-10-05T18:00:15.3707267Z actor: whwh13
+2026-10-05T18:00:15.3707999Z runNumber: 2
+2026-10-05T18:00:15.3708959Z runId: 37352581045
+2026-10-05T18:00:15.3709700Z commitDate: Mon Oct 05 2026 17:59:13 GMT+0000 (Coordinated Universal Time)
+2026-10-05T18:00:15.3710852Z ##[endgroup]
+2026-10-05T18:00:15.3713845Z ##[group]Processing images input
+2026-10-05T18:00:15.3714447Z name=ghcr.io/whwh13/reader_web_py,enable=true
+2026-10-05T18:00:15.3715495Z ##[endgroup]
+2026-10-05T18:00:15.3739176Z ##[group]Processing tags input
+2026-10-05T18:00:15.3740215Z type=semver,pattern={{version}},value=,match=,enable=true,priority=900
+2026-10-05T18:00:15.3741370Z type=semver,pattern={{major}}.{{minor}},value=,match=,enable=true,priority=900
+2026-10-05T18:00:15.3742496Z type=raw,value=latest,enable=true,priority=200
+2026-10-05T18:00:15.3743711Z ##[endgroup]
+2026-10-05T18:00:15.3744622Z ##[group]Processing flavor input
+2026-10-05T18:00:15.3745276Z latest=auto
+2026-10-05T18:00:15.3745788Z prefix=
+2026-10-05T18:00:15.3746317Z prefixLatest=false
+2026-10-05T18:00:15.3746899Z suffix=
+2026-10-05T18:00:15.3747428Z suffixLatest=false
+2026-10-05T18:00:15.3748501Z ##[endgroup]
+2026-10-05T18:00:15.3846550Z ##[group]Docker image version
+2026-10-05T18:00:15.3847012Z 1.0.0
+2026-10-05T18:00:15.3847605Z ##[endgroup]
+2026-10-05T18:00:15.3852240Z ##[group]Docker tags
+2026-10-05T18:00:15.3852676Z ghcr.io/whwh13/reader_web_py:1.0.0
+2026-10-05T18:00:15.3853148Z ghcr.io/whwh13/reader_web_py:1.0
+2026-10-05T18:00:15.3853644Z ghcr.io/whwh13/reader_web_py:latest
+2026-10-05T18:00:15.3854127Z ghcr.io/whwh13/reader_web_py:latest
+2026-10-05T18:00:15.3854841Z ##[endgroup]
+2026-10-05T18:00:15.3975466Z ##[group]Docker labels
+2026-10-05T18:00:15.3976305Z org.opencontainers.image.created=2026-10-05T18:00:15.373Z
+2026-10-05T18:00:15.3977996Z org.opencontainers.image.description=用AI重写的python版本的阅读网页版
+2026-10-05T18:00:15.3978942Z org.opencontainers.image.licenses=AGPL-3.0
+2026-10-05T18:00:15.3979774Z org.opencontainers.image.revision=a4ee6bf74b79e41d4dc52d5d3e656e1368d61222
+2026-10-05T18:00:15.3980841Z org.opencontainers.image.source=https://github.com/whwh13/reader_web_py
+2026-10-05T18:00:15.3981661Z org.opencontainers.image.title=reader_web_py
+2026-10-05T18:00:15.3982424Z org.opencontainers.image.url=https://github.com/whwh13/reader_web_py
+2026-10-05T18:00:15.3983175Z org.opencontainers.image.version=1.0.0
+2026-10-05T18:00:15.3984069Z ##[endgroup]
+2026-10-05T18:00:15.3984823Z ##[group]Annotations
+2026-10-05T18:00:15.3985771Z manifest:org.opencontainers.image.created=2026-10-05T18:00:15.373Z
+2026-10-05T18:00:15.3986828Z manifest:org.opencontainers.image.description=用AI重写的python版本的阅读网页版
+2026-10-05T18:00:15.3987659Z manifest:org.opencontainers.image.licenses=AGPL-3.0
+2026-10-05T18:00:15.3988762Z manifest:org.opencontainers.image.revision=a4ee6bf74b79e41d4dc52d5d3e656e1368d61222
+2026-10-05T18:00:15.3990178Z manifest:org.opencontainers.image.source=https://github.com/whwh13/reader_web_py
+2026-10-05T18:00:15.3991069Z manifest:org.opencontainers.image.title=reader_web_py
+2026-10-05T18:00:15.3991928Z manifest:org.opencontainers.image.url=https://github.com/whwh13/reader_web_py
+2026-10-05T18:00:15.3992769Z manifest:org.opencontainers.image.version=1.0.0
+2026-10-05T18:00:15.3993605Z ##[endgroup]
+2026-10-05T18:00:15.3994459Z ##[group]JSON output
+2026-10-05T18:00:15.3994910Z {
+2026-10-05T18:00:15.3995268Z   "tags": [
+2026-10-05T18:00:15.3995622Z     "ghcr.io/whwh13/reader_web_py:1.0.0",
+2026-10-05T18:00:15.3996145Z     "ghcr.io/whwh13/reader_web_py:1.0",
+2026-10-05T18:00:15.3996640Z     "ghcr.io/whwh13/reader_web_py:latest",
+2026-10-05T18:00:15.3997145Z     "ghcr.io/whwh13/reader_web_py:latest"
+2026-10-05T18:00:15.3997625Z   ],
+2026-10-05T18:00:15.3997942Z   "tag-names": [
+2026-10-05T18:00:15.4010079Z     "1.0.0",
+2026-10-05T18:00:15.4010403Z     "1.0",
+2026-10-05T18:00:15.4010700Z     "latest",
+2026-10-05T18:00:15.4011007Z     "latest"
+2026-10-05T18:00:15.4011304Z   ],
+2026-10-05T18:00:15.4011587Z   "labels": {
+2026-10-05T18:00:15.4012049Z     "org.opencontainers.image.created": "2026-10-05T18:00:15.373Z",
+2026-10-05T18:00:15.4012978Z     "org.opencontainers.image.description": "用AI重写的python版本的阅读网页版",
+2026-10-05T18:00:15.4013781Z     "org.opencontainers.image.licenses": "AGPL-3.0",
+2026-10-05T18:00:15.4014580Z     "org.opencontainers.image.revision": "a4ee6bf74b79e41d4dc52d5d3e656e1368d61222",
+2026-10-05T18:00:15.4015629Z     "org.opencontainers.image.source": "https://github.com/whwh13/reader_web_py",
+2026-10-05T18:00:15.4016523Z     "org.opencontainers.image.title": "reader_web_py",
+2026-10-05T18:00:15.4017236Z     "org.opencontainers.image.url": "https://github.com/whwh13/reader_web_py",
+2026-10-05T18:00:15.4018042Z     "org.opencontainers.image.version": "1.0.0"
+2026-10-05T18:00:15.4018858Z   },
+2026-10-05T18:00:15.4019187Z   "annotations": [
+2026-10-05T18:00:15.4019739Z     "manifest:org.opencontainers.image.created=2026-10-05T18:00:15.373Z",
+2026-10-05T18:00:15.4020499Z     "manifest:org.opencontainers.image.description=用AI重写的python版本的阅读网页版",
+2026-10-05T18:00:15.4021022Z     "manifest:org.opencontainers.image.licenses=AGPL-3.0",
+2026-10-05T18:00:15.4021549Z     "manifest:org.opencontainers.image.revision=a4ee6bf74b79e41d4dc52d5d3e656e1368d61222",
+2026-10-05T18:00:15.4022174Z     "manifest:org.opencontainers.image.source=https://github.com/whwh13/reader_web_py",
+2026-10-05T18:00:15.4022697Z     "manifest:org.opencontainers.image.title=reader_web_py",
+2026-10-05T18:00:15.4023189Z     "manifest:org.opencontainers.image.url=https://github.com/whwh13/reader_web_py",
+2026-10-05T18:00:15.4023682Z     "manifest:org.opencontainers.image.version=1.0.0"
+2026-10-05T18:00:15.4023990Z   ]
+2026-10-05T18:00:15.4024177Z }
+2026-10-05T18:00:15.4024532Z ##[endgroup]
+2026-10-05T18:00:15.4025115Z ##[group]Bake file definition (tags)
+2026-10-05T18:00:15.4025522Z {
+2026-10-05T18:00:15.4025792Z   "target": {
+2026-10-05T18:00:15.4026122Z     "docker-metadata-action": {
+2026-10-05T18:00:15.4026535Z       "tags": [
+2026-10-05T18:00:15.4027013Z         "ghcr.io/whwh13/reader_web_py:1.0.0",
+2026-10-05T18:00:15.4027618Z         "ghcr.io/whwh13/reader_web_py:1.0",
+2026-10-05T18:00:15.4028416Z         "ghcr.io/whwh13/reader_web_py:latest",
+2026-10-05T18:00:15.4029036Z         "ghcr.io/whwh13/reader_web_py:latest"
+2026-10-05T18:00:15.4029517Z       ],
+2026-10-05T18:00:15.4029850Z       "args": {
+2026-10-05T18:00:15.4030301Z         "DOCKER_META_IMAGES": "ghcr.io/whwh13/reader_web_py",
+2026-10-05T18:00:15.4030910Z         "DOCKER_META_VERSION": "1.0.0"
+2026-10-05T18:00:15.4031611Z       }
+2026-10-05T18:00:15.4031946Z     }
+2026-10-05T18:00:15.4032265Z   }
+2026-10-05T18:00:15.4032576Z }
+2026-10-05T18:00:15.4033187Z ##[endgroup]
+2026-10-05T18:00:15.4033856Z ##[group]Bake file definition (labels)
+2026-10-05T18:00:15.4034360Z {
+2026-10-05T18:00:15.4034684Z   "target": {
+2026-10-05T18:00:15.4035059Z     "docker-metadata-action": {
+2026-10-05T18:00:15.4035481Z       "labels": {
+2026-10-05T18:00:15.4036226Z         "org.opencontainers.image.created": "2026-10-05T18:00:15.373Z",
+2026-10-05T18:00:15.4037239Z         "org.opencontainers.image.description": "用AI重写的python版本的阅读网页版",
+2026-10-05T18:00:15.4038058Z         "org.opencontainers.image.licenses": "AGPL-3.0",
+2026-10-05T18:00:15.4039149Z         "org.opencontainers.image.revision": "a4ee6bf74b79e41d4dc52d5d3e656e1368d61222",
+2026-10-05T18:00:15.4040245Z         "org.opencontainers.image.source": "https://github.com/whwh13/reader_web_py",
+2026-10-05T18:00:15.4041113Z         "org.opencontainers.image.title": "reader_web_py",
+2026-10-05T18:00:15.4041953Z         "org.opencontainers.image.url": "https://github.com/whwh13/reader_web_py",
+2026-10-05T18:00:15.4042812Z         "org.opencontainers.image.version": "1.0.0"
+2026-10-05T18:00:15.4043381Z       }
+2026-10-05T18:00:15.4043682Z     }
+2026-10-05T18:00:15.4044007Z   }
+2026-10-05T18:00:15.4044329Z }
+2026-10-05T18:00:15.4044955Z ##[endgroup]
+2026-10-05T18:00:15.4045633Z ##[group]Bake file definition (annotations)
+2026-10-05T18:00:15.4046182Z {
+2026-10-05T18:00:15.4046615Z   "target": {
+2026-10-05T18:00:15.4047013Z     "docker-metadata-action": {
+2026-10-05T18:00:15.4047470Z       "annotations": [
+2026-10-05T18:00:15.4048087Z         "manifest:org.opencontainers.image.created=2026-10-05T18:00:15.373Z",
+2026-10-05T18:00:15.4049510Z         "manifest:org.opencontainers.image.description=用AI重写的python版本的阅读网页版",
+2026-10-05T18:00:15.4050510Z         "manifest:org.opencontainers.image.licenses=AGPL-3.0",
+2026-10-05T18:00:15.4051599Z         "manifest:org.opencontainers.image.revision=a4ee6bf74b79e41d4dc52d5d3e656e1368d61222",
+2026-10-05T18:00:15.4052766Z         "manifest:org.opencontainers.image.source=https://github.com/whwh13/reader_web_py",
+2026-10-05T18:00:15.4053758Z         "manifest:org.opencontainers.image.title=reader_web_py",
+2026-10-05T18:00:15.4054696Z         "manifest:org.opencontainers.image.url=https://github.com/whwh13/reader_web_py",
+2026-10-05T18:00:15.4055603Z         "manifest:org.opencontainers.image.version=1.0.0"
+2026-10-05T18:00:15.4056198Z       ]
+2026-10-05T18:00:15.4056545Z     }
+2026-10-05T18:00:15.4056875Z   }
+2026-10-05T18:00:15.4057204Z }
+2026-10-05T18:00:15.4057816Z ##[endgroup]
+2026-10-05T18:00:15.4230531Z ##[group]Run docker/build-push-action@v6
+2026-10-05T18:00:15.4230853Z with:
+2026-10-05T18:00:15.4231056Z   context: .
+2026-10-05T18:00:15.4231282Z   platforms: linux/amd64,linux/arm64
+2026-10-05T18:00:15.4231558Z   push: true
+2026-10-05T18:00:15.4232098Z   tags: ghcr.io/whwh13/reader_web_py:1.0.0
+ghcr.io/whwh13/reader_web_py:1.0
+ghcr.io/whwh13/reader_web_py:latest
+ghcr.io/whwh13/reader_web_py:latest
+2026-10-05T18:00:15.4234316Z   labels: org.opencontainers.image.created=2026-10-05T18:00:15.373Z
+org.opencontainers.image.description=用AI重写的python版本的阅读网页版
+org.opencontainers.image.licenses=AGPL-3.0
+org.opencontainers.image.revision=a4ee6bf74b79e41d4dc52d5d3e656e1368d61222
+org.opencontainers.image.source=https://github.com/whwh13/reader_web_py
+org.opencontainers.image.title=reader_web_py
+org.opencontainers.image.url=https://github.com/whwh13/reader_web_py
+org.opencontainers.image.version=1.0.0
+2026-10-05T18:00:15.4236155Z   cache-from: type=gha
+2026-10-05T18:00:15.4236433Z   cache-to: type=gha,mode=max
+2026-10-05T18:00:15.4236685Z   load: false
+2026-10-05T18:00:15.4236887Z   no-cache: false
+2026-10-05T18:00:15.4237094Z   pull: false
+2026-10-05T18:00:15.4239873Z   github-token: ***
+2026-10-05T18:00:15.4240101Z env:
+2026-10-05T18:00:15.4240293Z   REGISTRY: ghcr.io
+2026-10-05T18:00:15.4240527Z   IMAGE_NAME: whwh13/reader_web_py
+2026-10-05T18:00:15.4240810Z   DOCKER_METADATA_OUTPUT_VERSION: 1.0.0
+2026-10-05T18:00:15.4241678Z   DOCKER_METADATA_OUTPUT_TAGS: ghcr.io/whwh13/reader_web_py:1.0.0
+ghcr.io/whwh13/reader_web_py:1.0
+ghcr.io/whwh13/reader_web_py:latest
+ghcr.io/whwh13/reader_web_py:latest
+2026-10-05T18:00:15.4242428Z   DOCKER_METADATA_OUTPUT_TAG_NAMES: 1.0.0
+1.0
+latest
+latest
+2026-10-05T18:00:15.4244390Z   DOCKER_METADATA_OUTPUT_LABELS: org.opencontainers.image.created=2026-10-05T18:00:15.373Z
+org.opencontainers.image.description=用AI重写的python版本的阅读网页版
+org.opencontainers.image.licenses=AGPL-3.0
+org.opencontainers.image.revision=a4ee6bf74b79e41d4dc52d5d3e656e1368d61222
+org.opencontainers.image.source=https://github.com/whwh13/reader_web_py
+org.opencontainers.image.title=reader_web_py
+org.opencontainers.image.url=https://github.com/whwh13/reader_web_py
+org.opencontainers.image.version=1.0.0
+2026-10-05T18:00:15.4248308Z   DOCKER_METADATA_OUTPUT_ANNOTATIONS: manifest:org.opencontainers.image.created=2026-10-05T18:00:15.373Z
+manifest:org.opencontainers.image.description=用AI重写的python版本的阅读网页版
+manifest:org.opencontainers.image.licenses=AGPL-3.0
+manifest:org.opencontainers.image.revision=a4ee6bf74b79e41d4dc52d5d3e656e1368d61222
+manifest:org.opencontainers.image.source=https://github.com/whwh13/reader_web_py
+manifest:org.opencontainers.image.title=reader_web_py
+manifest:org.opencontainers.image.url=https://github.com/whwh13/reader_web_py
+manifest:org.opencontainers.image.version=1.0.0
+2026-10-05T18:00:15.4254848Z   DOCKER_METADATA_OUTPUT_JSON: {"tags":["ghcr.io/whwh13/reader_web_py:1.0.0","ghcr.io/whwh13/reader_web_py:1.0","ghcr.io/whwh13/reader_web_py:latest","ghcr.io/whwh13/reader_web_py:latest"],"tag-names":["1.0.0","1.0","latest","latest"],"labels":{"org.opencontainers.image.created":"2026-10-05T18:00:15.373Z","org.opencontainers.image.description":"用AI重写的python版本的阅读网页版","org.opencontainers.image.licenses":"AGPL-3.0","org.opencontainers.image.revision":"a4ee6bf74b79e41d4dc52d5d3e656e1368d61222","org.opencontainers.image.source":"https://github.com/whwh13/reader_web_py","org.opencontainers.image.title":"reader_web_py","org.opencontainers.image.url":"https://github.com/whwh13/reader_web_py","org.opencontainers.image.version":"1.0.0"},"annotations":["manifest:org.opencontainers.image.created=2026-10-05T18:00:15.373Z","manifest:org.opencontainers.image.description=用AI重写的python版本的阅读网页版","manifest:org.opencontainers.image.licenses=AGPL-3.0","manifest:org.opencontainers.image.revision=a4ee6bf74b79e41d4dc52d5d3e656e1368d61222","manifest:org.opencontainers.image.source=https://github.com/whwh13/reader_web_py","manifest:org.opencontainers.image.title=reader_web_py","manifest:org.opencontainers.image.url=https://github.com/whwh13/reader_web_py","manifest:org.opencontainers.image.version=1.0.0"]}
+2026-10-05T18:00:15.4260011Z   DOCKER_METADATA_OUTPUT_BAKE_FILE_TAGS: /home/runner/work/_temp/docker-actions-toolkit-PDYdgF/docker-metadata-action-bake-tags.json
+2026-10-05T18:00:15.4260969Z   DOCKER_METADATA_OUTPUT_BAKE_FILE_LABELS: /home/runner/work/_temp/docker-actions-toolkit-PDYdgF/docker-metadata-action-bake-labels.json
+2026-10-05T18:00:15.4261987Z   DOCKER_METADATA_OUTPUT_BAKE_FILE_ANNOTATIONS: /home/runner/work/_temp/docker-actions-toolkit-PDYdgF/docker-metadata-action-bake-annotations.json
+2026-10-05T18:00:15.4262941Z   DOCKER_METADATA_OUTPUT_BAKE_FILE: /home/runner/work/_temp/docker-actions-toolkit-PDYdgF/docker-metadata-action-bake.json
+2026-10-05T18:00:15.4263504Z ##[endgroup]
+2026-10-05T18:00:15.6664646Z (node:2828) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-05T18:00:15.6666133Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-05T18:00:15.6686994Z ##[group]GitHub Actions runtime token ACs
+2026-10-05T18:00:15.6695433Z refs/heads/refs/tags/v1.0.0: read/write
+2026-10-05T18:00:15.6696040Z refs/heads/master: read
+2026-10-05T18:00:15.6697598Z ##[endgroup]
+2026-10-05T18:00:15.6698818Z ##[group]Docker info
+2026-10-05T18:00:15.6741999Z [command]/usr/bin/docker version
+2026-10-05T18:00:15.6956821Z Client: Docker Engine - Community
+2026-10-05T18:00:15.6957339Z  Version:           28.0.4
+2026-10-05T18:00:15.6957749Z  API version:       1.48
+2026-10-05T18:00:15.6958381Z  Go version:        go1.23.7
+2026-10-05T18:00:15.6958804Z  Git commit:        b8034c0
+2026-10-05T18:00:15.6959245Z  Built:             Tue Mar 25 15:07:16 2025
+2026-10-05T18:00:15.6959729Z  OS/Arch:           linux/amd64
+2026-10-05T18:00:15.6960135Z  Context:           default
+2026-10-05T18:00:15.6960398Z 
+2026-10-05T18:00:15.6960572Z Server: Docker Engine - Community
+2026-10-05T18:00:15.6960999Z  Engine:
+2026-10-05T18:00:15.6961322Z   Version:          28.0.4
+2026-10-05T18:00:15.6961789Z   API version:      1.48 (minimum version 1.24)
+2026-10-05T18:00:15.6962298Z   Go version:       go1.23.7
+2026-10-05T18:00:15.6962693Z   Git commit:       6430e49
+2026-10-05T18:00:15.6963101Z   Built:            Tue Mar 25 15:07:16 2025
+2026-10-05T18:00:15.6963573Z   OS/Arch:          linux/amd64
+2026-10-05T18:00:15.6963981Z   Experimental:     false
+2026-10-05T18:00:15.6964413Z  containerd:
+2026-10-05T18:00:15.6964754Z   Version:          v2.3.6
+2026-10-05T18:00:15.6965249Z   GitCommit:        ee2735368117d2eb259779949d5e75cdafec9761
+2026-10-05T18:00:15.6965787Z  runc:
+2026-10-05T18:00:15.6966108Z   Version:          1.5.1
+2026-10-05T18:00:15.6966508Z   GitCommit:        v1.5.1-0-g8f2685a4
+2026-10-05T18:00:15.6966960Z  docker-init:
+2026-10-05T18:00:15.6967306Z   Version:          0.19.0
+2026-10-05T18:00:15.6967680Z   GitCommit:        de40ad0
+2026-10-05T18:00:15.7008339Z [command]/usr/bin/docker info
+2026-10-05T18:00:15.7805671Z Client: Docker Engine - Community
+2026-10-05T18:00:15.7806214Z  Version:    28.0.4
+2026-10-05T18:00:15.7806582Z  Context:    default
+2026-10-05T18:00:15.7806932Z  Debug Mode: false
+2026-10-05T18:00:15.7807266Z  Plugins:
+2026-10-05T18:00:15.7807622Z   buildx: Docker Buildx (Docker Inc.)
+2026-10-05T18:00:15.7808071Z     Version:  v0.37.1
+2026-10-05T18:00:15.7808806Z     Path:     /usr/libexec/docker/cli-plugins/docker-buildx
+2026-10-05T18:00:15.7809392Z   compose: Docker Compose (Docker Inc.)
+2026-10-05T18:00:15.7809859Z     Version:  v2.38.2
+2026-10-05T18:00:15.7810315Z     Path:     /usr/libexec/docker/cli-plugins/docker-compose
+2026-10-05T18:00:15.7810719Z 
+2026-10-05T18:00:15.7810854Z Server:
+2026-10-05T18:00:15.7811159Z  Containers: 1
+2026-10-05T18:00:15.7811486Z   Running: 1
+2026-10-05T18:00:15.7811949Z   Paused: 0
+2026-10-05T18:00:15.7812298Z   Stopped: 0
+2026-10-05T18:00:15.7812614Z  Images: 7
+2026-10-05T18:00:15.7812934Z  Server Version: 28.0.4
+2026-10-05T18:00:15.7813310Z  Storage Driver: overlay2
+2026-10-05T18:00:15.7814087Z   Backing Filesystem: extfs
+2026-10-05T18:00:15.7814523Z   Supports d_type: true
+2026-10-05T18:00:15.7814893Z   Using metacopy: false
+2026-10-05T18:00:15.7815269Z   Native Overlay Diff: false
+2026-10-05T18:00:15.7815663Z   userxattr: false
+2026-10-05T18:00:15.7816013Z  Logging Driver: json-file
+2026-10-05T18:00:15.7816403Z  Cgroup Driver: systemd
+2026-10-05T18:00:15.7816763Z  Cgroup Version: 2
+2026-10-05T18:00:15.7817105Z  Plugins:
+2026-10-05T18:00:15.7817411Z   Volume: local
+2026-10-05T18:00:15.7817803Z   Network: bridge host ipvlan macvlan null overlay
+2026-10-05T18:00:15.7818728Z   Log: awslogs fluentd gcplogs gelf journald json-file local splunk syslog
+2026-10-05T18:00:15.7819359Z  Swarm: inactive
+2026-10-05T18:00:15.7819762Z  Runtimes: io.containerd.runc.v2 runc
+2026-10-05T18:00:15.7820221Z  Default Runtime: runc
+2026-10-05T18:00:15.7820591Z  Init Binary: docker-init
+2026-10-05T18:00:15.7821082Z  containerd version: ee2735368117d2eb259779949d5e75cdafec9761
+2026-10-05T18:00:15.7821648Z  runc version: v1.5.1-0-g8f2685a4
+2026-10-05T18:00:15.7822073Z  init version: de40ad0
+2026-10-05T18:00:15.7822437Z  Security Options:
+2026-10-05T18:00:15.7822771Z   apparmor
+2026-10-05T18:00:15.7823071Z   seccomp
+2026-10-05T18:00:15.7823380Z    Profile: builtin
+2026-10-05T18:00:15.7823707Z   cgroupns
+2026-10-05T18:00:15.7824028Z  Kernel Version: 6.17.0-1022-azure
+2026-10-05T18:00:15.7824464Z  Operating System: Ubuntu 24.04.5 LTS
+2026-10-05T18:00:15.7825080Z  OSType: linux
+2026-10-05T18:00:15.7825410Z  Architecture: x86_64
+2026-10-05T18:00:15.7825756Z  CPUs: 4
+2026-10-05T18:00:15.7826065Z  Total Memory: 15.61GiB
+2026-10-05T18:00:15.7826427Z  Name: runnervm8df0l
+2026-10-05T18:00:15.7826806Z  ID: 96bc9d58-7015-4b4a-8357-8e592f0b19b5
+2026-10-05T18:00:15.7827265Z  Docker Root Dir: /var/lib/docker
+2026-10-05T18:00:15.7827673Z  Debug Mode: false
+2026-10-05T18:00:15.7828021Z  Username: githubactions
+2026-10-05T18:00:15.7828624Z  Experimental: false
+2026-10-05T18:00:15.7828984Z  Insecure Registries:
+2026-10-05T18:00:15.7829362Z   ::1/128
+2026-10-05T18:00:15.7829665Z   127.0.0.0/8
+2026-10-05T18:00:15.7829993Z  Live Restore Enabled: false
+2026-10-05T18:00:15.7830251Z 
+2026-10-05T18:00:15.7830756Z ##[endgroup]
+2026-10-05T18:00:15.7831332Z ##[group]Proxy configuration
+2026-10-05T18:00:15.7831744Z No proxy configuration found
+2026-10-05T18:00:15.7832343Z ##[endgroup]
+2026-10-05T18:00:15.8431111Z ##[group]Buildx version
+2026-10-05T18:00:15.8459085Z [command]/usr/bin/docker buildx version
+2026-10-05T18:00:15.9014059Z github.com/docker/buildx v0.37.1 0b265a9f62db554fa9aba6dd19e1bd5704bc7d8a
+2026-10-05T18:00:15.9047182Z ##[endgroup]
+2026-10-05T18:00:15.9047928Z ##[group]Builder info
+2026-10-05T18:00:15.9951245Z {
+2026-10-05T18:00:15.9951885Z   "nodes": [
+2026-10-05T18:00:15.9952537Z     {
+2026-10-05T18:00:15.9953198Z       "name": "builder-289a4962-76bb-4b6c-bf22-ed92c87366b40",
+2026-10-05T18:00:15.9953623Z       "endpoint": "unix:///var/run/docker.sock",
+2026-10-05T18:00:15.9953946Z       "status": "running",
+2026-10-05T18:00:15.9954522Z       "buildkitd-flags": "--allow-insecure-entitlement security.insecure --allow-insecure-entitlement network.host",
+2026-10-05T18:00:15.9955081Z       "buildkit": "v0.33.1",
+2026-10-05T18:00:15.9955425Z       "platforms": "linux/amd64,linux/amd64/v2,linux/amd64/v3,linux/386",
+2026-10-05T18:00:15.9955797Z       "features": {
+2026-10-05T18:00:15.9956118Z         "Automatically load images to the Docker Engine image store": true,
+2026-10-05T18:00:15.9956510Z         "Cache export": true,
+2026-10-05T18:00:15.9956766Z         "Direct push": true,
+2026-10-05T18:00:15.9957012Z         "Docker exporter": true,
+2026-10-05T18:00:15.9957317Z         "Multi-platform build": true,
+2026-10-05T18:00:15.9957590Z         "OCI exporter": true
+2026-10-05T18:00:15.9957818Z       },
+2026-10-05T18:00:15.9958022Z       "labels": {
+2026-10-05T18:00:15.9958660Z         "org.mobyproject.buildkit.worker.executor": "oci",
+2026-10-05T18:00:15.9959103Z         "org.mobyproject.buildkit.worker.hostname": "830b50722e75",
+2026-10-05T18:00:15.9960123Z         "org.mobyproject.buildkit.worker.network": "host",
+2026-10-05T18:00:15.9960650Z         "org.mobyproject.buildkit.worker.oci.process-mode": "sandbox",
+2026-10-05T18:00:15.9961128Z         "org.mobyproject.buildkit.worker.selinux.enabled": "false",
+2026-10-05T18:00:15.9961576Z         "org.mobyproject.buildkit.worker.snapshotter": "overlayfs"
+2026-10-05T18:00:15.9961916Z       },
+2026-10-05T18:00:15.9962126Z       "gcPolicy": [
+2026-10-05T18:00:15.9962335Z         {
+2026-10-05T18:00:15.9962527Z           "all": false,
+2026-10-05T18:00:15.9962751Z           "filter": [
+2026-10-05T18:00:15.9963113Z             "type==source.local type==exec.cachemount type==source.git.checkout"
+2026-10-05T18:00:15.9963482Z           ],
+2026-10-05T18:00:15.9963688Z           "keepDuration": "48h0m0s",
+2026-10-05T18:00:15.9963952Z           "maxUsedSpace": "488.3MiB"
+2026-10-05T18:00:15.9964189Z         },
+2026-10-05T18:00:15.9964404Z         {
+2026-10-05T18:00:15.9964585Z           "all": false,
+2026-10-05T18:00:15.9964814Z           "keepDuration": "1440h0m0s",
+2026-10-05T18:00:15.9965078Z           "reservedSpace": "9.313GiB",
+2026-10-05T18:00:15.9965341Z           "maxUsedSpace": "93.13GiB",
+2026-10-05T18:00:15.9965606Z           "minFreeSpace": "27.01GiB"
+2026-10-05T18:00:15.9965859Z         },
+2026-10-05T18:00:15.9966054Z         {
+2026-10-05T18:00:15.9966235Z           "all": false,
+2026-10-05T18:00:15.9966458Z           "reservedSpace": "9.313GiB",
+2026-10-05T18:00:15.9966887Z           "maxUsedSpace": "93.13GiB",
+2026-10-05T18:00:15.9967141Z           "minFreeSpace": "27.01GiB"
+2026-10-05T18:00:15.9967379Z         },
+2026-10-05T18:00:15.9967553Z         {
+2026-10-05T18:00:15.9967733Z           "all": true,
+2026-10-05T18:00:15.9967970Z           "reservedSpace": "9.313GiB",
+2026-10-05T18:00:15.9968639Z           "maxUsedSpace": "93.13GiB",
+2026-10-05T18:00:15.9969028Z           "minFreeSpace": "27.01GiB"
+2026-10-05T18:00:15.9969275Z         }
+2026-10-05T18:00:15.9969479Z       ]
+2026-10-05T18:00:15.9969672Z     }
+2026-10-05T18:00:15.9969858Z   ],
+2026-10-05T18:00:15.9970104Z   "name": "builder-289a4962-76bb-4b6c-bf22-ed92c87366b4",
+2026-10-05T18:00:15.9970443Z   "driver": "docker-container",
+2026-10-05T18:00:15.9970708Z   "lastActivity": "2026-10-05T18:00:11.000Z"
+2026-10-05T18:00:15.9970972Z }
+2026-10-05T18:00:15.9971424Z ##[endgroup]
+2026-10-05T18:00:16.1720088Z [command]/usr/bin/docker buildx build --cache-from type=gha --cache-to type=gha,mode=max --iidfile /home/runner/work/_temp/docker-actions-toolkit-YbAYlM/build-iidfile-597260fb94.txt --label org.opencontainers.image.created=2026-10-05T18:00:15.373Z --label org.opencontainers.image.description=用AI重写的python版本的阅读网页版 --label org.opencontainers.image.licenses=AGPL-3.0 --label org.opencontainers.image.revision=a4ee6bf74b79e41d4dc52d5d3e656e1368d61222 --label org.opencontainers.image.source=https://github.com/whwh13/reader_web_py --label org.opencontainers.image.title=reader_web_py --label org.opencontainers.image.url=https://github.com/whwh13/reader_web_py --label org.opencontainers.image.version=1.0.0 --platform linux/amd64,linux/arm64 --attest type=provenance,mode=max,builder-id=https://github.com/whwh13/reader_web_py/actions/runs/37352581045/attempts/1 --tag ghcr.io/whwh13/reader_web_py:1.0.0 --tag ghcr.io/whwh13/reader_web_py:1.0 --tag ghcr.io/whwh13/reader_web_py:latest --tag ghcr.io/whwh13/reader_web_py:latest --metadata-file /home/runner/work/_temp/docker-actions-toolkit-YbAYlM/build-metadata-6463be6bbf.json --push .
+2026-10-05T18:00:16.5322676Z #0 building with "builder-289a4962-76bb-4b6c-bf22-ed92c87366b4" instance using docker-container driver
+2026-10-05T18:00:16.5323271Z 
+2026-10-05T18:00:16.5323447Z #1 [internal] load build definition from Dockerfile
+2026-10-05T18:00:16.5323861Z #1 transferring dockerfile: 1.39kB 0.0s done
+2026-10-05T18:00:16.5324210Z #1 DONE 0.0s
+2026-10-05T18:00:16.5324358Z 
+2026-10-05T18:00:16.5324555Z #2 [auth] library/python:pull token for registry-1.docker.io
+2026-10-05T18:00:16.5324956Z #2 DONE 0.0s
+2026-10-05T18:00:16.5325098Z 
+2026-10-05T18:00:16.5325565Z #3 [auth] library/node:pull token for registry-1.docker.io
+2026-10-05T18:00:16.5326882Z #3 DONE 0.0s
+2026-10-05T18:00:16.5327121Z 
+2026-10-05T18:00:16.5327826Z #4 [linux/arm64 internal] load metadata for docker.io/library/node:22-alpine
+2026-10-05T18:00:16.7910674Z #4 ...
+2026-10-05T18:00:16.7911337Z 
+2026-10-05T18:00:16.7911981Z #5 [linux/amd64 internal] load metadata for docker.io/library/node:22-alpine
+2026-10-05T18:00:16.7912651Z #5 DONE 0.5s
+2026-10-05T18:00:16.9037774Z 
+2026-10-05T18:00:16.9040238Z #4 [linux/arm64 internal] load metadata for docker.io/library/node:22-alpine
+2026-10-05T18:00:16.9041416Z #4 DONE 0.5s
+2026-10-05T18:00:16.9041824Z 
+2026-10-05T18:00:16.9042451Z #6 [linux/amd64 internal] load metadata for docker.io/library/python:3.12-slim
+2026-10-05T18:00:16.9043841Z #6 DONE 0.5s
+2026-10-05T18:00:16.9044022Z 
+2026-10-05T18:00:16.9044141Z #7 [internal] load .dockerignore
+2026-10-05T18:00:16.9044440Z #7 transferring context: 177B done
+2026-10-05T18:00:16.9044779Z #7 DONE 0.0s
+2026-10-05T18:00:16.9045052Z 
+2026-10-05T18:00:16.9045325Z #8 [linux/arm64 internal] load metadata for docker.io/library/python:3.12-slim
+2026-10-05T18:00:16.9045757Z #8 DONE 0.6s
+2026-10-05T18:00:17.0041420Z 
+2026-10-05T18:00:17.0042984Z #9 importing cache manifest from gha:15239666477454955510
+2026-10-05T18:00:17.0044560Z #9 DONE 0.1s
+2026-10-05T18:00:17.0045009Z 
+2026-10-05T18:00:17.0045410Z #10 [internal] load build context
+2026-10-05T18:00:17.0046487Z #10 transferring context: 341.26kB 0.0s done
+2026-10-05T18:00:17.0047193Z #10 DONE 0.0s
+2026-10-05T18:00:17.0047512Z 
+2026-10-05T18:00:17.0048894Z #11 [linux/amd64 frontend-build 1/6] FROM docker.io/library/node:22-alpine@sha256:0a7108bf6c7bf5de370ffb1a3ed6be93d405b43ff159f681a8d18c0e2bc2e402
+2026-10-05T18:00:17.0049884Z #11 resolve docker.io/library/node:22-alpine@sha256:0a7108bf6c7bf5de370ffb1a3ed6be93d405b43ff159f681a8d18c0e2bc2e402 0.0s done
+2026-10-05T18:00:17.2542180Z #11 sha256:d39db1cf9caa4f49c5a2e67111fbe6e0d5eea8ede550cb82f3dc2b79712688d6 447B / 447B 0.0s done
+2026-10-05T18:00:17.2550693Z #11 sha256:e554276b05e6306c5ad33cd85bfa7f0693083e21f6114db5abf60a20fb413039 1.26MB / 1.26MB 0.0s done
+2026-10-05T18:00:17.3580082Z #11 sha256:e2de96513ba9eb53b431787ec8a65cdde380ac4772a3e4c4b714dcfde2a102b5 3.85MB / 3.85MB 0.1s done
+2026-10-05T18:00:17.3581636Z #11 extracting sha256:e2de96513ba9eb53b431787ec8a65cdde380ac4772a3e4c4b714dcfde2a102b5
+2026-10-05T18:00:17.3583111Z #11 sha256:f7f2d304681aaa935c9cfd180850cf616ae843efce7682873d6521ded7268937 28.31MB / 55.59MB 0.2s
+2026-10-05T18:00:17.4663691Z #11 sha256:f7f2d304681aaa935c9cfd180850cf616ae843efce7682873d6521ded7268937 55.59MB / 55.59MB 0.3s done
+2026-10-05T18:00:17.6673653Z #11 extracting sha256:e2de96513ba9eb53b431787ec8a65cdde380ac4772a3e4c4b714dcfde2a102b5 0.2s done
+2026-10-05T18:00:17.6675521Z #11 extracting sha256:f7f2d304681aaa935c9cfd180850cf616ae843efce7682873d6521ded7268937
+2026-10-05T18:00:18.5932559Z #11 ...
+2026-10-05T18:00:18.5932883Z 
+2026-10-05T18:00:18.5933728Z #12 [linux/amd64 stage-1 1/7] FROM docker.io/library/python:3.12-slim@sha256:02108f5d322dd89f1c9e552442c25acb0543dfdbc455693a5599624f20d9155d
+2026-10-05T18:00:18.5935338Z #12 resolve docker.io/library/python:3.12-slim@sha256:02108f5d322dd89f1c9e552442c25acb0543dfdbc455693a5599624f20d9155d done
+2026-10-05T18:00:18.5936728Z #12 sha256:5e62c0470a0973ad9561440c8a37984c3252eda1dd19e00ca7e76a37b62b5dc7 249B / 249B 0.1s done
+2026-10-05T18:00:18.5938663Z #12 sha256:e360d85fdc0f3910a4fe48ba2bb0865d5e618392ea8abfa424e66575e45273c0 12.12MB / 12.12MB 0.1s done
+2026-10-05T18:00:18.5940662Z #12 sha256:a510a9ea6d60786b7cefdbf9577945344c72879881de8d32ef07ec38111fb045 4.27MB / 4.27MB 0.1s done
+2026-10-05T18:00:18.5942368Z #12 sha256:6b37362b3da78869050b894b799ad4df04f1f3b52774087db0d81151570244c8 29.83MB / 29.83MB 0.2s done
+2026-10-05T18:00:18.5943580Z #12 extracting sha256:6b37362b3da78869050b894b799ad4df04f1f3b52774087db0d81151570244c8 1.4s done
+2026-10-05T18:00:18.5946342Z #12 DONE 1.6s
+2026-10-05T18:00:18.7450115Z 
+2026-10-05T18:00:18.7452083Z #12 [linux/amd64 stage-1 1/7] FROM docker.io/library/python:3.12-slim@sha256:02108f5d322dd89f1c9e552442c25acb0543dfdbc455693a5599624f20d9155d
+2026-10-05T18:00:18.7453455Z #12 extracting sha256:a510a9ea6d60786b7cefdbf9577945344c72879881de8d32ef07ec38111fb045
+2026-10-05T18:00:18.8390715Z #12 extracting sha256:a510a9ea6d60786b7cefdbf9577945344c72879881de8d32ef07ec38111fb045 0.2s done
+2026-10-05T18:00:18.8392017Z #12 DONE 1.9s
+2026-10-05T18:00:18.8392718Z 
+2026-10-05T18:00:18.8393839Z #13 [linux/arm64 frontend-build 1/6] FROM docker.io/library/node:22-alpine@sha256:0a7108bf6c7bf5de370ffb1a3ed6be93d405b43ff159f681a8d18c0e2bc2e402
+2026-10-05T18:00:18.8395862Z #13 resolve docker.io/library/node:22-alpine@sha256:0a7108bf6c7bf5de370ffb1a3ed6be93d405b43ff159f681a8d18c0e2bc2e402 0.0s done
+2026-10-05T18:00:18.8397671Z #13 sha256:74849c662da757b89cfe8b5406d7beaaf491727ea6843cbba85b8889d1543956 1.26MB / 1.26MB 0.1s done
+2026-10-05T18:00:18.8399464Z #13 sha256:66fa63c7a061939c4346f9c3c1ada45434b276dd4e4274721d6bf13cb8adec6e 444B / 444B 0.0s done
+2026-10-05T18:00:18.8401035Z #13 sha256:a9986cd6f37dbddae7862a6d4be71683472e7c2ea708e87db14f8a6393c00f00 4.19MB / 4.19MB 0.1s done
+2026-10-05T18:00:18.8406395Z #13 extracting sha256:a9986cd6f37dbddae7862a6d4be71683472e7c2ea708e87db14f8a6393c00f00 0.2s done
+2026-10-05T18:00:18.8408063Z #13 sha256:87919ed734a39bc185155d715bdcf2ce6c52d112ff642650d9e0e35502b481e9 55.60MB / 55.60MB 0.2s done
+2026-10-05T18:00:18.8410010Z #13 extracting sha256:87919ed734a39bc185155d715bdcf2ce6c52d112ff642650d9e0e35502b481e9
+2026-10-05T18:00:19.5317962Z #13 extracting sha256:87919ed734a39bc185155d715bdcf2ce6c52d112ff642650d9e0e35502b481e9 2.1s done
+2026-10-05T18:00:19.5331499Z #13 DONE 2.6s
+2026-10-05T18:00:19.5331987Z 
+2026-10-05T18:00:19.5333299Z #14 [linux/arm64 stage-1 1/7] FROM docker.io/library/python:3.12-slim@sha256:02108f5d322dd89f1c9e552442c25acb0543dfdbc455693a5599624f20d9155d
+2026-10-05T18:00:19.5336524Z #14 resolve docker.io/library/python:3.12-slim@sha256:02108f5d322dd89f1c9e552442c25acb0543dfdbc455693a5599624f20d9155d 0.0s done
+2026-10-05T18:00:19.5339095Z #14 sha256:bd52add1124e6215f0397d7f29ec8de44d5689b13c1445fc072db18079d2343d 4.61MB / 4.61MB 0.1s done
+2026-10-05T18:00:19.5340789Z #14 sha256:aadd712613b67e03507e67bcdcd78607aa7f5cc935cadcb0b412abf686baee2c 248B / 248B 0.2s done
+2026-10-05T18:00:19.5342782Z #14 sha256:50a64a4cd155959e7a3ac95351be73becf56d98fc496a7d1dd4f2f8e5876c098 12.06MB / 12.06MB 0.1s done
+2026-10-05T18:00:19.5344967Z #14 sha256:bd36565c0fdebaf0f3af5c3b4ce610ca085ced32e9e9da850d95912f5f18f47b 30.19MB / 30.19MB 0.1s done
+2026-10-05T18:00:19.5346868Z #14 extracting sha256:bd36565c0fdebaf0f3af5c3b4ce610ca085ced32e9e9da850d95912f5f18f47b 1.4s done
+2026-10-05T18:00:19.5349164Z #14 extracting sha256:bd52add1124e6215f0397d7f29ec8de44d5689b13c1445fc072db18079d2343d 0.2s done
+2026-10-05T18:00:19.5351477Z #14 extracting sha256:50a64a4cd155959e7a3ac95351be73becf56d98fc496a7d1dd4f2f8e5876c098
+2026-10-05T18:00:19.7407125Z #14 ...
+2026-10-05T18:00:19.7407424Z 
+2026-10-05T18:00:19.7408568Z #12 [linux/amd64 stage-1 1/7] FROM docker.io/library/python:3.12-slim@sha256:02108f5d322dd89f1c9e552442c25acb0543dfdbc455693a5599624f20d9155d
+2026-10-05T18:00:19.7409753Z #12 extracting sha256:e360d85fdc0f3910a4fe48ba2bb0865d5e618392ea8abfa424e66575e45273c0 0.7s done
+2026-10-05T18:00:19.7410577Z #12 extracting sha256:5e62c0470a0973ad9561440c8a37984c3252eda1dd19e00ca7e76a37b62b5dc7 0.0s done
+2026-10-05T18:00:19.7411155Z #12 DONE 2.6s
+2026-10-05T18:00:19.7411297Z 
+2026-10-05T18:00:19.7411865Z #13 [linux/arm64 frontend-build 1/6] FROM docker.io/library/node:22-alpine@sha256:0a7108bf6c7bf5de370ffb1a3ed6be93d405b43ff159f681a8d18c0e2bc2e402
+2026-10-05T18:00:19.7412879Z #13 extracting sha256:74849c662da757b89cfe8b5406d7beaaf491727ea6843cbba85b8889d1543956 0.1s done
+2026-10-05T18:00:19.7413661Z #13 extracting sha256:66fa63c7a061939c4346f9c3c1ada45434b276dd4e4274721d6bf13cb8adec6e done
+2026-10-05T18:00:19.7414201Z #13 DONE 2.6s
+2026-10-05T18:00:19.8898804Z 
+2026-10-05T18:00:19.8900642Z #15 [linux/amd64 stage-1 2/7] WORKDIR /app
+2026-10-05T18:00:20.2016959Z #15 ...
+2026-10-05T18:00:20.2018535Z 
+2026-10-05T18:00:20.2019575Z #14 [linux/arm64 stage-1 1/7] FROM docker.io/library/python:3.12-slim@sha256:02108f5d322dd89f1c9e552442c25acb0543dfdbc455693a5599624f20d9155d
+2026-10-05T18:00:20.2022765Z #14 extracting sha256:50a64a4cd155959e7a3ac95351be73becf56d98fc496a7d1dd4f2f8e5876c098 1.0s done
+2026-10-05T18:00:20.2026314Z #14 extracting sha256:aadd712613b67e03507e67bcdcd78607aa7f5cc935cadcb0b412abf686baee2c 0.1s done
+2026-10-05T18:00:20.2027184Z #14 DONE 3.2s
+2026-10-05T18:00:20.3531363Z 
+2026-10-05T18:00:20.3532280Z #11 [linux/amd64 frontend-build 1/6] FROM docker.io/library/node:22-alpine@sha256:0a7108bf6c7bf5de370ffb1a3ed6be93d405b43ff159f681a8d18c0e2bc2e402
+2026-10-05T18:00:20.3533296Z #11 extracting sha256:f7f2d304681aaa935c9cfd180850cf616ae843efce7682873d6521ded7268937 2.6s done
+2026-10-05T18:00:20.3534020Z #11 extracting sha256:e554276b05e6306c5ad33cd85bfa7f0693083e21f6114db5abf60a20fb413039
+2026-10-05T18:00:20.3605287Z #11 extracting sha256:e554276b05e6306c5ad33cd85bfa7f0693083e21f6114db5abf60a20fb413039 0.3s done
+2026-10-05T18:00:20.3606642Z #11 DONE 3.4s
+2026-10-05T18:00:20.3606884Z 
+2026-10-05T18:00:20.3607090Z #16 [linux/arm64 stage-1 2/7] WORKDIR /app
+2026-10-05T18:00:20.5566901Z #16 ...
+2026-10-05T18:00:20.5567152Z 
+2026-10-05T18:00:20.5567734Z #11 [linux/amd64 frontend-build 1/6] FROM docker.io/library/node:22-alpine@sha256:0a7108bf6c7bf5de370ffb1a3ed6be93d405b43ff159f681a8d18c0e2bc2e402
+2026-10-05T18:00:20.5569347Z #11 extracting sha256:d39db1cf9caa4f49c5a2e67111fbe6e0d5eea8ede550cb82f3dc2b79712688d6 0.0s done
+2026-10-05T18:00:20.5569899Z #11 DONE 3.4s
+2026-10-05T18:00:20.7076379Z 
+2026-10-05T18:00:20.7076917Z #17 [linux/amd64 frontend-build 2/6] WORKDIR /build
+2026-10-05T18:00:21.0048941Z #17 ...
+2026-10-05T18:00:21.0049202Z 
+2026-10-05T18:00:21.0049391Z #16 [linux/arm64 stage-1 2/7] WORKDIR /app
+2026-10-05T18:00:21.0049895Z #16 DONE 0.8s
+2026-10-05T18:00:21.2204048Z 
+2026-10-05T18:00:21.2229360Z #15 [linux/amd64 stage-1 2/7] WORKDIR /app
+2026-10-05T18:00:21.2259600Z #15 DONE 1.4s
+2026-10-05T18:00:21.2294159Z 
+2026-10-05T18:00:21.2299347Z #18 [linux/arm64 frontend-build 2/6] WORKDIR /build
+2026-10-05T18:00:21.2300213Z #18 DONE 1.4s
+2026-10-05T18:00:21.2300592Z 
+2026-10-05T18:00:21.2301098Z #17 [linux/amd64 frontend-build 2/6] WORKDIR /build
+2026-10-05T18:00:21.2301990Z #17 DONE 0.6s
+2026-10-05T18:00:21.2302376Z 
+2026-10-05T18:00:21.2302849Z #19 [linux/arm64 stage-1 3/7] COPY pyproject.toml README.md ./
+2026-10-05T18:00:21.2303707Z #19 DONE 0.0s
+2026-10-05T18:00:21.2304071Z 
+2026-10-05T18:00:21.2304492Z #20 [linux/amd64 stage-1 3/7] COPY pyproject.toml README.md ./
+2026-10-05T18:00:21.2305306Z #20 DONE 0.0s
+2026-10-05T18:00:21.2305655Z 
+2026-10-05T18:00:21.2306311Z #21 [linux/amd64 frontend-build 3/6] COPY frontend/package.json frontend/package-lock.json* ./
+2026-10-05T18:00:21.2307328Z #21 DONE 0.0s
+2026-10-05T18:00:21.2307691Z 
+2026-10-05T18:00:21.2308681Z #22 [linux/arm64 frontend-build 3/6] COPY frontend/package.json frontend/package-lock.json* ./
+2026-10-05T18:00:21.2309654Z #22 DONE 0.0s
+2026-10-05T18:00:21.2310021Z 
+2026-10-05T18:00:21.2310362Z #23 [linux/amd64 stage-1 4/7] COPY src/ ./src/
+2026-10-05T18:00:21.2311082Z #23 DONE 0.0s
+2026-10-05T18:00:21.2311428Z 
+2026-10-05T18:00:21.2311768Z #24 [linux/arm64 stage-1 4/7] COPY src/ ./src/
+2026-10-05T18:00:21.2312474Z #24 DONE 0.0s
+2026-10-05T18:00:21.2312821Z 
+2026-10-05T18:00:21.2313639Z #25 [linux/arm64 stage-1 5/7] RUN pip install --no-cache-dir     --index-url https://pypi.tuna.tsinghua.edu.cn/simple     .
+2026-10-05T18:00:26.9433355Z #25 ...
+2026-10-05T18:00:26.9434147Z 
+2026-10-05T18:00:26.9435123Z #26 [linux/amd64 stage-1 5/7] RUN pip install --no-cache-dir     --index-url https://pypi.tuna.tsinghua.edu.cn/simple     .
+2026-10-05T18:00:26.9437121Z #26 3.169 Looking in indexes: https://pypi.tuna.tsinghua.edu.cn/simple
+2026-10-05T18:00:26.9438391Z #26 3.170 Processing /app
+2026-10-05T18:00:26.9439854Z #26 3.175   Installing build dependencies: started
+2026-10-05T18:00:31.1919615Z #26 ...
+2026-10-05T18:00:31.1920599Z 
+2026-10-05T18:00:31.1921319Z #27 [linux/amd64 frontend-build 4/6] RUN npm ci --registry=https://registry.npmmirror.com
+2026-10-05T18:00:31.1922300Z #27 9.842 
+2026-10-05T18:00:31.1922844Z #27 9.842 added 108 packages in 10s
+2026-10-05T18:00:31.1923472Z #27 9.842 
+2026-10-05T18:00:31.1924116Z #27 9.842 20 packages are looking for funding
+2026-10-05T18:00:31.1924827Z #27 9.842   run `npm fund` for details
+2026-10-05T18:00:31.1925446Z #27 9.843 npm notice
+2026-10-05T18:00:31.1926165Z #27 9.843 npm notice New major version of npm available! 10.9.9 -> 12.2.0
+2026-10-05T18:00:31.1927220Z #27 9.843 npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+2026-10-05T18:00:31.1929861Z #27 9.843 npm notice To update run: npm install -g npm@12.2.0
+2026-10-05T18:00:31.1930681Z #27 9.843 npm notice
+2026-10-05T18:00:31.3305977Z #27 DONE 10.3s
+2026-10-05T18:00:31.3306267Z 
+2026-10-05T18:00:31.3306930Z #28 [linux/arm64 frontend-build 4/6] RUN npm ci --registry=https://registry.npmmirror.com
+2026-10-05T18:00:31.4444275Z #28 ...
+2026-10-05T18:00:31.4444458Z 
+2026-10-05T18:00:31.4444767Z #29 [linux/amd64 frontend-build 5/6] COPY frontend/ ./
+2026-10-05T18:00:31.4445187Z #29 DONE 0.1s
+2026-10-05T18:00:31.5968013Z 
+2026-10-05T18:00:31.5968916Z #30 [linux/amd64 frontend-build 6/6] RUN npm run build
+2026-10-05T18:00:31.6444838Z #30 0.198 
+2026-10-05T18:00:31.6445964Z #30 0.198 > reader-py-frontend@0.1.0 build
+2026-10-05T18:00:31.6447487Z #30 0.198 > vue-tsc -b && vite build
+2026-10-05T18:00:31.6448543Z #30 0.198 
+2026-10-05T18:00:37.7513264Z #30 ...
+2026-10-05T18:00:37.7515961Z 
+2026-10-05T18:00:37.7516977Z #26 [linux/amd64 stage-1 5/7] RUN pip install --no-cache-dir     --index-url https://pypi.tuna.tsinghua.edu.cn/simple     .
+2026-10-05T18:00:37.7518684Z #26 11.54   Installing build dependencies: finished with status 'done'
+2026-10-05T18:00:37.7519684Z #26 11.54   Getting requirements to build wheel: started
+2026-10-05T18:00:37.7520680Z #26 11.68   Getting requirements to build wheel: finished with status 'done'
+2026-10-05T18:00:37.7521662Z #26 11.68   Preparing metadata (pyproject.toml): started
+2026-10-05T18:00:37.7522586Z #26 11.91   Preparing metadata (pyproject.toml): finished with status 'done'
+2026-10-05T18:00:37.7523630Z #26 16.09 Collecting charset-normalizer>=3.3 (from reader-py==0.1.0)
+2026-10-05T18:00:37.7525840Z #26 16.38   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/7f/c5/38806a25ab5e65fc178f39affeda20858efafede2fce1ffc2556cfc9fe73/charset_normalizer-3.5.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (257 kB)
+2026-10-05T18:00:38.0474085Z #26 16.98 Collecting fastapi>=0.115 (from reader-py==0.1.0)
+2026-10-05T18:00:38.3420820Z #26 17.27   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/a0/b6/78aaf9141fb46742928c113f3cf6ef2259d538cb02b604b7656c1dc9883c/fastapi-0.142.2-py3-none-any.whl (144 kB)
+2026-10-05T18:00:38.7471054Z #26 17.68 Collecting httpx>=0.27 (from reader-py==0.1.0)
+2026-10-05T18:00:39.0334924Z #26 17.96   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/2a/39/e50c7c3a983047577ee07d2a9e53faf5a69493943ec3f6a384bdc792deb2/httpx-0.28.1-py3-none-any.whl (73 kB)
+2026-10-05T18:00:39.3507453Z #26 18.28 Collecting jsonpath-ng>=1.6 (from reader-py==0.1.0)
+2026-10-05T18:00:39.6379127Z #26 18.57   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/03/99/33c7d78a3fb70d545fd5411ac67a651c81602cc09c9cf0df383733f068c5/jsonpath_ng-1.8.0-py3-none-any.whl (67 kB)
+2026-10-05T18:00:41.2271723Z #26 20.16 Collecting lxml>=5.0 (from reader-py==0.1.0)
+2026-10-05T18:00:41.5105541Z #26 20.44   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/0a/20/e022dbc6b4753a9bc9fc5fb28a27163430c1731b9913997f6544c1b2518c/lxml-6.1.3-cp312-cp312-manylinux_2_26_x86_64.manylinux_2_28_x86_64.whl (5.2 MB)
+2026-10-05T18:00:42.4296956Z #26 21.16      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.2/5.2 MB 7.2 MB/s eta 0:00:00
+2026-10-05T18:00:42.4298058Z #26 ...
+2026-10-05T18:00:42.4298782Z 
+2026-10-05T18:00:42.4299705Z #30 [linux/amd64 frontend-build 6/6] RUN npm run build
+2026-10-05T18:00:42.4300755Z #30 10.86 vite v7.3.6 building client environment for production...
+2026-10-05T18:00:42.4301661Z #30 10.98 transforming...
+2026-10-05T18:00:47.8246836Z #30 ...
+2026-10-05T18:00:47.8250249Z 
+2026-10-05T18:00:47.8251287Z #26 [linux/amd64 stage-1 5/7] RUN pip install --no-cache-dir     --index-url https://pypi.tuna.tsinghua.edu.cn/simple     .
+2026-10-05T18:00:47.8252643Z #26 21.48 Collecting parsel>=1.9 (from reader-py==0.1.0)
+2026-10-05T18:00:47.8254491Z #26 21.76   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/e9/44/2ff782553b581b3d55632eb4f9de1dc792ca99de7e47f69e22af28a9ef2d/parsel-1.12.1-py3-none-any.whl (15 kB)
+2026-10-05T18:00:47.8256317Z #26 22.24 Collecting pycryptodome>=3.20 (from reader-py==0.1.0)
+2026-10-05T18:00:47.8258763Z #26 22.52   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/9a/7d/1a7c58f5b839fbf65965461b554bb1297839fdb8880b5ab92c8331b7a02a/pycryptodome-3.24.0-cp37-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (2.3 MB)
+2026-10-05T18:00:47.8261331Z #26 22.62      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.3/2.3 MB 22.8 MB/s eta 0:00:00
+2026-10-05T18:00:47.8262463Z #26 22.94 Collecting pydantic-settings>=2.4 (from reader-py==0.1.0)
+2026-10-05T18:00:47.8264358Z #26 23.23   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/30/a4/2bffa9f8e804325a09867f0e9d30795c80ea9f8d62560bd1b6ad6220eb2f/pydantic_settings-2.15.0-py3-none-any.whl (69 kB)
+2026-10-05T18:00:47.8267170Z #26 23.54 Collecting python-multipart>=0.0.9 (from reader-py==0.1.0)
+2026-10-05T18:00:47.8269293Z #26 23.82   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/e1/04/e8135ebd1ad02c56ec633277529b2602ff99ff634be76cdba5744cf554fd/python_multipart-0.0.32-py3-none-any.whl (30 kB)
+2026-10-05T18:00:47.8271134Z #26 24.13 Collecting quickjs>=1.19.4 (from reader-py==0.1.0)
+2026-10-05T18:00:47.8273265Z #26 24.41   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/26/59/1689a6f59f26d8f68c082dc6dfbbb38d9b7eaa3e243a775f8be2c876b561/quickjs-1.19.4-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.manylinux_2_28_x86_64.whl (2.2 MB)
+2026-10-05T18:00:47.8275345Z #26 24.51      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.2/2.2 MB 23.0 MB/s eta 0:00:00
+2026-10-05T18:00:47.8276136Z #26 24.89 Collecting sqlmodel>=0.0.21 (from reader-py==0.1.0)
+2026-10-05T18:00:47.8277492Z #26 25.17   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/f7/b3/988928029b0e68de7ac587c2e1ccd379aa18e7c0aa7cc426628145a032fe/sqlmodel-0.0.47-py3-none-any.whl (31 kB)
+2026-10-05T18:00:47.8279658Z #26 25.52 Collecting uvicorn>=0.30 (from uvicorn[standard]>=0.30->reader-py==0.1.0)
+2026-10-05T18:00:47.8281450Z #26 25.81   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/38/0c/b54a4fdd7f90a3af8b02ebc9ce6712c2c208b7926a2f7bad95c33ebbe943/uvicorn-0.54.0-py3-none-any.whl (87 kB)
+2026-10-05T18:00:47.8291041Z #26 26.17 Collecting starlette>=0.46.0 (from fastapi>=0.115->reader-py==0.1.0)
+2026-10-05T18:00:47.8292883Z #26 26.46   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/4e/d6/1ec1b290f9e0fb067899b61e1d37a30c923068bad260b216dbe37a7d2967/starlette-1.7.0-py3-none-any.whl (78 kB)
+2026-10-05T18:00:48.0771915Z #26 27.01 Collecting pydantic>=2.9.0 (from fastapi>=0.115->reader-py==0.1.0)
+2026-10-05T18:00:48.3600997Z #26 27.29   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/eb/47/c95ffc2009878c7aac0c5e08528022dcb885933252a88b5f170058014464/pydantic-2.13.5-py3-none-any.whl (472 kB)
+2026-10-05T18:00:48.7580978Z #26 27.69 Collecting typing-extensions>=4.8.0 (from fastapi>=0.115->reader-py==0.1.0)
+2026-10-05T18:00:49.0409771Z #26 27.97   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/49/d3/b8441a820a491ddfc024b0b0cf0393375b75ea13866d9c66727e54c2fc80/typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+2026-10-05T18:00:49.3367626Z #26 28.27 Collecting typing-inspection>=0.4.2 (from fastapi>=0.115->reader-py==0.1.0)
+2026-10-05T18:00:49.6191319Z #26 28.55   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/67/81/4add07e5172b7ac40d8ed5ff580409a7801a4fe26d529bdd915401dabfbe/typing_inspection-0.4.4-py3-none-any.whl (14 kB)
+2026-10-05T18:00:49.9070253Z #26 28.84 Collecting annotated-doc>=0.0.2 (from fastapi>=0.115->reader-py==0.1.0)
+2026-10-05T18:00:50.1897531Z #26 29.12   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/3e/30/e900b21425a860e195f32e37657aa1f7c7f2b1bfb26f03ca209b90933c06/annotated_doc-0.0.5-py3-none-any.whl (5.3 kB)
+2026-10-05T18:00:50.5049456Z #26 29.44 Collecting opentelemetry-api>=1.44.0 (from fastapi>=0.115->reader-py==0.1.0)
+2026-10-05T18:00:50.7878210Z #26 29.72   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/44/b9/040d1a1c7836922828e6480cd2366bb8fe0ebf75b413d2bb51a9b0e7f78f/opentelemetry_api-1.45.0-py3-none-any.whl (60 kB)
+2026-10-05T18:00:51.1047396Z #26 30.04 Collecting anyio (from httpx>=0.27->reader-py==0.1.0)
+2026-10-05T18:00:51.3870213Z #26 30.32   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/12/b8/4bd346e22b28902df4d651910f5242c28d84e4a5c2435ca5c3f797ed7e2e/anyio-4.15.1-py3-none-any.whl (132 kB)
+2026-10-05T18:00:51.6986231Z #26 30.63 Collecting certifi (from httpx>=0.27->reader-py==0.1.0)
+2026-10-05T18:00:51.9794928Z #26 30.91   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/0b/a7/71ac2cff56fec219ed242bb11b8efb69fcc4bec75db06fb7bfe35de520e6/certifi-2026.7.22-py3-none-any.whl (136 kB)
+2026-10-05T18:00:52.2987604Z #26 31.23 Collecting httpcore==1.* (from httpx>=0.27->reader-py==0.1.0)
+2026-10-05T18:00:52.5810485Z #26 31.51   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/7e/f5/f66802a942d491edb555dd61e3a9961140fd64c90bce1eafd741609d334d/httpcore-1.0.9-py3-none-any.whl (78 kB)
+2026-10-05T18:00:52.7045181Z #26 ...
+2026-10-05T18:00:52.7052722Z 
+2026-10-05T18:00:52.7053577Z #30 [linux/amd64 frontend-build 6/6] RUN npm run build
+2026-10-05T18:00:52.7054948Z #30 21.26 ✓ 1700 modules transformed.
+2026-10-05T18:00:53.3367828Z #30 21.89 rendering chunks...
+2026-10-05T18:00:54.2828961Z #30 22.62 computing gzip size...
+2026-10-05T18:00:54.2832100Z #30 22.68 dist/index.html                                        0.41 kB │ gzip:   0.29 kB
+2026-10-05T18:00:54.2833733Z #30 22.68 dist/assets/Search-B98fCpyG.css                        0.20 kB │ gzip:   0.16 kB
+2026-10-05T18:00:54.2835631Z #30 22.68 dist/assets/SourceManage-CA1xKBs1.css                  0.43 kB │ gzip:   0.22 kB
+2026-10-05T18:00:54.2837939Z #30 22.68 dist/assets/Reader-BVHQpOQk.css                        0.90 kB │ gzip:   0.46 kB
+2026-10-05T18:00:54.2839662Z #30 22.68 dist/assets/Bookshelf-D1tLtijZ.css                     1.27 kB │ gzip:   0.48 kB
+2026-10-05T18:00:54.2841012Z #30 22.68 dist/assets/index-De5H2EIX.css                       361.37 kB │ gzip:  48.30 kB
+2026-10-05T18:00:54.2842596Z #30 22.68 dist/assets/_plugin-vue_export-helper-DlAUqK2U.js      0.09 kB │ gzip:   0.10 kB
+2026-10-05T18:00:54.2844116Z #30 22.68 dist/assets/Settings-C3262MvI.js                       0.91 kB │ gzip:   0.60 kB
+2026-10-05T18:00:54.2845458Z #30 22.68 dist/assets/Search-wg7peD2h.js                         2.62 kB │ gzip:   1.44 kB
+2026-10-05T18:00:54.2847100Z #30 22.68 dist/assets/Bookshelf-DRoEKfWW.js                      3.03 kB │ gzip:   1.48 kB
+2026-10-05T18:00:54.2890272Z #30 22.68 dist/assets/Reader-BKVnHf6h.js                         7.07 kB │ gzip:   3.01 kB
+2026-10-05T18:00:54.2891874Z #30 22.68 dist/assets/SourceManage-DcMjSI2K.js                   7.57 kB │ gzip:   2.91 kB
+2026-10-05T18:00:54.2906586Z #30 22.68 dist/assets/index-ezVelMiI.js                         53.73 kB │ gzip:  20.38 kB
+2026-10-05T18:00:54.2907963Z #30 22.68 dist/assets/index-C7Xmog-1.js                      1,028.73 kB │ gzip: 338.79 kB
+2026-10-05T18:00:54.2909326Z #30 22.68 
+2026-10-05T18:00:54.2910103Z #30 22.68 (!) Some chunks are larger than 500 kB after minification. Consider:
+2026-10-05T18:00:54.2911135Z #30 22.68 - Using dynamic import() to code-split the application
+2026-10-05T18:00:54.2912643Z #30 22.68 - Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+2026-10-05T18:00:54.2914937Z #30 22.68 - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+2026-10-05T18:00:54.2941914Z #30 22.68 ✓ built in 11.78s
+2026-10-05T18:00:54.4936355Z #30 DONE 22.9s
+2026-10-05T18:00:54.4938079Z 
+2026-10-05T18:00:54.4939594Z #26 [linux/amd64 stage-1 5/7] RUN pip install --no-cache-dir     --index-url https://pypi.tuna.tsinghua.edu.cn/simple     .
+2026-10-05T18:00:54.4940477Z #26 31.82 Collecting idna (from httpx>=0.27->reader-py==0.1.0)
+2026-10-05T18:00:54.4941343Z #26 32.10   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/58/a2/bb081bab032533a855d44de1d56f8e8426114ff1ba5d1f07a438a0a654f8/idna-3.20-py3-none-any.whl (69 kB)
+2026-10-05T18:00:54.4942212Z #26 32.40 Collecting h11>=0.16 (from httpcore==1.*->httpx>=0.27->reader-py==0.1.0)
+2026-10-05T18:00:54.4943062Z #26 32.68   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/04/4b/29cac41a4d98d144bf5f6d33995617b185d14b22401f75ca86f384e87ff1/h11-0.16.0-py3-none-any.whl (37 kB)
+2026-10-05T18:00:54.4943887Z #26 32.97 Collecting cssselect>=1.2.0 (from parsel>=1.9->reader-py==0.1.0)
+2026-10-05T18:00:54.4944739Z #26 33.26   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/60/e9/6734502f67533a752ea8b1c8f7f227c94eecf300252ba8bf23e3e59d8a36/cssselect-1.5.0-py3-none-any.whl (20 kB)
+2026-10-05T18:00:54.6302659Z #26 33.56 Collecting jmespath>=1.0.0 (from parsel>=1.9->reader-py==0.1.0)
+2026-10-05T18:00:54.9127079Z #26 33.84   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/14/2f/967ba146e6d58cf6a652da73885f52fc68001525b4197effc174321d70b4/jmespath-1.1.0-py3-none-any.whl (20 kB)
+2026-10-05T18:00:55.2234651Z #26 34.15 Collecting w3lib>=1.19.0 (from parsel>=1.9->reader-py==0.1.0)
+2026-10-05T18:00:55.5090517Z #26 34.44   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/99/bb/e977329315ba4e14f6f6ca0fee7de816a80d161c115a181405bbab92aecf/w3lib-2.5.0-py3-none-any.whl (37 kB)
+2026-10-05T18:00:55.8363255Z #26 34.77 Collecting python-dotenv>=0.21.0 (from pydantic-settings>=2.4->reader-py==0.1.0)
+2026-10-05T18:00:56.1340088Z #26 35.06   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/60/d1/38f3a3405989a89ac18390803e70c6ad7c7760da4f9b83cbeca0c44a0c72/python_dotenv-1.2.4-py3-none-any.whl (23 kB)
+2026-10-05T18:00:57.1620074Z #26 36.09 Collecting SQLAlchemy<2.1.0,>=2.0.14 (from sqlmodel>=0.0.21->reader-py==0.1.0)
+2026-10-05T18:00:57.4466381Z #26 36.38   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/d9/93/34fdc4a4faced77037a6b3ba1db1acd92e9bd12c21e229b327edd1d3e881/sqlalchemy-2.0.54-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (3.5 MB)
+2026-10-05T18:00:57.7484365Z #26 36.53      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.5/3.5 MB 22.9 MB/s eta 0:00:00
+2026-10-05T18:00:57.9656057Z #26 36.90 Collecting click>=7.0 (from uvicorn>=0.30->uvicorn[standard]>=0.30->reader-py==0.1.0)
+2026-10-05T18:00:58.2478509Z #26 37.18   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/58/50/6c0d534c5f134586a8e1ba4e330569e32f057e33372ae556463212fb4cd3/click-8.5.0-py3-none-any.whl (125 kB)
+2026-10-05T18:00:58.5873950Z #26 37.52 Collecting httptools>=0.8.0 (from uvicorn[standard]>=0.30->reader-py==0.1.0)
+2026-10-05T18:00:58.8684851Z #26 37.80   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/e3/a6/febbb8b8db0f58b38e44ad6cb946e6a255ae49b55f2e8543408fb7501ccd/httptools-0.8.0-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (523 kB)
+2026-10-05T18:00:59.2814585Z #26 38.21 Collecting pyyaml>=5.1 (from uvicorn[standard]>=0.30->reader-py==0.1.0)
+2026-10-05T18:00:59.5626349Z #26 38.49   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/8b/9d/b3589d3877982d4f2329302ef98a8026e7f4443c765c46cfecc8858c6b4b/pyyaml-6.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (807 kB)
+2026-10-05T18:00:59.7493045Z #26 38.53      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 807.9/807.9 kB 23.9 MB/s eta 0:00:00
+2026-10-05T18:00:59.9545538Z #26 38.89 Collecting uvloop>=0.15.1 (from uvicorn[standard]>=0.30->reader-py==0.1.0)
+2026-10-05T18:01:00.2358746Z #26 39.17   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/51/27/c1d2f9fa977f8f42ea294604166df10e0027e6dc6cd17f85ede386c9bf36/uvloop-0.23.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (4.5 MB)
+2026-10-05T18:01:00.7461422Z #26 39.53      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.5/4.5 MB 12.3 MB/s eta 0:00:00
+2026-10-05T18:01:01.0356316Z #26 39.97 Collecting watchfiles>=0.20 (from uvicorn[standard]>=0.30->reader-py==0.1.0)
+2026-10-05T18:01:01.2692424Z #26 ...
+2026-10-05T18:01:01.2693651Z 
+2026-10-05T18:01:01.2694392Z #25 [linux/arm64 stage-1 5/7] RUN pip install --no-cache-dir     --index-url https://pypi.tuna.tsinghua.edu.cn/simple     .
+2026-10-05T18:01:01.2695967Z #25 39.99 Looking in indexes: https://pypi.tuna.tsinghua.edu.cn/simple
+2026-10-05T18:01:01.2696651Z #25 40.00 Processing /app
+2026-10-05T18:01:01.2697149Z #25 40.05   Installing build dependencies: started
+2026-10-05T18:01:06.9129025Z #25 ...
+2026-10-05T18:01:06.9129838Z 
+2026-10-05T18:01:06.9130879Z #26 [linux/amd64 stage-1 5/7] RUN pip install --no-cache-dir     --index-url https://pypi.tuna.tsinghua.edu.cn/simple     .
+2026-10-05T18:01:06.9133345Z #26 40.25   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/8a/cf/e3ad894ed5909a7c44b0707e89bc25d19a3d78b3a7aec846119443b6ae56/watchfiles-1.3.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (458 kB)
+2026-10-05T18:01:06.9136168Z #26 40.80 Collecting websockets>=13.0 (from uvicorn[standard]>=0.30->reader-py==0.1.0)
+2026-10-05T18:01:06.9139052Z #26 41.08   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/03/c0/a6d8be9c43e4456fb9597fdf8b5e0ce1f0a5df41503acce6d869536e4e23/websockets-17.2-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (225 kB)
+2026-10-05T18:01:06.9142060Z #26 41.39 Collecting annotated-types>=0.6.0 (from pydantic>=2.9.0->fastapi>=0.115->reader-py==0.1.0)
+2026-10-05T18:01:06.9144054Z #26 41.67   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/99/91/8acff4f5e50511b911bbccb72b8628a49c68ce14148cd9f6431094859a90/annotated_types-0.8.0-py3-none-any.whl (13 kB)
+2026-10-05T18:01:06.9146467Z #26 43.30 Collecting pydantic-core==2.46.5 (from pydantic>=2.9.0->fastapi>=0.115->reader-py==0.1.0)
+2026-10-05T18:01:06.9149729Z #26 43.58   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/c0/a4/eb9409ec0736e50aa70a412f16c204ed149516846912f7e6724d4c73ee53/pydantic_core-2.46.5-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.1 MB)
+2026-10-05T18:01:06.9152258Z #26 43.66      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 27.9 MB/s eta 0:00:00
+2026-10-05T18:01:06.9153530Z #26 44.37 Collecting greenlet>=1 (from SQLAlchemy<2.1.0,>=2.0.14->sqlmodel>=0.0.21->reader-py==0.1.0)
+2026-10-05T18:01:06.9155716Z #26 44.65   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/66/6a/1594f3869c57c149abdb380492529e04d4c0229b5e4d79572c5bd0aaa673/greenlet-3.5.6-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (621 kB)
+2026-10-05T18:01:06.9158041Z #26 44.67      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 621.4/621.4 kB 29.1 MB/s eta 0:00:00
+2026-10-05T18:01:06.9159439Z #26 44.77 Building wheels for collected packages: reader-py
+2026-10-05T18:01:06.9160421Z #26 44.77   Building wheel for reader-py (pyproject.toml): started
+2026-10-05T18:01:06.9161550Z #26 44.83   Building wheel for reader-py (pyproject.toml): finished with status 'done'
+2026-10-05T18:01:06.9163270Z #26 44.83   Created wheel for reader-py: filename=reader_py-0.1.0-py3-none-any.whl size=69753 sha256=48ca1969203438f13d1bfe4e1c3cf0964624203fc180d01dfa5fe8994fb611af
+2026-10-05T18:01:06.9165375Z #26 44.83   Stored in directory: /tmp/pip-ephem-wheel-cache-uatkcxmb/wheels/54/1b/b7/aa63e25c8f14f4f2ae7b04e6097bdecb770e455c5c1ee0a600
+2026-10-05T18:01:06.9166746Z #26 44.83 Successfully built reader-py
+2026-10-05T18:01:06.9170707Z #26 44.94 Installing collected packages: quickjs, jsonpath-ng, websockets, w3lib, uvloop, typing-extensions, pyyaml, python-multipart, python-dotenv, pycryptodome, lxml, jmespath, idna, httptools, h11, greenlet, cssselect, click, charset-normalizer, certifi, annotated-types, annotated-doc, uvicorn, typing-inspection, SQLAlchemy, pydantic-core, parsel, opentelemetry-api, httpcore, anyio, watchfiles, starlette, pydantic, httpx, sqlmodel, pydantic-settings, fastapi, reader-py
+2026-10-05T18:01:10.0400866Z #26 48.97 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+2026-10-05T18:01:10.1907062Z #26 48.97 Successfully installed SQLAlchemy-2.0.54 annotated-doc-0.0.5 annotated-types-0.8.0 anyio-4.15.1 certifi-2026.7.22 charset-normalizer-3.5.2 click-8.5.0 cssselect-1.5.0 fastapi-0.142.2 greenlet-3.5.6 h11-0.16.0 httpcore-1.0.9 httptools-0.8.0 httpx-0.28.1 idna-3.20 jmespath-1.1.0 jsonpath-ng-1.8.0 lxml-6.1.3 opentelemetry-api-1.45.0 parsel-1.12.1 pycryptodome-3.24.0 pydantic-2.13.5 pydantic-core-2.46.5 pydantic-settings-2.15.0 python-dotenv-1.2.4 python-multipart-0.0.32 pyyaml-6.0.3 quickjs-1.19.4 reader-py-0.1.0 sqlmodel-0.0.47 starlette-1.7.0 typing-extensions-4.16.0 typing-inspection-0.4.4 uvicorn-0.54.0 uvloop-0.23.0 w3lib-2.5.0 watchfiles-1.3.0 websockets-17.2
+2026-10-05T18:01:11.9577672Z #26 50.89 
+2026-10-05T18:01:11.9579140Z #26 50.89 [notice] A new release of pip is available: 25.0.1 -> 26.2.1
+2026-10-05T18:01:11.9581344Z #26 50.89 [notice] To update, run: pip install --upgrade pip
+2026-10-05T18:01:12.5101537Z #26 DONE 51.4s
+2026-10-05T18:01:12.5101917Z 
+2026-10-05T18:01:12.5108043Z #28 [linux/arm64 frontend-build 4/6] RUN npm ci --registry=https://registry.npmmirror.com
+2026-10-05T18:01:12.6706699Z #28 ...
+2026-10-05T18:01:12.6706998Z 
+2026-10-05T18:01:12.6707421Z #31 [linux/amd64 stage-1 6/7] COPY --from=frontend-build /build/dist ./static
+2026-10-05T18:01:12.6708537Z #31 DONE 0.1s
+2026-10-05T18:01:12.6708761Z 
+2026-10-05T18:01:12.6708991Z #32 [linux/amd64 stage-1 7/7] RUN mkdir -p /data
+2026-10-05T18:01:12.6709654Z #32 DONE 0.1s
+2026-10-05T18:01:12.8208535Z 
+2026-10-05T18:01:12.8209601Z #28 [linux/arm64 frontend-build 4/6] RUN npm ci --registry=https://registry.npmmirror.com
+2026-10-05T18:01:18.2185614Z #28 57.17 
+2026-10-05T18:01:18.2187188Z #28 57.17 added 108 packages in 53s
+2026-10-05T18:01:18.3926761Z #28 57.17 
+2026-10-05T18:01:18.3927500Z #28 57.17 20 packages are looking for funding
+2026-10-05T18:01:18.3928648Z #28 57.17   run `npm fund` for details
+2026-10-05T18:01:18.3929277Z #28 57.19 npm notice
+2026-10-05T18:01:18.3929813Z #28 57.19 npm notice New major version of npm available! 10.9.9 -> 12.2.0
+2026-10-05T18:01:18.3930679Z #28 57.19 npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+2026-10-05T18:01:18.3931442Z #28 57.19 npm notice To update run: npm install -g npm@12.2.0
+2026-10-05T18:01:18.3932021Z #28 57.19 npm notice
+2026-10-05T18:01:18.4587825Z #28 DONE 57.4s
+2026-10-05T18:01:18.4590536Z 
+2026-10-05T18:01:18.4592013Z #25 [linux/arm64 stage-1 5/7] RUN pip install --no-cache-dir     --index-url https://pypi.tuna.tsinghua.edu.cn/simple     .
+2026-10-05T18:01:18.5735577Z #25 ...
+2026-10-05T18:01:18.5735883Z 
+2026-10-05T18:01:18.5736152Z #33 [linux/arm64 frontend-build 5/6] COPY frontend/ ./
+2026-10-05T18:01:18.5736696Z #33 DONE 0.1s
+2026-10-05T18:01:18.7249182Z 
+2026-10-05T18:01:18.7249991Z #34 [linux/arm64 frontend-build 6/6] RUN npm run build
+2026-10-05T18:01:21.4307078Z #34 2.856 
+2026-10-05T18:01:21.4307908Z #34 2.856 > reader-py-frontend@0.1.0 build
+2026-10-05T18:01:21.4308952Z #34 2.856 > vue-tsc -b && vite build
+2026-10-05T18:01:21.4309763Z #34 2.856 
+2026-10-05T18:01:25.0702650Z #34 ...
+2026-10-05T18:01:25.0703215Z 
+2026-10-05T18:01:25.0704027Z #25 [linux/arm64 stage-1 5/7] RUN pip install --no-cache-dir     --index-url https://pypi.tuna.tsinghua.edu.cn/simple     .
+2026-10-05T18:01:25.0705232Z #25 60.15   Installing build dependencies: finished with status 'done'
+2026-10-05T18:01:25.0705976Z #25 60.16   Getting requirements to build wheel: started
+2026-10-05T18:01:25.0707295Z #25 61.73   Getting requirements to build wheel: finished with status 'done'
+2026-10-05T18:01:25.0708504Z #25 61.75   Preparing metadata (pyproject.toml): started
+2026-10-05T18:01:25.3634488Z #25 64.29   Preparing metadata (pyproject.toml): finished with status 'done'
+2026-10-05T18:01:32.9525937Z #25 71.88 Collecting charset-normalizer>=3.3 (from reader-py==0.1.0)
+2026-10-05T18:01:33.2720888Z #25 72.20   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/c9/87/2fea8c13dc24b3ca9c6f803a5b2dfdeae73eb4f9e12c7885ed908ff0433c/charset_normalizer-3.5.2-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl (246 kB)
+2026-10-05T18:01:35.2539426Z #25 74.18 Collecting fastapi>=0.115 (from reader-py==0.1.0)
+2026-10-05T18:01:35.5591068Z #25 74.49   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/a0/b6/78aaf9141fb46742928c113f3cf6ef2259d538cb02b604b7656c1dc9883c/fastapi-0.142.2-py3-none-any.whl (144 kB)
+2026-10-05T18:01:36.4947722Z #25 75.42 Collecting httpx>=0.27 (from reader-py==0.1.0)
+2026-10-05T18:01:36.8008944Z #25 75.73   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/2a/39/e50c7c3a983047577ee07d2a9e53faf5a69493943ec3f6a384bdc792deb2/httpx-0.28.1-py3-none-any.whl (73 kB)
+2026-10-05T18:01:37.2341768Z #25 76.16 Collecting jsonpath-ng>=1.6 (from reader-py==0.1.0)
+2026-10-05T18:01:37.5385674Z #25 76.47   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/03/99/33c7d78a3fb70d545fd5411ac67a651c81602cc09c9cf0df383733f068c5/jsonpath_ng-1.8.0-py3-none-any.whl (67 kB)
+2026-10-05T18:01:45.5348617Z #25 84.46 Collecting lxml>=5.0 (from reader-py==0.1.0)
+2026-10-05T18:01:45.8358920Z #25 84.77   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/a3/a0/a1f7f1313795bfec67b77f01ef3b1128d49f2d7f66a8413fa55d47f4e25f/lxml-6.1.3-cp312-cp312-manylinux_2_26_aarch64.manylinux_2_28_aarch64.whl (5.0 MB)
+2026-10-05T18:01:46.7184982Z #25 85.49      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.0/5.0 MB 7.3 MB/s eta 0:00:00
+2026-10-05T18:01:47.1868928Z #25 86.12 Collecting parsel>=1.9 (from reader-py==0.1.0)
+2026-10-05T18:01:47.4901658Z #25 86.42   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/e9/44/2ff782553b581b3d55632eb4f9de1dc792ca99de7e47f69e22af28a9ef2d/parsel-1.12.1-py3-none-any.whl (15 kB)
+2026-10-05T18:01:50.1722844Z #25 89.10 Collecting pycryptodome>=3.20 (from reader-py==0.1.0)
+2026-10-05T18:01:50.4776420Z #25 89.41   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/08/60/128bbb9b00e2da47d2f6bed68c13dfea466f1116e2f330a401634271978e/pycryptodome-3.24.0-cp37-abi3-manylinux2014_aarch64.manylinux_2_17_aarch64.whl (2.2 MB)
+2026-10-05T18:01:50.7412877Z #25 89.52      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.2/2.2 MB 25.7 MB/s eta 0:00:00
+2026-10-05T18:01:51.2025240Z #25 90.13 Collecting pydantic-settings>=2.4 (from reader-py==0.1.0)
+2026-10-05T18:01:51.5045447Z #25 90.43   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/30/a4/2bffa9f8e804325a09867f0e9d30795c80ea9f8d62560bd1b6ad6220eb2f/pydantic_settings-2.15.0-py3-none-any.whl (69 kB)
+2026-10-05T18:01:52.0530331Z #25 90.98 Collecting python-multipart>=0.0.9 (from reader-py==0.1.0)
+2026-10-05T18:01:52.3617187Z #25 91.29   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/e1/04/e8135ebd1ad02c56ec633277529b2602ff99ff634be76cdba5744cf554fd/python_multipart-0.0.32-py3-none-any.whl (30 kB)
+2026-10-05T18:01:52.8199964Z #25 91.75 Collecting quickjs>=1.19.4 (from reader-py==0.1.0)
+2026-10-05T18:01:53.1176764Z #25 92.05   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/f1/a7/8fac2e213db8108d8108e9f1ee8d6c2abfcbe943238b0960585c26666862/quickjs-1.19.4.tar.gz (456 kB)
+2026-10-05T18:01:53.4211665Z #25 92.35   Installing build dependencies: started
+2026-10-05T18:02:18.3375524Z #25 117.3   Installing build dependencies: finished with status 'done'
+2026-10-05T18:02:18.4944449Z #25 117.3   Getting requirements to build wheel: started
+2026-10-05T18:02:21.4948907Z #25 120.4   Getting requirements to build wheel: finished with status 'done'
+2026-10-05T18:02:21.6582458Z #25 120.4   Preparing metadata (pyproject.toml): started
+2026-10-05T18:02:25.0130638Z #25 123.9   Preparing metadata (pyproject.toml): finished with status 'done'
+2026-10-05T18:02:25.2581751Z #25 ...
+2026-10-05T18:02:25.2582609Z 
+2026-10-05T18:02:25.2582900Z #34 [linux/arm64 frontend-build 6/6] RUN npm run build
+2026-10-05T18:02:25.2583369Z #34 66.68 vite v7.3.6 building client environment for production...
+2026-10-05T18:02:26.0719978Z #34 67.50 transforming...
+2026-10-05T18:02:31.9916540Z #34 ...
+2026-10-05T18:02:31.9917083Z 
+2026-10-05T18:02:31.9917843Z #25 [linux/arm64 stage-1 5/7] RUN pip install --no-cache-dir     --index-url https://pypi.tuna.tsinghua.edu.cn/simple     .
+2026-10-05T18:02:31.9919248Z #25 124.5 Collecting sqlmodel>=0.0.21 (from reader-py==0.1.0)
+2026-10-05T18:02:31.9920738Z #25 124.8   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/f7/b3/988928029b0e68de7ac587c2e1ccd379aa18e7c0aa7cc426628145a032fe/sqlmodel-0.0.47-py3-none-any.whl (31 kB)
+2026-10-05T18:02:31.9922293Z #25 125.7 Collecting uvicorn>=0.30 (from uvicorn[standard]>=0.30->reader-py==0.1.0)
+2026-10-05T18:02:31.9923960Z #25 126.0   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/38/0c/b54a4fdd7f90a3af8b02ebc9ce6712c2c208b7926a2f7bad95c33ebbe943/uvicorn-0.54.0-py3-none-any.whl (87 kB)
+2026-10-05T18:02:31.9925615Z #25 127.2 Collecting starlette>=0.46.0 (from fastapi>=0.115->reader-py==0.1.0)
+2026-10-05T18:02:31.9927242Z #25 127.5   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/4e/d6/1ec1b290f9e0fb067899b61e1d37a30c923068bad260b216dbe37a7d2967/starlette-1.7.0-py3-none-any.whl (78 kB)
+2026-10-05T18:02:32.0878032Z #25 131.0 Collecting pydantic>=2.9.0 (from fastapi>=0.115->reader-py==0.1.0)
+2026-10-05T18:02:32.4009599Z #25 131.3   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/eb/47/c95ffc2009878c7aac0c5e08528022dcb885933252a88b5f170058014464/pydantic-2.13.5-py3-none-any.whl (472 kB)
+2026-10-05T18:02:33.0990510Z #25 132.0 Collecting typing-extensions>=4.8.0 (from fastapi>=0.115->reader-py==0.1.0)
+2026-10-05T18:02:33.4076079Z #25 132.3   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/49/d3/b8441a820a491ddfc024b0b0cf0393375b75ea13866d9c66727e54c2fc80/typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+2026-10-05T18:02:33.7991967Z #25 132.7 Collecting typing-inspection>=0.4.2 (from fastapi>=0.115->reader-py==0.1.0)
+2026-10-05T18:02:34.0983632Z #25 133.0   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/67/81/4add07e5172b7ac40d8ed5ff580409a7801a4fe26d529bdd915401dabfbe/typing_inspection-0.4.4-py3-none-any.whl (14 kB)
+2026-10-05T18:02:34.4479830Z #25 133.4 Collecting annotated-doc>=0.0.2 (from fastapi>=0.115->reader-py==0.1.0)
+2026-10-05T18:02:34.7514529Z #25 133.7   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/3e/30/e900b21425a860e195f32e37657aa1f7c7f2b1bfb26f03ca209b90933c06/annotated_doc-0.0.5-py3-none-any.whl (5.3 kB)
+2026-10-05T18:02:35.4451554Z #25 134.4 Collecting opentelemetry-api>=1.44.0 (from fastapi>=0.115->reader-py==0.1.0)
+2026-10-05T18:02:35.7555298Z #25 134.7   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/44/b9/040d1a1c7836922828e6480cd2366bb8fe0ebf75b413d2bb51a9b0e7f78f/opentelemetry_api-1.45.0-py3-none-any.whl (60 kB)
+2026-10-05T18:02:36.3773688Z #25 135.3 Collecting anyio (from httpx>=0.27->reader-py==0.1.0)
+2026-10-05T18:02:36.6753301Z #25 135.6   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/12/b8/4bd346e22b28902df4d651910f5242c28d84e4a5c2435ca5c3f797ed7e2e/anyio-4.15.1-py3-none-any.whl (132 kB)
+2026-10-05T18:02:37.3615426Z #25 136.3 Collecting certifi (from httpx>=0.27->reader-py==0.1.0)
+2026-10-05T18:02:37.6562289Z #25 136.6   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/0b/a7/71ac2cff56fec219ed242bb11b8efb69fcc4bec75db06fb7bfe35de520e6/certifi-2026.7.22-py3-none-any.whl (136 kB)
+2026-10-05T18:02:38.3576249Z #25 137.3 Collecting httpcore==1.* (from httpx>=0.27->reader-py==0.1.0)
+2026-10-05T18:02:38.6526901Z #25 137.6   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/7e/f5/f66802a942d491edb555dd61e3a9961140fd64c90bce1eafd741609d334d/httpcore-1.0.9-py3-none-any.whl (78 kB)
+2026-10-05T18:02:39.2009441Z #25 138.1 Collecting idna (from httpx>=0.27->reader-py==0.1.0)
+2026-10-05T18:02:39.5027952Z #25 138.4   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/58/a2/bb081bab032533a855d44de1d56f8e8426114ff1ba5d1f07a438a0a654f8/idna-3.20-py3-none-any.whl (69 kB)
+2026-10-05T18:02:39.9235586Z #25 138.9 Collecting h11>=0.16 (from httpcore==1.*->httpx>=0.27->reader-py==0.1.0)
+2026-10-05T18:02:40.2201165Z #25 139.1   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/04/4b/29cac41a4d98d144bf5f6d33995617b185d14b22401f75ca86f384e87ff1/h11-0.16.0-py3-none-any.whl (37 kB)
+2026-10-05T18:02:40.6272700Z #25 139.6 Collecting cssselect>=1.2.0 (from parsel>=1.9->reader-py==0.1.0)
+2026-10-05T18:02:40.9318971Z #25 139.9   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/60/e9/6734502f67533a752ea8b1c8f7f227c94eecf300252ba8bf23e3e59d8a36/cssselect-1.5.0-py3-none-any.whl (20 kB)
+2026-10-05T18:02:41.4267608Z #25 140.4 Collecting jmespath>=1.0.0 (from parsel>=1.9->reader-py==0.1.0)
+2026-10-05T18:02:41.7394955Z #25 140.7   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/14/2f/967ba146e6d58cf6a652da73885f52fc68001525b4197effc174321d70b4/jmespath-1.1.0-py3-none-any.whl (20 kB)
+2026-10-05T18:02:42.4419981Z #25 141.4 Collecting w3lib>=1.19.0 (from parsel>=1.9->reader-py==0.1.0)
+2026-10-05T18:02:42.7420276Z #25 141.7   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/99/bb/e977329315ba4e14f6f6ca0fee7de816a80d161c115a181405bbab92aecf/w3lib-2.5.0-py3-none-any.whl (37 kB)
+2026-10-05T18:02:43.8956267Z #25 142.8 Collecting python-dotenv>=0.21.0 (from pydantic-settings>=2.4->reader-py==0.1.0)
+2026-10-05T18:02:44.1973658Z #25 143.1   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/60/d1/38f3a3405989a89ac18390803e70c6ad7c7760da4f9b83cbeca0c44a0c72/python_dotenv-1.2.4-py3-none-any.whl (23 kB)
+2026-10-05T18:02:53.3007192Z #25 152.2 Collecting SQLAlchemy<2.1.0,>=2.0.14 (from sqlmodel>=0.0.21->reader-py==0.1.0)
+2026-10-05T18:02:53.5994671Z #25 152.5   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/a2/3d/5dfbb9528a391186a99986daecc5cbe003f34408dee91db8f5cdcf917040/sqlalchemy-2.0.54-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl (3.4 MB)
+2026-10-05T18:02:53.9201542Z #25 152.7      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.4/3.4 MB 24.0 MB/s eta 0:00:00
+2026-10-05T18:02:55.1423178Z #25 154.1 Collecting click>=7.0 (from uvicorn>=0.30->uvicorn[standard]>=0.30->reader-py==0.1.0)
+2026-10-05T18:02:55.4387188Z #25 154.4   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/58/50/6c0d534c5f134586a8e1ba4e330569e32f057e33372ae556463212fb4cd3/click-8.5.0-py3-none-any.whl (125 kB)
+2026-10-05T18:02:56.4077715Z #25 155.3 Collecting httptools>=0.8.0 (from uvicorn[standard]>=0.30->reader-py==0.1.0)
+2026-10-05T18:02:56.7139690Z #25 155.6   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/b7/e4/f90a0df0b83beff265b7e3b65f2a4cefd95792d4be0ac3e16049f2acd3c2/httptools-0.8.0-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl (518 kB)
+2026-10-05T18:02:57.9786306Z #25 156.9 Collecting pyyaml>=5.1 (from uvicorn[standard]>=0.30->reader-py==0.1.0)
+2026-10-05T18:02:58.2789869Z #25 157.2   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/ed/23/7a778b6bd0b9a8039df8b1b1d80e2e2ad78aa04171592c8a5c43a56a6af4/pyyaml-6.0.3-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl (775 kB)
+2026-10-05T18:02:58.4953509Z #25 157.3      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 775.1/775.1 kB 34.5 MB/s eta 0:00:00
+2026-10-05T18:02:59.3930334Z #25 158.3 Collecting uvloop>=0.15.1 (from uvicorn[standard]>=0.30->reader-py==0.1.0)
+2026-10-05T18:02:59.7071801Z #25 158.6   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/3d/95/a880f8ce3b87ac5b307c354e8ee480be4658d24bf01f87921d57e3530b4a/uvloop-0.23.0-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl (4.4 MB)
+2026-10-05T18:03:00.2422205Z #25 159.0      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.4/4.4 MB 13.1 MB/s eta 0:00:00
+2026-10-05T18:03:02.7296718Z #25 161.7 Collecting watchfiles>=0.20 (from uvicorn[standard]>=0.30->reader-py==0.1.0)
+2026-10-05T18:03:03.0270669Z #25 162.0   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/5a/61/f277cd5ead05f5d37b98b41fbdd0c943ee0c04d49738f62e902cb291cf43/watchfiles-1.3.0-cp310-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl (454 kB)
+2026-10-05T18:03:07.0131215Z #25 165.9 Collecting websockets>=13.0 (from uvicorn[standard]>=0.30->reader-py==0.1.0)
+2026-10-05T18:03:07.3101018Z #25 166.2   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/2f/d4/976d34b5491258b0a86c2ce9b9aabb9fdd68919ffd7fe65999c14a502a98/websockets-17.2-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl (226 kB)
+2026-10-05T18:03:07.9755080Z #25 166.9 Collecting annotated-types>=0.6.0 (from pydantic>=2.9.0->fastapi>=0.115->reader-py==0.1.0)
+2026-10-05T18:03:08.2865525Z #25 167.2   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/99/91/8acff4f5e50511b911bbccb72b8628a49c68ce14148cd9f6431094859a90/annotated_types-0.8.0-py3-none-any.whl (13 kB)
+2026-10-05T18:03:24.9810422Z #25 183.9 Collecting pydantic-core==2.46.5 (from pydantic>=2.9.0->fastapi>=0.115->reader-py==0.1.0)
+2026-10-05T18:03:25.2791426Z #25 184.2   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/09/f0/2a8ce3849e299d44e2d2c196b6082643a3235565a735cb51db7a6261f614/pydantic_core-2.46.5-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl (2.0 MB)
+2026-10-05T18:03:25.5260212Z #25 184.3      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.0/2.0 MB 33.7 MB/s eta 0:00:00
+2026-10-05T18:03:29.0702203Z #25 188.0 Collecting greenlet>=1 (from SQLAlchemy<2.1.0,>=2.0.14->sqlmodel>=0.0.21->reader-py==0.1.0)
+2026-10-05T18:03:29.3732439Z #25 188.3   Downloading https://pypi.tuna.tsinghua.edu.cn/packages/27/89/366d2af5061eeefa5012f510d95a99c8620dcc457609838db4d538820318/greenlet-3.5.6-cp312-cp312-manylinux_2_24_aarch64.manylinux_2_28_aarch64.whl (611 kB)
+2026-10-05T18:03:29.5722977Z #25 188.3      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 611.7/611.7 kB 38.1 MB/s eta 0:00:00
+2026-10-05T18:03:30.5840444Z #25 189.5 Building wheels for collected packages: reader-py, quickjs
+2026-10-05T18:03:30.7436283Z #25 189.5   Building wheel for reader-py (pyproject.toml): started
+2026-10-05T18:03:31.3228675Z #25 190.3   Building wheel for reader-py (pyproject.toml): finished with status 'done'
+2026-10-05T18:03:31.5090500Z #25 190.3   Created wheel for reader-py: filename=reader_py-0.1.0-py3-none-any.whl size=69753 sha256=48ca1969203438f13d1bfe4e1c3cf0964624203fc180d01dfa5fe8994fb611af
+2026-10-05T18:03:31.5092790Z #25 190.3   Stored in directory: /tmp/pip-ephem-wheel-cache-rvon7sqw/wheels/54/1b/b7/aa63e25c8f14f4f2ae7b04e6097bdecb770e455c5c1ee0a600
+2026-10-05T18:03:31.5094879Z #25 190.3   Building wheel for quickjs (pyproject.toml): started
+2026-10-05T18:03:33.9674086Z #25 192.9   Building wheel for quickjs (pyproject.toml): finished with status 'error'
+2026-10-05T18:03:34.1992661Z #25 193.0   error: subprocess-exited-with-error
+2026-10-05T18:03:34.1995724Z #25 193.0   
+2026-10-05T18:03:34.1997585Z #25 193.0   × Building wheel for quickjs (pyproject.toml) did not run successfully.
+2026-10-05T18:03:34.1998903Z #25 193.0   │ exit code: 1
+2026-10-05T18:03:34.1999434Z #25 193.0   ╰─> [9 lines of output]
+2026-10-05T18:03:34.1999924Z #25 193.0       running bdist_wheel
+2026-10-05T18:03:34.2000387Z #25 193.0       running build
+2026-10-05T18:03:34.2000827Z #25 193.0       running build_py
+2026-10-05T18:03:34.2001434Z #25 193.0       creating build/lib.linux-aarch64-cpython-312/quickjs
+2026-10-05T18:03:34.2002314Z #25 193.0       copying quickjs/__init__.py -> build/lib.linux-aarch64-cpython-312/quickjs
+2026-10-05T18:03:34.2003076Z #25 193.0       running build_ext
+2026-10-05T18:03:34.2003568Z #25 193.0       building '_quickjs' extension
+2026-10-05T18:03:34.2005408Z #25 193.0       gcc -fno-strict-overflow -Wsign-compare -DNDEBUG -g -O3 -Wall -fPIC -DCONFIG_VERSION=\"2021-03-27\" -DCONFIG_BIGNUM -I/usr/local/include/python3.12 -c module.c -o build/temp.linux-aarch64-cpython-312/module.o -Werror=incompatible-pointer-types
+2026-10-05T18:03:34.2009376Z #25 193.0       error: [Errno 2] No such file or directory: 'gcc'
+2026-10-05T18:03:34.2009987Z #25 193.0       [end of output]
+2026-10-05T18:03:34.2010422Z #25 193.0   
+2026-10-05T18:03:34.2011076Z #25 193.0   note: This error originates from a subprocess, and is likely not a problem with pip.
+2026-10-05T18:03:34.2011933Z #25 193.0   ERROR: Failed building wheel for quickjs
+2026-10-05T18:03:34.2012798Z #25 193.0 Successfully built reader-py
+2026-10-05T18:03:34.2013292Z #25 193.0 Failed to build quickjs
+2026-10-05T18:03:34.4324425Z #25 ...
+2026-10-05T18:03:34.4325860Z 
+2026-10-05T18:03:34.4326183Z #34 [linux/arm64 frontend-build 6/6] RUN npm run build
+2026-10-05T18:03:34.4326939Z #34 135.9 ✓ 1700 modules transformed.
+2026-10-05T18:03:38.6057387Z #34 ...
+2026-10-05T18:03:38.6058369Z 
+2026-10-05T18:03:38.6059525Z #25 [linux/arm64 stage-1 5/7] RUN pip install --no-cache-dir     --index-url https://pypi.tuna.tsinghua.edu.cn/simple     .
+2026-10-05T18:03:38.6060690Z #25 196.3 
+2026-10-05T18:03:38.6061718Z #25 196.3 [notice] A new release of pip is available: 25.0.1 -> 26.2.1
+2026-10-05T18:03:38.6062458Z #25 196.3 [notice] To update, run: pip install --upgrade pip
+2026-10-05T18:03:38.6064293Z #25 196.3 ERROR: Failed to build installable wheels for some pyproject.toml based projects (quickjs)
+2026-10-05T18:03:38.6067035Z #25 ERROR: process "/dev/.buildkit_qemu_emulator /bin/sh -c pip install --no-cache-dir     --index-url https://pypi.tuna.tsinghua.edu.cn/simple     ." did not complete successfully: exit code: 1
+2026-10-05T18:03:38.6886262Z 
+2026-10-05T18:03:38.6886864Z #34 [linux/arm64 frontend-build 6/6] RUN npm run build
+2026-10-05T18:03:38.6887453Z #34 CANCELED
+2026-10-05T18:03:38.6887806Z ------
+2026-10-05T18:03:38.6888910Z  > [linux/arm64 stage-1 5/7] RUN pip install --no-cache-dir     --index-url https://pypi.tuna.tsinghua.edu.cn/simple     .:
+2026-10-05T18:03:38.6889886Z 193.0       [end of output]
+2026-10-05T18:03:38.6890315Z 193.0   
+2026-10-05T18:03:38.6916048Z 193.0   note: This error originates from a subprocess, and is likely not a problem with pip.
+2026-10-05T18:03:38.6916978Z 193.0   ERROR: Failed building wheel for quickjs
+2026-10-05T18:03:38.6917864Z 193.0 Successfully built reader-py
+2026-10-05T18:03:38.6918795Z 193.0 Failed to build quickjs
+2026-10-05T18:03:38.6919365Z 196.3 
+2026-10-05T18:03:38.6919860Z 196.3 [notice] A new release of pip is available: 25.0.1 -> 26.2.1
+2026-10-05T18:03:38.6920618Z 196.3 [notice] To update, run: pip install --upgrade pip
+2026-10-05T18:03:38.6921851Z 196.3 ERROR: Failed to build installable wheels for some pyproject.toml based projects (quickjs)
+2026-10-05T18:03:38.6922650Z ------
+2026-10-05T18:03:38.6992613Z Dockerfile:21
+2026-10-05T18:03:38.7009109Z --------------------
+2026-10-05T18:03:38.7009710Z   20 |     COPY src/ ./src/
+2026-10-05T18:03:38.7010425Z   21 | >>> RUN pip install --no-cache-dir \
+2026-10-05T18:03:38.7011155Z   22 | >>>     --index-url https://pypi.tuna.tsinghua.edu.cn/simple \
+2026-10-05T18:03:38.7011750Z   23 | >>>     .
+2026-10-05T18:03:38.7012450Z   24 |     
+2026-10-05T18:03:38.7012830Z --------------------
+2026-10-05T18:03:38.7014349Z ERROR: failed to build: failed to solve: process "/dev/.buildkit_qemu_emulator /bin/sh -c pip install --no-cache-dir     --index-url https://pypi.tuna.tsinghua.edu.cn/simple     ." did not complete successfully: exit code: 1
+2026-10-05T18:03:38.7220842Z ##[group]Reference
+2026-10-05T18:03:38.8229750Z builder-289a4962-76bb-4b6c-bf22-ed92c87366b4/builder-289a4962-76bb-4b6c-bf22-ed92c87366b40/u9m0ozgysg9h3jfpqrd2qfmit
+2026-10-05T18:03:38.8230917Z ##[endgroup]
+2026-10-05T18:03:38.8231868Z ##[group]Check build summary support
+2026-10-05T18:03:38.8234979Z Build summary supported!
+2026-10-05T18:03:38.8235801Z ##[endgroup]
+2026-10-05T18:03:38.8259594Z ##[error]buildx failed with: ERROR: failed to build: failed to solve: process "/dev/.buildkit_qemu_emulator /bin/sh -c pip install --no-cache-dir     --index-url https://pypi.tuna.tsinghua.edu.cn/simple     ." did not complete successfully: exit code: 1
+2026-10-05T18:03:38.8485973Z Post job cleanup.
+2026-10-05T18:03:39.0907970Z ##[group]Generating build summary
+2026-10-05T18:03:39.0914979Z exporting build record to /home/runner/work/_temp/docker-actions-toolkit-f9LRw3/export
+2026-10-05T18:03:39.0929055Z (node:3706) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-05T18:03:39.0930118Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-05T18:03:39.2881786Z [command]/usr/bin/docker buildx history export --builder builder-289a4962-76bb-4b6c-bf22-ed92c87366b4 --output /home/runner/work/_temp/docker-actions-toolkit-f9LRw3/export/whwh13~reader_web_py~U9M0OZ.dockerbuild u9m0ozgysg9h3jfpqrd2qfmit --finalize
+2026-10-05T18:03:39.5237652Z Build record written to /home/runner/work/_temp/docker-actions-toolkit-f9LRw3/export/whwh13~reader_web_py~U9M0OZ.dockerbuild (51.78 KB)
+2026-10-05T18:03:39.5262358Z Uploading whwh13~reader_web_py~U9M0OZ.dockerbuild to blob storage
+2026-10-05T18:03:39.7267115Z Beginning upload of artifact content to blob storage
+2026-10-05T18:03:39.7405507Z (node:3706) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-05T18:03:39.7414329Z Uploaded bytes 53018
+2026-10-05T18:03:39.7648532Z Finished uploading artifact content to blob storage!
+2026-10-05T18:03:39.7653428Z SHA256 hash of uploaded artifact is c62a0bb6d154f7097519004f9be0e3ef6c45d7cc88cd1a329f78c78d9444c774
+2026-10-05T18:03:39.7655224Z Finalizing artifact upload
+2026-10-05T18:03:39.9764110Z Artifact successfully finalized (11362464723)
+2026-10-05T18:03:39.9765613Z Artifact download URL: https://github.com/whwh13/reader_web_py/actions/runs/37352581045/artifacts/11362464723
+2026-10-05T18:03:39.9802569Z Writing summary
+2026-10-05T18:03:39.9816380Z ##[endgroup]
+2026-10-05T18:03:39.9817300Z ##[group]Removing temp folder /home/runner/work/_temp/docker-actions-toolkit-YbAYlM
+2026-10-05T18:03:39.9818855Z ##[endgroup]
+2026-10-05T18:03:39.9819601Z ##[group]Post cache
+2026-10-05T18:03:39.9821367Z State not set
+2026-10-05T18:03:39.9828779Z ##[endgroup]
+2026-10-05T18:03:39.9981743Z Post job cleanup.
+2026-10-05T18:03:40.3148924Z ##[group]Logout from ghcr.io
+2026-10-05T18:03:40.3171778Z (node:3847) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-05T18:03:40.3172734Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-05T18:03:40.3215685Z [command]/usr/bin/docker logout ghcr.io
+2026-10-05T18:03:40.3473875Z Removing login credentials for ghcr.io
+2026-10-05T18:03:40.3512515Z ##[endgroup]
+2026-10-05T18:03:40.3513401Z ##[group]Post cache
+2026-10-05T18:03:40.3514523Z State not set
+2026-10-05T18:03:40.3515622Z ##[endgroup]
+2026-10-05T18:03:40.3771745Z Post job cleanup.
+2026-10-05T18:03:40.6347413Z ##[group]Removing builder
+2026-10-05T18:03:40.6355009Z (node:3867) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-05T18:03:40.6355990Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-05T18:03:40.7376952Z [command]/usr/bin/docker buildx rm builder-289a4962-76bb-4b6c-bf22-ed92c87366b4
+2026-10-05T18:03:44.8116235Z builder-289a4962-76bb-4b6c-bf22-ed92c87366b4 removed
+2026-10-05T18:03:44.8151976Z ##[endgroup]
+2026-10-05T18:03:44.8152467Z ##[group]Cleaning up certificates
+2026-10-05T18:03:44.8154408Z ##[endgroup]
+2026-10-05T18:03:44.8155136Z ##[group]Post cache
+2026-10-05T18:03:44.8157755Z State not set
+2026-10-05T18:03:44.8158749Z ##[endgroup]
+2026-10-05T18:03:44.8344082Z Post job cleanup.
+2026-10-05T18:03:44.9212654Z [command]/usr/bin/git version
+2026-10-05T18:03:44.9253229Z git version 2.55.0
+2026-10-05T18:03:44.9297291Z Temporarily overriding HOME='/home/runner/work/_temp/96629409-bd21-4160-85a3-4af864e3634a' before making global git config changes
+2026-10-05T18:03:44.9298670Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-05T18:03:44.9303532Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/reader_web_py/reader_web_py
+2026-10-05T18:03:44.9343542Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-05T18:03:44.9378883Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-05T18:03:44.9667202Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-05T18:03:44.9698502Z http.https://github.com/.extraheader
+2026-10-05T18:03:44.9711093Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-10-05T18:03:44.9747742Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-05T18:03:45.0020663Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-05T18:03:45.0063031Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-05T18:03:45.0456526Z Cleaning up orphan processes
+2026-10-05T18:03:45.0780443Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, docker/build-push-action@v6, docker/login-action@v3, docker/metadata-action@v5, docker/setup-buildx-action@v3. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

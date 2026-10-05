@@ -1,0 +1,9 @@
+2026-10-05T18:00:02.5530000Z Evaluating docker.if
+2026-10-05T18:00:02.5530000Z Evaluating: (success() && (startsWith(github.ref, 'refs/tags/v')))
+2026-10-05T18:00:02.5530000Z Expanded: (true && startsWith('refs/tags/v1.0.0', 'refs/tags/v'))
+2026-10-05T18:00:02.5530000Z Result: true
+2026-10-05T18:00:02.5780000Z Requested labels: ubuntu-latest
+2026-10-05T18:00:02.5780000Z Job defined at: whwh13/reader_web_py/.github/workflows/ci.yml@refs/tags/v1.0.0
+2026-10-05T18:00:02.5780000Z Waiting for a runner to pick up this job...
+2026-10-05T18:00:02.7920000Z Job is about to start running on the hosted runner: GitHub Actions 1000000036
+2026-10-05T18:00:02.7920000Z Job is waiting for a hosted runner to come online.

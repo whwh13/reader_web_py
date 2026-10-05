@@ -1,0 +1,283 @@
+﻿2026-10-05T17:59:37.3598399Z Current runner version: '2.337.0'
+2026-10-05T17:59:37.3614621Z ##[group]Runner Image Provisioner
+2026-10-05T17:59:37.3615121Z Hosted Compute Agent
+2026-10-05T17:59:37.3615523Z Version: 20260901.588
+2026-10-05T17:59:37.3615891Z Commit: f88ec8081b781fac6c440065ac7ff9e710ce3d0b
+2026-10-05T17:59:37.3616350Z Build Date: 2026-09-01T19:56:44Z
+2026-10-05T17:59:37.3616779Z Worker ID: {70fd6028-77ae-4255-bef9-a6ef72989437}
+2026-10-05T17:59:37.3617177Z Azure Region: westus3
+2026-10-05T17:59:37.3617536Z ##[endgroup]
+2026-10-05T17:59:37.3618315Z ##[group]Operating System
+2026-10-05T17:59:37.3618651Z Ubuntu
+2026-10-05T17:59:37.3619031Z 24.04.5
+2026-10-05T17:59:37.3619359Z LTS
+2026-10-05T17:59:37.3619680Z ##[endgroup]
+2026-10-05T17:59:37.3620026Z ##[group]Runner Image
+2026-10-05T17:59:37.3620379Z Image: ubuntu-24.04
+2026-10-05T17:59:37.3620814Z Version: 20260927.320.1
+2026-10-05T17:59:37.3621705Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260927.320/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-05T17:59:37.3622571Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260927.320
+2026-10-05T17:59:37.3623106Z ##[endgroup]
+2026-10-05T17:59:37.3623845Z ##[group]GITHUB_TOKEN Permissions
+2026-10-05T17:59:37.3625167Z Contents: read
+2026-10-05T17:59:37.3625557Z Metadata: read
+2026-10-05T17:59:37.3625882Z Packages: read
+2026-10-05T17:59:37.3626258Z ##[endgroup]
+2026-10-05T17:59:37.3627478Z Secret source: Actions
+2026-10-05T17:59:37.3628259Z Cache mode: write
+2026-10-05T17:59:37.3628721Z Prepare workflow directory
+2026-10-05T17:59:37.3917964Z Prepare all required actions
+2026-10-05T17:59:37.3947937Z Getting action download info
+2026-10-05T17:59:37.6984752Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-10-05T17:59:37.7626387Z Download action repository 'astral-sh/setup-uv@v5' (SHA:d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86)
+2026-10-05T17:59:38.7129829Z Complete job name: test
+2026-10-05T17:59:38.7544013Z ##[group]Run actions/checkout@v4
+2026-10-05T17:59:38.7545369Z with:
+2026-10-05T17:59:38.7545671Z   repository: whwh13/reader_web_py
+2026-10-05T17:59:38.7548118Z   token: ***
+2026-10-05T17:59:38.7548397Z   ssh-strict: true
+2026-10-05T17:59:38.7548687Z   ssh-user: git
+2026-10-05T17:59:38.7548984Z   persist-credentials: true
+2026-10-05T17:59:38.7549303Z   clean: true
+2026-10-05T17:59:38.7549602Z   sparse-checkout-cone-mode: true
+2026-10-05T17:59:38.7549944Z   fetch-depth: 1
+2026-10-05T17:59:38.7550229Z   fetch-tags: false
+2026-10-05T17:59:38.7550522Z   show-progress: true
+2026-10-05T17:59:38.7550814Z   lfs: false
+2026-10-05T17:59:38.7551095Z   submodules: false
+2026-10-05T17:59:38.7552396Z   set-safe-directory: true
+2026-10-05T17:59:38.7554047Z   allow-unsafe-pr-checkout: false
+2026-10-05T17:59:38.7554490Z env:
+2026-10-05T17:59:38.7554724Z   REGISTRY: ghcr.io
+2026-10-05T17:59:38.7556510Z   IMAGE_NAME: whwh13/reader_web_py
+2026-10-05T17:59:38.7558172Z ##[endgroup]
+2026-10-05T17:59:38.8285237Z Syncing repository: whwh13/reader_web_py
+2026-10-05T17:59:38.8286341Z ##[group]Getting Git version info
+2026-10-05T17:59:38.8286772Z Working directory is '/home/runner/work/reader_web_py/reader_web_py'
+2026-10-05T17:59:38.8287448Z [command]/usr/bin/git version
+2026-10-05T17:59:38.8353232Z git version 2.55.0
+2026-10-05T17:59:38.8370634Z ##[endgroup]
+2026-10-05T17:59:38.8380941Z Temporarily overriding HOME='/home/runner/work/_temp/d52c41d9-7bc8-483c-a0b3-a459c3d215a4' before making global git config changes
+2026-10-05T17:59:38.8382485Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-05T17:59:38.8384700Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/reader_web_py/reader_web_py
+2026-10-05T17:59:38.8428318Z Deleting the contents of '/home/runner/work/reader_web_py/reader_web_py'
+2026-10-05T17:59:38.8437646Z ##[group]Initializing the repository
+2026-10-05T17:59:38.8438654Z [command]/usr/bin/git init /home/runner/work/reader_web_py/reader_web_py
+2026-10-05T17:59:38.8686515Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-05T17:59:38.8691914Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-05T17:59:38.8694325Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-05T17:59:38.8696424Z hint: call:
+2026-10-05T17:59:38.8698071Z hint:
+2026-10-05T17:59:38.8699815Z hint: 	git config --global init.defaultBranch <name>
+2026-10-05T17:59:38.8700508Z hint:
+2026-10-05T17:59:38.8701109Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-05T17:59:38.8704950Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-05T17:59:38.8706875Z hint:
+2026-10-05T17:59:38.8708193Z hint: 	git branch -m <name>
+2026-10-05T17:59:38.8708777Z hint:
+2026-10-05T17:59:38.8710229Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-05T17:59:38.8712440Z Initialized empty Git repository in /home/runner/work/reader_web_py/reader_web_py/.git/
+2026-10-05T17:59:38.8715365Z [command]/usr/bin/git remote add origin https://github.com/whwh13/reader_web_py
+2026-10-05T17:59:38.8862870Z ##[endgroup]
+2026-10-05T17:59:38.8865082Z ##[group]Disabling automatic garbage collection
+2026-10-05T17:59:38.8875411Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-05T17:59:38.8971563Z ##[endgroup]
+2026-10-05T17:59:38.8973527Z ##[group]Setting up auth
+2026-10-05T17:59:38.8985367Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-05T17:59:38.9039724Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-05T17:59:38.9699451Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-05T17:59:38.9761132Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-05T17:59:39.0046061Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-05T17:59:39.0074485Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-05T17:59:39.0246149Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-05T17:59:39.0278736Z ##[endgroup]
+2026-10-05T17:59:39.0279565Z ##[group]Fetching the repository
+2026-10-05T17:59:39.0285785Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +a4ee6bf74b79e41d4dc52d5d3e656e1368d61222:refs/tags/v1.0.0
+2026-10-05T17:59:39.5929246Z From https://github.com/whwh13/reader_web_py
+2026-10-05T17:59:39.5930197Z  * [new ref]         a4ee6bf74b79e41d4dc52d5d3e656e1368d61222 -> v1.0.0
+2026-10-05T17:59:39.5933977Z ##[endgroup]
+2026-10-05T17:59:39.5934760Z ##[group]Determining the checkout info
+2026-10-05T17:59:39.5935972Z ##[endgroup]
+2026-10-05T17:59:39.5940283Z [command]/usr/bin/git sparse-checkout disable
+2026-10-05T17:59:39.5984903Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-05T17:59:39.6010552Z ##[group]Checking out the ref
+2026-10-05T17:59:39.6012872Z [command]/usr/bin/git checkout --progress --force refs/tags/v1.0.0
+2026-10-05T17:59:39.6100940Z Note: switching to 'refs/tags/v1.0.0'.
+2026-10-05T17:59:39.6101584Z 
+2026-10-05T17:59:39.6102016Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-05T17:59:39.6103157Z changes and commit them, and you can discard any commits you make in this
+2026-10-05T17:59:39.6104263Z state without impacting any branches by switching back to a branch.
+2026-10-05T17:59:39.6104916Z 
+2026-10-05T17:59:39.6105334Z If you want to create a new branch to retain commits you create, you may
+2026-10-05T17:59:39.6106465Z do so (now or later) by using -c with the switch command. Example:
+2026-10-05T17:59:39.6107292Z 
+2026-10-05T17:59:39.6107575Z   git switch -c <new-branch-name>
+2026-10-05T17:59:39.6108026Z 
+2026-10-05T17:59:39.6108288Z Or undo this operation with:
+2026-10-05T17:59:39.6108828Z 
+2026-10-05T17:59:39.6109110Z   git switch -
+2026-10-05T17:59:39.6109452Z 
+2026-10-05T17:59:39.6110018Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-05T17:59:39.6110948Z 
+2026-10-05T17:59:39.6112725Z HEAD is now at a4ee6bf Docker 部署：多阶段 Dockerfile（amd64+arm64）、数据持久化卷 /data、版本号 1.0.0 统一（version.py 单一来源）、/version 接口、GitHub Actions（测试 + GHCR 镜像发布）、compose 示例
+2026-10-05T17:59:39.6115542Z ##[endgroup]
+2026-10-05T17:59:39.6141306Z [command]/usr/bin/git log -1 --format=%H
+2026-10-05T17:59:39.6161583Z a4ee6bf74b79e41d4dc52d5d3e656e1368d61222
+2026-10-05T17:59:39.6412301Z ##[group]Run astral-sh/setup-uv@v5
+2026-10-05T17:59:39.6412912Z with:
+2026-10-05T17:59:39.6413336Z   version: latest
+2026-10-05T17:59:39.6419072Z   github-token: ***
+2026-10-05T17:59:39.6419579Z   enable-cache: auto
+2026-10-05T17:59:39.6420271Z   cache-dependency-glob: **/uv.lock
+**/requirements*.txt
+
+2026-10-05T17:59:39.6421324Z   prune-cache: true
+2026-10-05T17:59:39.6421942Z   ignore-nothing-to-cache: false
+2026-10-05T17:59:39.6422723Z   ignore-empty-workdir: false
+2026-10-05T17:59:39.6423346Z env:
+2026-10-05T17:59:39.6423763Z   REGISTRY: ghcr.io
+2026-10-05T17:59:39.6424258Z   IMAGE_NAME: whwh13/reader_web_py
+2026-10-05T17:59:39.6424832Z ##[endgroup]
+2026-10-05T17:59:39.7482081Z (node:2080) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-05T17:59:39.7483833Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-05T17:59:40.1310988Z Downloading uv from "https://github.com/astral-sh/uv/releases/download/0.12.23/uv-x86_64-unknown-linux-gnu.tar.gz" ...
+2026-10-05T17:59:40.5320210Z [command]/usr/bin/tar xz --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/2cf2b8f4-e2ee-4e72-ae98-2a0bd310d9d2 -f /home/runner/work/_temp/a3e4181e-32a9-4ddf-bf8c-49de996c269f
+2026-10-05T17:59:41.0327879Z Added /home/runner/.local/bin to the path
+2026-10-05T17:59:41.0329565Z Added /opt/hostedtoolcache/uv/0.12.23/x86_64 to the path
+2026-10-05T17:59:41.0347714Z Set UV_CACHE_DIR to /home/runner/work/_temp/setup-uv-cache
+2026-10-05T17:59:41.0348055Z Successfully installed uv version 0.12.23
+2026-10-05T17:59:41.0348438Z Searching files using cache dependency glob: **/uv.lock,**/requirements*.txt
+2026-10-05T17:59:41.0579587Z /home/runner/work/reader_web_py/reader_web_py/uv.lock
+2026-10-05T17:59:41.0589997Z Found 1 files to hash.
+2026-10-05T17:59:41.1040048Z Trying to restore uv cache from GitHub Actions cache with key: setup-uv-1-x86_64-unknown-linux-gnu-3.12.3-af3b599304f6c7e3c864feab3598aa3bde037181a18e8a99f9a869af5062746d
+2026-10-05T17:59:41.2945281Z No GitHub Actions cache found for key: setup-uv-1-x86_64-unknown-linux-gnu-3.12.3-af3b599304f6c7e3c864feab3598aa3bde037181a18e8a99f9a869af5062746d
+2026-10-05T17:59:41.3091224Z ##[group]Run uv sync
+2026-10-05T17:59:41.3091615Z [36;1muv sync[0m
+2026-10-05T17:59:41.3091760Z [36;1muv pip install -e .[0m
+2026-10-05T17:59:41.3313603Z shell: /usr/bin/bash -e {0}
+2026-10-05T17:59:41.3313780Z env:
+2026-10-05T17:59:41.3313902Z   REGISTRY: ghcr.io
+2026-10-05T17:59:41.3314031Z   IMAGE_NAME: whwh13/reader_web_py
+2026-10-05T17:59:41.3314205Z   UV_CACHE_DIR: /home/runner/work/_temp/setup-uv-cache
+2026-10-05T17:59:41.3314373Z ##[endgroup]
+2026-10-05T17:59:41.3446159Z Using CPython 3.12.3 interpreter at: /usr/bin/python3.12
+2026-10-05T17:59:41.3446380Z Creating virtual environment at: .venv
+2026-10-05T17:59:41.3464833Z Resolved 45 packages in 0.64ms
+2026-10-05T17:59:41.3499223Z    Building reader-py @ file:///home/runner/work/reader_web_py/reader_web_py
+2026-10-05T17:59:46.4047261Z Downloading quickjs (2.1MiB)
+2026-10-05T17:59:46.6096181Z Downloading lxml (5.0MiB)
+2026-10-05T17:59:46.6098540Z Downloading uvloop (4.3MiB)
+2026-10-05T17:59:46.6098875Z Downloading sqlalchemy (3.3MiB)
+2026-10-05T17:59:46.6099359Z Downloading pycryptodome (2.2MiB)
+2026-10-05T17:59:46.6099609Z Downloading pydantic-core (2.0MiB)
+2026-10-05T17:59:46.6099884Z Downloading pygments (1.2MiB)
+2026-10-05T17:59:48.9795340Z  Downloaded quickjs
+2026-10-05T17:59:49.4663073Z  Downloaded pydantic-core
+2026-10-05T17:59:49.5905974Z  Downloaded pygments
+2026-10-05T17:59:49.8262034Z  Downloaded pycryptodome
+2026-10-05T17:59:49.9138467Z  Downloaded sqlalchemy
+2026-10-05T17:59:49.9347380Z  Downloaded lxml
+2026-10-05T17:59:50.0553330Z  Downloaded uvloop
+2026-10-05T17:59:50.9485419Z       Built reader-py @ file:///home/runner/work/reader_web_py/reader_web_py
+2026-10-05T17:59:50.9493279Z Prepared 44 packages in 9.60s
+2026-10-05T17:59:50.9631101Z Installed 44 packages in 13ms
+2026-10-05T17:59:50.9631519Z  + annotated-doc==0.0.5
+2026-10-05T17:59:50.9631887Z  + annotated-types==0.8.0
+2026-10-05T17:59:50.9634210Z  + anyio==4.15.1
+2026-10-05T17:59:50.9634393Z  + certifi==2026.7.22
+2026-10-05T17:59:50.9634611Z  + charset-normalizer==3.5.2
+2026-10-05T17:59:50.9634813Z  + click==8.5.0
+2026-10-05T17:59:50.9634970Z  + cssselect==1.5.0
+2026-10-05T17:59:50.9635141Z  + fastapi==0.142.2
+2026-10-05T17:59:50.9635277Z  + greenlet==3.5.6
+2026-10-05T17:59:50.9635381Z  + h11==0.16.0
+2026-10-05T17:59:50.9635483Z  + httpcore==1.0.9
+2026-10-05T17:59:50.9635589Z  + httptools==0.8.0
+2026-10-05T17:59:50.9635811Z  + httpx==0.28.1
+2026-10-05T17:59:50.9635977Z  + idna==3.20
+2026-10-05T17:59:50.9636138Z  + iniconfig==2.3.0
+2026-10-05T17:59:50.9636303Z  + jmespath==1.1.0
+2026-10-05T17:59:50.9636472Z  + jsonpath-ng==1.8.0
+2026-10-05T17:59:50.9636725Z  + lxml==6.1.3
+2026-10-05T17:59:50.9646083Z  + opentelemetry-api==1.45.0
+2026-10-05T17:59:50.9646300Z  + packaging==26.3
+2026-10-05T17:59:50.9649087Z  + parsel==1.12.1
+2026-10-05T17:59:50.9649430Z  + pluggy==1.6.0
+2026-10-05T17:59:50.9649597Z  + pycryptodome==3.24.0
+2026-10-05T17:59:50.9649775Z  + pydantic==2.13.5
+2026-10-05T17:59:50.9649946Z  + pydantic-core==2.46.5
+2026-10-05T17:59:50.9650144Z  + pydantic-settings==2.15.0
+2026-10-05T17:59:50.9650336Z  + pygments==2.21.0
+2026-10-05T17:59:50.9650497Z  + pytest==9.1.1
+2026-10-05T17:59:50.9650663Z  + pytest-asyncio==1.4.0
+2026-10-05T17:59:50.9650846Z  + python-dotenv==1.2.4
+2026-10-05T17:59:50.9651031Z  + python-multipart==0.0.32
+2026-10-05T17:59:50.9651218Z  + pyyaml==6.0.3
+2026-10-05T17:59:50.9651477Z  + quickjs==1.19.4
+2026-10-05T17:59:50.9651751Z  + reader-py==0.1.0 (from file:///home/runner/work/reader_web_py/reader_web_py)
+2026-10-05T17:59:50.9652041Z  + sqlalchemy==2.0.54
+2026-10-05T17:59:50.9652153Z  + sqlmodel==0.0.47
+2026-10-05T17:59:50.9652259Z  + starlette==1.7.0
+2026-10-05T17:59:50.9652371Z  + typing-extensions==4.16.0
+2026-10-05T17:59:50.9652501Z  + typing-inspection==0.4.4
+2026-10-05T17:59:50.9652620Z  + uvicorn==0.54.0
+2026-10-05T17:59:50.9652724Z  + uvloop==0.23.0
+2026-10-05T17:59:50.9652828Z  + w3lib==2.5.0
+2026-10-05T17:59:50.9652931Z  + watchfiles==1.3.0
+2026-10-05T17:59:50.9653041Z  + websockets==17.2
+2026-10-05T17:59:55.7770086Z Resolved 38 packages in 4.77s
+2026-10-05T17:59:55.7778695Z    Building reader-py @ file:///home/runner/work/reader_web_py/reader_web_py
+2026-10-05T17:59:55.9448483Z       Built reader-py @ file:///home/runner/work/reader_web_py/reader_web_py
+2026-10-05T17:59:55.9458164Z Prepared 1 package in 168ms
+2026-10-05T17:59:55.9463470Z Uninstalled 1 package in 0.48ms
+2026-10-05T17:59:55.9468464Z Installed 1 package in 0.49ms
+2026-10-05T17:59:55.9468906Z  ~ reader-py==0.1.0 (from file:///home/runner/work/reader_web_py/reader_web_py)
+2026-10-05T17:59:55.9574268Z ##[group]Run uv run pytest tests/ -q
+2026-10-05T17:59:55.9574468Z [36;1muv run pytest tests/ -q[0m
+2026-10-05T17:59:55.9624793Z shell: /usr/bin/bash -e {0}
+2026-10-05T17:59:55.9624923Z env:
+2026-10-05T17:59:55.9625025Z   REGISTRY: ghcr.io
+2026-10-05T17:59:55.9625145Z   IMAGE_NAME: whwh13/reader_web_py
+2026-10-05T17:59:55.9625321Z   UV_CACHE_DIR: /home/runner/work/_temp/setup-uv-cache
+2026-10-05T17:59:55.9625484Z ##[endgroup]
+2026-10-05T17:59:58.1942843Z .......................................................                  [100%]
+2026-10-05T17:59:58.1943668Z =============================== warnings summary ===============================
+2026-10-05T17:59:58.1943953Z tests/test_analyze_rule.py:175
+2026-10-05T17:59:58.1944489Z   /home/runner/work/reader_web_py/reader_web_py/tests/test_analyze_rule.py:175: SyntaxWarning: invalid escape sequence '\d'
+2026-10-05T17:59:58.1945286Z     """$\d 与文本混排：正则分组引用重建。"""
+2026-10-05T17:59:58.1945412Z 
+2026-10-05T17:59:58.1945562Z src/reader/core/rule/analyze_rule.py:136
+2026-10-05T17:59:58.1946017Z   /home/runner/work/reader_web_py/reader_web_py/src/reader/core/rule/analyze_rule.py:136: SyntaxWarning: invalid escape sequence '\d'
+2026-10-05T17:59:58.1946590Z     """拆分 $\d{1,2}（对照 splitRegex，含 ## 尾段携带）。"""
+2026-10-05T17:59:58.1946752Z 
+2026-10-05T17:59:58.1946887Z .venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+2026-10-05T17:59:58.1947652Z   /home/runner/work/reader_web_py/reader_web_py/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+2026-10-05T17:59:58.1948446Z     from starlette.testclient import TestClient as TestClient  # noqa
+2026-10-05T17:59:58.1948673Z 
+2026-10-05T17:59:58.1948871Z -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+2026-10-05T17:59:58.1949185Z 55 passed, 3 warnings in 1.82s
+2026-10-05T17:59:58.2540075Z Post job cleanup.
+2026-10-05T17:59:58.3435677Z Pruning cache...
+2026-10-05T17:59:58.3450304Z (node:2247) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-05T17:59:58.3450665Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-05T17:59:58.4343418Z Saving cache path: /home/runner/work/_temp/setup-uv-cache
+2026-10-05T17:59:58.4437306Z [command]/usr/bin/tar --posix -cf cache.tzst --exclude cache.tzst -P -C /home/runner/work/reader_web_py/reader_web_py --files-from manifest.txt --use-compress-program zstdmt
+2026-10-05T17:59:58.7795200Z (node:2247) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-05T17:59:59.4882924Z Sent 4401411 of 4401411 (100.0%), 5.9 MBs/sec
+2026-10-05T17:59:59.6002482Z cache saved with the key: setup-uv-1-x86_64-unknown-linux-gnu-3.12.3-af3b599304f6c7e3c864feab3598aa3bde037181a18e8a99f9a869af5062746d
+2026-10-05T17:59:59.6123588Z Post job cleanup.
+2026-10-05T17:59:59.6666507Z [command]/usr/bin/git version
+2026-10-05T17:59:59.6697289Z git version 2.55.0
+2026-10-05T17:59:59.6720126Z Temporarily overriding HOME='/home/runner/work/_temp/93a96e2e-2ed6-4e17-8b11-229f07febae0' before making global git config changes
+2026-10-05T17:59:59.6720792Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-05T17:59:59.6723548Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/reader_web_py/reader_web_py
+2026-10-05T17:59:59.6750980Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-05T17:59:59.6774602Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-05T17:59:59.6957183Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-05T17:59:59.6978639Z http.https://github.com/.extraheader
+2026-10-05T17:59:59.6986971Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-10-05T17:59:59.7015182Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-05T17:59:59.7196674Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-05T17:59:59.7236302Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-05T17:59:59.7504620Z Cleaning up orphan processes
+2026-10-05T17:59:59.7698600Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, astral-sh/setup-uv@v5. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

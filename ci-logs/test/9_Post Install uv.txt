@@ -1,0 +1,9 @@
+﻿2026-10-05T17:59:58.2540063Z Post job cleanup.
+2026-10-05T17:59:58.3435631Z Pruning cache...
+2026-10-05T17:59:58.3450292Z (node:2247) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-05T17:59:58.3450663Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-05T17:59:58.4343382Z Saving cache path: /home/runner/work/_temp/setup-uv-cache
+2026-10-05T17:59:58.4437287Z [command]/usr/bin/tar --posix -cf cache.tzst --exclude cache.tzst -P -C /home/runner/work/reader_web_py/reader_web_py --files-from manifest.txt --use-compress-program zstdmt
+2026-10-05T17:59:58.7795171Z (node:2247) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-05T17:59:59.4882898Z Sent 4401411 of 4401411 (100.0%), 5.9 MBs/sec
+2026-10-05T17:59:59.6002413Z cache saved with the key: setup-uv-1-x86_64-unknown-linux-gnu-3.12.3-af3b599304f6c7e3c864feab3598aa3bde037181a18e8a99f9a869af5062746d
