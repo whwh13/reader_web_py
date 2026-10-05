@@ -41,7 +41,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { booksApi, shelfApi } from "../api";
 import type { Book, BookChapter } from "../api/types";
@@ -149,6 +149,25 @@ function onSourceSwitched(p: { newBookUrl: string; index: number; newSourceName:
     query: { url: p.newBookUrl, jump: String(p.index) },
   });
 }
+
+// 换源后 route.query.url 变化，但组件被复用——watch 重新加载书籍与章节
+watch(
+  () => route.query.url,
+  (newUrl, oldUrl) => {
+    if (newUrl && newUrl !== oldUrl && route.path === "/reader") {
+      loadBook().then(() => {
+        const jump = route.query.jump;
+        if (jump !== undefined) {
+          const i = Number(jump);
+          if (Number.isInteger(i) && i >= 0 && i < chapters.value.length) {
+            index.value = i;
+            loadContent();
+          }
+        }
+      });
+    }
+  }
+);
 
 onMounted(() => {
   fontSize.value = Number(localStorage.getItem("reader_font") || 18);

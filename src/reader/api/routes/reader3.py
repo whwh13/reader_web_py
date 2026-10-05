@@ -276,10 +276,13 @@ async def set_book_source(request: Request):
         new_source = svc.get_source(p.get_str("bookSourceUrl"))
         if new_source is None:
             return fail("书源不存在")
+        old_url = book.bookUrl
         book.bookUrl = p.get_str("newUrl") or book.bookUrl
         book.origin = new_source.bookSourceUrl
         book.originName = new_source.bookSourceName
         book.tocUrl = ""
+        # 主键是 bookUrl：先删旧行再存，否则旧记录残留、进度保存会重建出重复书
+        svc.db.delete_book(old_url)
         svc.db.save_book(book)
         return ok(True)
     except Exception as e:
