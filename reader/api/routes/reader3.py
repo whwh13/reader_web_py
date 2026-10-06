@@ -67,6 +67,9 @@ async def get_shelf_book(request: Request):
 async def save_book(request: Request):
     p = await read_params(request)
     try:
+        # 最小校验：name/bookUrl/origin 必须非空（空 body/脏请求不入库）
+        if not (p.get_str("name") and p.get_str("bookUrl") and p.get_str("origin")):
+            return fail("缺少必要字段（name/bookUrl/origin）")
         book = Book.model_validate(dict(p))
         get_service().save_book(book)
         return ok(dict(p))
