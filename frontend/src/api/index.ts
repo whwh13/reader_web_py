@@ -54,6 +54,8 @@ export const sourcesApi = {
   saveFromRemoteSource: (url: string) => post<number>("/saveFromRemoteSource", { url }),
   deleteBookSource: (bookSourceUrl: string) =>
     post<unknown>("/deleteBookSources", { bookSourceUrls: [bookSourceUrl] }),
+  /** 一键移除失效书源（最近一次校验失败者），返回删除数 */
+  removeInvalidSources: () => post<{ removed: number }>("/removeInvalidBookSources"),
 };
 
 export interface BookSourceSub {

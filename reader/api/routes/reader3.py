@@ -494,6 +494,17 @@ async def get_invalid_book_sources():
     return ok(get_service().db.list_invalid_sources())
 
 
+@router.post("/removeInvalidBookSources")
+async def remove_invalid_book_sources():
+    """一键移除失效书源：删除最近一次校验失败的全部源，返回删除数。"""
+    svc = get_service()
+    keys = svc.db.list_invalid_sources()
+    if not keys:
+        return ok({"removed": 0})
+    svc.db.delete_sources(keys)
+    return ok({"removed": len(keys)})
+
+
 # ---- 书源批量校验 ----
 
 

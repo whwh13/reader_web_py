@@ -68,6 +68,20 @@
           <el-radio-button value="all">全部 ({{ sources.length }})</el-radio-button>
           <el-radio-button value="invalid">失效 ({{ invalidCount }})</el-radio-button>
         </el-radio-group>
+        <el-popconfirm
+          :title="`确定移除 ${invalidCount} 个失效书源？删除后需重新校验或订阅刷新恢复`"
+          width="280"
+          @confirm="removeInvalid"
+        >
+          <template #reference>
+            <el-button
+              size="small"
+              type="danger"
+              :disabled="invalidCount === 0 || validating"
+              class="remove-invalid-btn"
+            >一键移除失效源</el-button>
+          </template>
+        </el-popconfirm>
       </div>
       <el-table :data="filteredSources" size="small" max-height="420" v-loading="loading">
         <el-table-column prop="bookSourceName" label="名称" min-width="160" show-overflow-tooltip />
@@ -274,6 +288,17 @@ async function remove(row: BookSourceSimple) {
   }
 }
 
+async function removeInvalid() {
+  const r = await sourcesApi.removeInvalidSources();
+  if (r.isSuccess) {
+    ElMessage.success(`已移除 ${r.data?.removed ?? 0} 个失效书源`);
+    checkMap.value = {};
+    summary.value = null;
+    filterMode.value = "all";
+    await load();
+  }
+}
+
 onMounted(load);
 </script>
 
@@ -282,7 +307,7 @@ onMounted(load);
 .panel-head { display: flex; justify-content: space-between; align-items: center; }
 .panel-head-tools { display: flex; gap: 8px; align-items: center; }
 .src-bar { display: flex; gap: 12px; margin-bottom: 12px; }
-.filter-bar { margin: 8px 0; }
+.filter-bar { margin: 8px 0; display: flex; gap: 12px; align-items: center; }
 .err-text { color: var(--el-color-danger); font-size: 12px; }
 .rate-alert { margin: 8px 0; }
 </style>
