@@ -18,7 +18,7 @@ FROM python:3.12-slim AS pydeps
 RUN apt-get update && apt-get install -y --no-install-recommends gcc libc6-dev \
     && rm -rf /var/lib/apt/lists/*
 COPY pyproject.toml README.md ./
-COPY src/ ./src/
+COPY reader/ ./reader/
 RUN pip install --no-cache-dir --prefix=/install \
     --index-url https://pypi.tuna.tsinghua.edu.cn/simple \
     .

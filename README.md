@@ -36,7 +36,7 @@ docker run -d --name reader-web-py \
 
 - **持久化**：宿主目录挂到容器 `/data` 即可——书源、书架、章节缓存、cookie、封面缓存全在这一个目录里，删容器/升级镜像数据不丢。
 - 界面：`http://<设备IP>:8081`；KOReader 插件：服务器地址 `http://<设备IP>:8081/reader3`（凭证留空）。
-- 版本：`GET /version` 返回当前版本；镜像 tag 与 `src/reader/version.py` 的版本号一一对应。
+- 版本：`GET /version` 返回当前版本；镜像 tag 与 `reader/version.py` 的版本号一一对应。
 
 ## 快速开始
 
@@ -82,7 +82,7 @@ uv run pytest tests/ -q
 ## 目录结构
 
 ```
-src/reader/
+reader/
 ├── api/routes/reader3.py   # /reader3 兼容层（插件契约 19 端点 + 订阅/校验扩展）
 ├── core/rule/              # 规则引擎：切分器、五模式解析器、编排器、URL 分析
 ├── core/js/                # QuickJS 沙箱 + java.* 桥 + org.jsoup shim

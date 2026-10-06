@@ -17,3 +17,5 @@ frontend/dist/
 reference/
 *.tsbuildinfo
 Dockerfile.local
+container-data/
+*.db
