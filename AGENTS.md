@@ -41,6 +41,14 @@ cd frontend && npm run build    # 产物 frontend/dist
 - 契约测试 `tests/test_reader3_contract.py` 的调用序列就是 KOReader 插件的用法，改 API 前先跑它。
 - `reference/legado.koplugin/` 是去 .git 的只读快照（AGPL），已移出 git 跟踪、仅本地保留；不要恢复进仓库。
 
+## Docker / 发版工作流（container.exe + GHCR）
+
+- **本地调试**：`container.exe build -t reader-web-py:<版本>-dev -f Dockerfile.local .`（Dockerfile.local 基础镜像指向 daocloud 镜像源，不进 git）→ `container.exe run -d -p 8082:8081 -v <数据目录>:/data reader-web-py:<版本>-dev` 调试。
+- **正式发版**：改 `src/reader/version.py` 的 `__version__`（与 pyproject.toml 同步）→ 镜内调试通过 → `git commit && git tag v<版本> && git push --tags` → GitHub Actions（`.github/workflows/ci.yml`）测试 + 双平台（amd64/arm64）构建，发布 `ghcr.io/whwh13/reader_web_py:<版本>` 与 `:latest`。
+- **wslc**：`C:\Program Files\WSL\container.exe`（WSL 3.0 自带，用法与 docker 几乎一样）。需要虚拟机平台特性 + 重启；docker.io 直连拉不到基础镜像（走 daocloud 镜像源）。
+- **持久化**：容器数据全部在 `/data`（挂载宿主目录）——reader.db、章节缓存、cookie、封面；删容器数据不丢，已实测。
+- **已知坑**：wslc 的 buildx 对全局 ARG + 多个 FROM 引用报 "base name blank"（本地版写死镜像名）；版本号统一从 `version.py` 读取——勿在 `__init__.py`/路由里硬编码（曾出 1.0.1 镜像报 1.0.0 的事故）。
+
 ## 修改后同步
 
 改动 API 或管线行为 → 重跑全部 pytest；影响用法/架构 → 更新根 `README.md` 与本文件、
