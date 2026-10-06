@@ -15,6 +15,7 @@ from fastapi import APIRouter, Request
 from fastapi.responses import StreamingResponse
 import httpx
 
+from reader import __version__
 from reader.api.helpers import fail, ok, read_params
 from reader.models.book import Book, BookChapter
 from reader.models.book_source import parse_book_sources
@@ -416,7 +417,7 @@ async def get_system_info():
     return ok(
         {
             "name": "reader-py",
-            "version": "0.1.0",
+            "version": __version__,
             "bookshelf": {
                 "total": len(svc.list_sources()),
             },
