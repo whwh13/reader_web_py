@@ -1,9 +1,9 @@
 /** 按域拆分的 API 模块 */
 
 import { get, post } from "./request";
-import type { Book, BookChapter, BookSourceSimple } from "./types";
+import type { Book, BookChapter, BookSourceSimple, GroupedSearchResult } from "./types";
 
-export type { Book, BookChapter, BookSourceSimple } from "./types";
+export type { Book, BookChapter, BookSourceSimple, GroupedSearchResult } from "./types";
 
 export const shelfApi = {
   getBookshelf: (refresh = false) =>
@@ -46,6 +46,51 @@ export const searchApi = {
   searchBook: (key: string, bookSourceUrl: string, page = 1) =>
     get<Book[]>("/searchBook", { key, bookSourceUrl, page, concurrentCount: 16, lastIndex: -1, v: Date.now() }),
 };
+
+export interface SearchFrame {
+  lastIndex: number;
+  data?: Book[];
+  groups?: GroupedSearchResult[];
+}
+
+/** 多源搜索 SSE：逐帧回调（aggregate=1 时帧带 groups 聚合分组），end 时 resolve {lastIndex, isEnd}。 */
+export function searchMultiSSE(
+  opts: { key: string; concurrentCount?: number; aggregate?: boolean },
+  onFrame: (frame: SearchFrame) => void
+): Promise<{ lastIndex: number; isEnd: boolean; totalSources?: number } | null> {
+  return new Promise((resolve) => {
+    const params: Record<string, string> = {
+      key: opts.key,
+      concurrentCount: String(opts.concurrentCount || 48),
+      // dedup 关闭时每源多条，聚满 500 会提前截断——给大值让轮数上限（8 轮）成为主限制
+      searchSize: "2000",
+    };
+    if (opts.aggregate) params.aggregate = "1";
+    const es = new EventSource(
+      `/reader3/searchBookMultiSSE?${new URLSearchParams(params).toString()}`
+    );
+    es.addEventListener("end", (ev) => {
+      es.close();
+      try {
+        const d = JSON.parse((ev as MessageEvent).data);
+        resolve({ lastIndex: d.lastIndex ?? 0, isEnd: !!d.isEnd, totalSources: d.totalSources });
+      } catch {
+        resolve(null);
+      }
+    });
+    es.addEventListener("error", () => {
+      es.close();
+      resolve(null);
+    });
+    es.onmessage = (ev) => {
+      try {
+        onFrame(JSON.parse(ev.data));
+      } catch {
+        /* 忽略坏帧 */
+      }
+    };
+  });
+}
 
 export const sourcesApi = {
   getBookSources: (simple = true) =>

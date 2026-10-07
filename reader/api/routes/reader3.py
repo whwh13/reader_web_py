@@ -189,24 +189,55 @@ async def search_book_multi(request: Request):
 
 @router.get("/searchBookMultiSSE")
 async def search_book_multi_sse(request: Request):
-    """SSE 流式多源搜索：无名 data = {lastIndex, list}，event: end 结束。"""
+    """SSE 流式多源搜索：无名 data = {lastIndex, list}，event: end 结束。
+
+    aggregate=1：聚合分组模式——同帧内按 (name, author) 归组，帧书目为
+    {book(代表条目), sourceCount, sources(各源条目)}，不做跨帧去重。
+    dedup=0：关闭跨源去重（同书每源各留一条，配合前端自行聚合）。
+    """
     p = await read_params(request)
+    aggregate = p.get_bool("aggregate")
+    # dedup=0 关闭跨源去重（同书每源各留一条，配合前端自行聚合）；默认开启
+    dedup = p.get_str("dedup") != "0"
+    key = p.get_str("key")
 
     async def gen():
         queue: asyncio.Queue = asyncio.Queue()
+        # run() 结果（end 时取 is_end 判断是否真跑完全部源）
+        run_result: dict = {}
 
         def on_batch(batch, index):
-            queue.put_nowait(batch)
+            # index = 已搜完的源数（真实进度）；同步回调里必须用 put_nowait（put 是协程）
+            if aggregate:
+                # 聚合分组：帧内条目按 (name, author) 归组，组内保留全部来源
+                groups_in_batch: dict[tuple[str, str], list] = {}
+                for b in batch:
+                    groups_in_batch.setdefault((b.name, b.author), []).append(b)
+                queue.put_nowait(("groups", index, [
+                    {
+                        "book": items[0].model_dump(exclude_none=True),
+                        "sourceCount": len(items),
+                        "sources": [x.model_dump(exclude_none=True) for x in items],
+                    }
+                    for items in groups_in_batch.values()
+                ]))
+            else:
+                queue.put_nowait((batch, index, None))
 
         async def run():
             try:
                 result = await get_service().search_multi(
-                    key=p.get_str("key"),
+                    key=key,
                     concurrent_count=p.get_int("concurrentCount", 36),
                     search_size=p.get_int("searchSize", 100),
                     last_index=p.get_int("lastIndex", 0),
                     page=p.get_int("page", 1),
                     on_batch=on_batch,
+                    dedup=dedup,
+                )
+                run_result["is_end"] = result.is_end
+                run_result["total"] = len(
+                    [s for s in get_service().list_sources() if s.enabled]
                 )
                 await queue.put({"__end__": result.last_index})
             except Exception as e:
@@ -216,12 +247,16 @@ async def search_book_multi_sse(request: Request):
         while True:
             item = await queue.get()
             if isinstance(item, dict) and "__end__" in item:
-                yield f"event: end\ndata: {json.dumps({'lastIndex': item['__end__'], 'isEnd': True}, ensure_ascii=False)}\n\n"
+                yield f"event: end\ndata: {json.dumps({'lastIndex': item['__end__'], 'isEnd': run_result.get('is_end', False), 'totalSources': run_result.get('total', 0)}, ensure_ascii=False)}\n\n"
                 break
             if isinstance(item, dict) and "__error__" in item:
                 yield f"event: error\ndata: {json.dumps(fail(item['__error__']), ensure_ascii=False)}\n\n"
                 break
-            yield f"data: {json.dumps({'lastIndex': -1, 'data': [b.model_dump(exclude_none=True) for b in item]}, ensure_ascii=False)}\n\n"
+            batch, index, groups = item
+            if groups is not None:
+                yield f"data: {json.dumps({'lastIndex': index, 'groups': groups}, ensure_ascii=False)}\n\n"
+            else:
+                yield f"data: {json.dumps({'lastIndex': index, 'data': [b.model_dump(exclude_none=True) for b in batch]}, ensure_ascii=False)}\n\n"
 
     return StreamingResponse(gen(), media_type="text/event-stream")
 

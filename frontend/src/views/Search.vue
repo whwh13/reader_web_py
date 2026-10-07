@@ -8,58 +8,157 @@
         clearable
         @keyup.enter="doSearch"
       />
-      <el-button type="primary" size="large" :loading="searching" @click="doSearch">搜索</el-button>
+      <el-button type="primary" size="large" :loading="searching" @click="doSearch">
+        {{ searching ? "搜索中…" : "搜索" }}
+      </el-button>
     </div>
-    <div v-if="searching" class="search-tip">多源搜索中…（已聚合 {{ results.length }} 条）</div>
-    <el-table :data="results" v-loading="searching" @row-click="addToShelf">
-      <el-table-column prop="name" label="书名" min-width="180" />
-      <el-table-column prop="author" label="作者" width="140" />
-      <el-table-column prop="originName" label="来源" width="160" />
-      <el-table-column prop="latestChapterTitle" label="最新章节" min-width="180" />
-      <el-table-column label="操作" width="120">
+    <div v-if="searching" class="search-tip">
+      全源搜索中（{{ searchedSources }}/{{ totalSources }} 源）… 已聚合 {{ groups.length }} 本
+    </div>
+    <div v-else-if="searched" class="search-tip">
+      搜索完成：{{ groups.length }} 本（来自 {{ totalSources }} 个启用书源）
+      <el-button v-if="canContinue" link type="primary" @click="continueSearch">继续搜更多</el-button>
+    </div>
+    <el-table :data="groups" v-loading="searching && groups.length === 0">
+      <el-table-column label="书名" min-width="200">
         <template #default="{ row }">
-          <el-button size="small" type="primary" @click.stop="addToShelf(row)">入架</el-button>
+          {{ row.book.name }}
+          <el-tag v-if="row.sourceCount > 1" size="small" type="primary" class="src-count">
+            {{ row.sourceCount }} 个来源
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column prop="book.author" label="作者" width="140" />
+      <el-table-column label="首个来源" width="160">
+        <template #default="{ row }">{{ row.book.originName || row.book.origin }}</template>
+      </el-table-column>
+      <el-table-column prop="book.latestChapterTitle" label="最新章节" min-width="180" />
+      <el-table-column label="操作" width="200">
+        <template #default="{ row }">
+          <el-button size="small" type="primary" @click.stop="addToShelf(row.book)">入架</el-button>
+          <el-button
+            v-if="row.sourceCount > 1"
+            size="small"
+            @click.stop="toggleExpand(row)"
+          >{{ expandedKey === groupKey(row) ? "收起来源" : "选来源" }}</el-button>
         </template>
       </el-table-column>
     </el-table>
-    <el-empty v-if="!searching && searched && results.length === 0" description="没有搜到结果" />
+    <!-- 展开同书的多来源选择 -->
+    <el-card v-if="expandedGroup" shadow="never" class="expand-card">
+      <template #header>
+        <div class="panel-head">
+          <span>《{{ expandedGroup.book.name }}》的 {{ expandedGroup.sourceCount }} 个来源</span>
+          <el-button link @click="expandedGroup = null">关闭</el-button>
+        </div>
+      </template>
+      <el-table :data="expandedGroup.sources" size="small" max-height="320">
+        <el-table-column prop="originName" label="来源" width="160" show-overflow-tooltip />
+        <el-table-column prop="author" label="作者" width="120" show-overflow-tooltip />
+        <el-table-column prop="latestChapterTitle" label="最新章节" min-width="160" show-overflow-tooltip />
+        <el-table-column label="操作" width="100">
+          <template #default="{ row }">
+            <el-button size="small" type="primary" @click="addToShelf(row)">入架</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-card>
+    <el-empty
+      v-if="!searching && searched && groups.length === 0"
+      :description="`全部 ${totalSources} 个启用源均未搜到「${lastKeyword}」`"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { ElMessage } from "element-plus";
-import { searchApi, shelfApi } from "../api";
-import type { Book } from "../api/types";
+import { searchMultiSSE, shelfApi } from "../api";
+import type { Book, GroupedSearchResult } from "../api/types";
 
 const keyword = ref("");
-const results = ref<Book[]>([]);
+const lastKeyword = ref("");
+const groups = ref<GroupedSearchResult[]>([]);
 const searching = ref(false);
 const searched = ref(false);
+const searchedSources = ref(0);
+const totalSources = ref(0);
+const lastIndex = ref(0);
+const canContinue = ref(false);
+const expandedKey = ref("");
+const expandedGroup = ref<GroupedSearchResult | null>(null);
 const added = new Set<string>();
+
+function groupKey(g: GroupedSearchResult) {
+  // 聚合键只看书名：同名即聚合一组（源站作者元数据常乱填/缺失，
+  // 严格 (name, author) 会把同一本书拆散）；组内展开可见各来源的作者差异
+  return g.book.name;
+}
+
+function toggleExpand(g: GroupedSearchResult) {
+  const k = groupKey(g);
+  if (expandedKey.value === k) {
+    expandedKey.value = "";
+    expandedGroup.value = null;
+  } else {
+    expandedKey.value = k;
+    expandedGroup.value = g;
+  }
+}
 
 async function doSearch() {
   const key = keyword.value.trim();
-  if (!key) return;
+  if (!key || searching.value) return;
+  lastKeyword.value = key;
   searching.value = true;
   searched.value = true;
-  results.value = [];
-  // 单源逐个搜（MVP：串行前 12 个启用源；多源 SSE 在 backlog）
-  const src = await import("../api").then((m) => m.sourcesApi.getBookSources(true));
-  const sources = (src.isSuccess ? src.data : []).filter((s) => s.enabled).slice(0, 12);
-  for (const s of sources) {
-    const r = await searchApi.searchBook(key, s.bookSourceUrl);
-    if (r.isSuccess) {
-      for (const b of r.data) {
-        const dedup = `${b.name}|${b.author}`;
-        if (!added.has(dedup)) {
-          added.add(dedup);
-          results.value.push(b);
+  groups.value = [];
+  added.clear();
+  searchedSources.value = 0;
+  lastIndex.value = 0;
+  canContinue.value = false;
+  expandedKey.value = "";
+  expandedGroup.value = null;
+  await runSearch(key, 0);
+}
+
+async function continueSearch() {
+  if (searching.value) return;
+  searching.value = true;
+  canContinue.value = false;
+  await runSearch(lastKeyword.value, lastIndex.value);
+}
+
+async function runSearch(key: string, from: number) {
+  const final = await searchMultiSSE(
+    { key, concurrentCount: 48, aggregate: true },
+    (frame) => {
+      if (frame.lastIndex > 0) {
+        searchedSources.value = frame.lastIndex;
+        lastIndex.value = frame.lastIndex;
+      }
+      for (const g of frame.groups || []) {
+        const k = g.book.name;
+        const existing = groups.value.find((x) => groupKey(x) === k);
+        if (existing) {
+          // 后续帧出现同书：合并来源
+          existing.sourceCount += g.sourceCount;
+          existing.sources.push(...g.sources);
+        } else if (!added.has(k)) {
+          added.add(k);
+          groups.value.push(g);
         }
       }
     }
-  }
+  );
   searching.value = false;
+  if (final === null) {
+    ElMessage.warning("搜索中断");
+    return;
+  }
+  if (final.totalSources) totalSources.value = final.totalSources;
+  // isEnd=false 说明因条数上限截断，允许续搜
+  canContinue.value = !final.isEnd && final.lastIndex > 0;
 }
 
 async function addToShelf(b: Book) {
@@ -76,12 +175,15 @@ async function addToShelf(b: Book) {
     totalChapterNum: b.totalChapterNum ?? 0,
     latestChapterTitle: b.latestChapterTitle,
   });
-  if (r.isSuccess) ElMessage.success(`《${b.name}》已加入书架`);
+  if (r.isSuccess) ElMessage.success(`《${b.name}》已加入书架（${b.originName || b.origin}）`);
 }
 </script>
 
 <style scoped>
 .search-bar { display: flex; gap: 12px; margin-bottom: 16px; }
 .search-tip { color: var(--el-text-color-secondary); margin-bottom: 8px; }
-:deep(.el-table__row) { cursor: pointer; }
+.src-count { margin-left: 6px; }
+.expand-card { margin-top: 12px; }
+.panel-head { display: flex; justify-content: space-between; align-items: center; }
+:deep(.el-table__row) { cursor: default; }
 </style>

@@ -50,3 +50,10 @@ export interface BookSourceSimple {
 export interface SearchResult extends Book {
   lastIndex?: number;
 }
+
+/** 聚合分组搜索结果：同 (name, author) 一组，book 为代表条目，sources 为各源条目 */
+export interface GroupedSearchResult {
+  book: Book;
+  sourceCount: number;
+  sources: Book[];
+}

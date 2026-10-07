@@ -59,10 +59,11 @@ class ReaderService:
         page: int = 1,
         on_batch=None,
         max_rounds: int | None = 8,
+        dedup: bool = True,
     ):
         sources = [s for s in self.list_sources() if s.enabled]
         searcher = SourceSearcher(self.http, self.engine)
-        ms = MultiSearch(sources, searcher, concurrent_count, search_size)
+        ms = MultiSearch(sources, searcher, concurrent_count, search_size, dedup=dedup)
         return await ms.run(key, last_index, page, on_batch, max_rounds=max_rounds)
 
     async def search_accurate_all(self, name: str, author: str, concurrent_count: int = 48):

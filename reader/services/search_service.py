@@ -48,12 +48,15 @@ class MultiSearch:
         searcher: SourceSearcher,
         concurrent_count: int = 36,
         search_size: int = 100,
+        dedup: bool = True,
     ) -> None:
         # 排序：customOrder 降序（对照 legacy 源排序）
         self.sources = sorted(sources, key=lambda s: s.customOrder, reverse=True)
         self.searcher = searcher
         self.concurrent_count = max(1, concurrent_count)
         self.search_size = search_size
+        # dedup=False：同 (name, author) 每源各留一条（聚合分组场景——要看同书有哪些来源）
+        self.dedup = dedup
 
     async def run(
         self,
@@ -71,7 +74,7 @@ class MultiSearch:
         """
         loop = asyncio.get_running_loop()
         semaphore = asyncio.Semaphore(self.concurrent_count)
-        aggregated: dict[tuple[str, str], SearchBook] = {}
+        aggregated: dict[tuple[str, str], list[SearchBook]] = {}
         rounds_without_result = 0
         rounds = 0
         index = last_index
@@ -94,9 +97,12 @@ class MultiSearch:
             for books in results:
                 for sb in books:
                     dedup_key = (sb.name, sb.author)
-                    if dedup_key in aggregated:
+                    bucket = aggregated.setdefault(dedup_key, [])
+                    # dedup=True：同 (name,author) 跨源只留第一条（legacy 语义）；
+                    # dedup=False：每源各留一条（聚合分组场景）
+                    if self.dedup and bucket:
                         continue
-                    aggregated[dedup_key] = sb
+                    bucket.append(sb)
                     batch.append(sb)
 
             if on_batch and batch:
@@ -105,14 +111,15 @@ class MultiSearch:
             rounds_without_result = rounds_without_result + 1 if not batch else 0
             # legacy: resultList.size < searchSize 为继续条件，8 轮强制上限；
             # max_rounds=None 表示跑完全部源（换源候选场景）
-            if len(aggregated) >= self.search_size:
+            if sum(len(v) for v in aggregated.values()) >= self.search_size:
                 break
             if max_rounds is not None and rounds >= max_rounds:
                 break
 
+        flat = [b for bucket in aggregated.values() for b in bucket]
         return MultiSearchResult(
             last_index=index,
-            list=_rank_results(list(aggregated.values()), key)[: self.search_size],
+            list=_rank_results(flat, key)[: self.search_size],
             is_end=index >= total,
         )
 

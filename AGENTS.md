@@ -57,6 +57,14 @@ cd frontend && npm run build    # 产物 frontend/dist
 - **SSE 选中校验**：`validateBookSourcesSSE` 支持 `keys`（逗号分隔）只校验选中源，含停用源（`validate_one_sync` 的 `skip_enabled_check`）；全量校验仍跳过停用源。
 - **订阅名称展示**：前端来源列显示订阅名（无名称显示去协议主机名）；分组 tag 筛选条含"全部/失效/各分组"，失效 tag 数据来自最近校验结果。
 
+## 多源搜索语义（1.0.7+）
+
+- **Web 搜索走 `searchBookMultiSSE?aggregate=1`**：全源流式（48 并发 × 8 轮 = 384 源/次，searchSize=2000 不截断），带"继续搜更多"按钮（isEnd=false 时显示）。
+- **聚合键是书名**：前端按 name 聚合（不是 name+author）——源站作者元数据常乱填/缺失，同一本书 6 个源 6 种作者写法，严格拼接键会拆散；组内展开列表显示各来源作者供辨别。后端 `aggregate=1` 帧内按 (name, author) 归组 + 前端跨帧按 name 合并。
+- **dedup 开关**：`MultiSearch(dedup=False)` 同书每源各留一条（聚合/换源场景）；`dedup=True`（默认）跨源只留第一条（legacy 语义）。dedup=False 时 aggregated 是 dict[key, list]，searchSize 按 sum(len) 判。
+- **踩坑**：on_batch 同步回调里 `asyncio.Queue.put` 是协程未 await → 静默丢帧（SSE 0 字节），必须 `put_nowait`；data 帧 lastIndex 曾硬编码 -1、end 帧 isEnd 曾硬编码 True（前端进度失效），已改为真实值。
+- **换源 `search_accurate_all`**：全源精搜 name+author 精确匹配、不做跨源去重——与聚合搜索互补。
+
 ## 修改后同步
 
 改动 API 或管线行为 → 重跑全部 pytest；影响用法/架构 → 更新根 `README.md` 与本文件、
@@ -64,5 +72,6 @@ cd frontend && npm run build    # 产物 frontend/dist
 
 ## 最后更新
 
+- 2026-10-08：搜索优化（1.0.7）：Web 搜索改走 searchBookMultiSSE aggregate=1 全源流式（原串行只搜前 12 源）；同名书聚合展示+展开选来源入架（聚合键为书名）；修复 SSE 丢帧（Queue.put 未 await）/进度与 isEnd 硬编码 bug。
 - 2026-10-08：书架删除修复（1.0.7）：Web 书架卡片加删除按钮（确认弹窗）；删书同时清理章节目录/正文磁盘缓存（ChapterCache.delete_book，按 `books/<书名_作者>/` 目录删）；契约测试补缓存清理断言。
 - 2026-10-08：书源管理大改（1.0.7）：来源追溯（sub_link 列）、删除订阅可选级联删书源、书源多选批量操作（启用/停用/校验/删除）、启停开关（enabled 列为准）、分组 tag 筛选+失效 tag、SSE 选中校验。
