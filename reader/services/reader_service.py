@@ -185,7 +185,15 @@ class ReaderService:
         self.db.save_book(book)
 
     def delete_book(self, book_url: str) -> bool:
-        return self.db.delete_book(book_url)
+        book = self.db.get_book(book_url)
+        existed = self.db.delete_book(book_url)
+        # 同时清理章节目录/正文磁盘缓存（书已删，缓存无主）
+        if book is not None:
+            try:
+                self.chapters_cache.delete_book(book)
+            except OSError:
+                pass  # 缓存清理失败不阻碍删书
+        return existed
 
     def get_shelf_book(self, url: str) -> Book | None:
         return self.db.get_book(url)

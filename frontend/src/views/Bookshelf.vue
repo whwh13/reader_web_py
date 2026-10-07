@@ -20,13 +20,23 @@
           <div class="book-author">{{ b.author }}</div>
           <div class="book-foot">
             <span v-if="b.durChapterTitle" class="book-progress">读到:{{ b.durChapterTitle }}</span>
-            <el-button
-              link
-              type="primary"
-              size="small"
-              class="intro-btn"
-              @click.stop="introBook = b; introVisible = true"
-            >简介</el-button>
+            <span class="book-foot-btns">
+              <el-button
+                link
+                type="primary"
+                size="small"
+                class="intro-btn"
+                @click.stop="introBook = b; introVisible = true"
+              >简介</el-button>
+              <el-button
+                link
+                type="danger"
+                size="small"
+                class="intro-btn"
+                :loading="deleting === b.bookUrl"
+                @click.stop="removeBook(b)"
+              >删除</el-button>
+            </span>
           </div>
         </el-card>
       </el-col>
@@ -60,6 +70,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
+import { ElMessage, ElMessageBox } from "element-plus";
 import { shelfApi } from "../api";
 import type { Book } from "../api/types";
 
@@ -67,6 +78,7 @@ const router = useRouter();
 const books = ref<Book[]>([]);
 const loading = ref(false);
 const refreshing = ref(false);
+const deleting = ref("");
 const introVisible = ref(false);
 const introBook = ref<Book | null>(null);
 
@@ -88,6 +100,26 @@ function openReader(b: Book) {
   router.push({ path: "/reader", query: { url: b.bookUrl } });
 }
 
+async function removeBook(b: Book) {
+  const confirmed = await ElMessageBox.confirm(
+    `确定将《${b.name}》移出书架？阅读进度与章节缓存会一并删除。`,
+    "删除书籍",
+    { type: "warning", confirmButtonText: "删除", cancelButtonText: "取消" }
+  )
+    .then(() => true)
+    .catch(() => false);
+  if (!confirmed) return;
+  deleting.value = b.bookUrl;
+  const r = await shelfApi.deleteBook({ bookUrl: b.bookUrl });
+  deleting.value = "";
+  if (r.isSuccess) {
+    ElMessage.success(`已删除《${b.name}》`);
+    await load();
+  } else {
+    ElMessage.error(r.errorMsg || "删除失败");
+  }
+}
+
 onMounted(load);
 </script>
 
@@ -106,6 +138,7 @@ onMounted(load);
 .book-progress { color: var(--el-color-primary); font-size: 12px; margin-top: 4px;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .book-foot { display: flex; align-items: center; justify-content: space-between; }
+.book-foot-btns { display: flex; align-items: center; }
 .intro-btn { padding: 0 4px; }
 .intro-meta { display: flex; gap: 16px; }
 .intro-cover { width: 100px; height: 136px; border-radius: 6px; flex-shrink: 0; }

@@ -72,3 +72,22 @@ class ChapterCache:
         p = self.content_path(book, index)
         if p.exists():
             p.unlink()
+
+    def delete_book(self, book: Book) -> int:
+        """删除该书的整个缓存目录（目录 JSON + 正文 txt），返回删除的文件数。
+
+        缓存布局：books/<书名_作者>/<bookUrl md5>/<index>.txt 与 ../<bookUrl md5>.json。
+        """
+        d = self.root / _safe_name(book.get_folder_name())
+        if not d.exists():
+            return 0
+        n = 0
+        for p in sorted(d.rglob("*"), reverse=True):
+            if p.is_file():
+                p.unlink()
+                n += 1
+            elif p.is_dir() and not any(p.iterdir()):
+                p.rmdir()
+        if d.exists() and not any(d.iterdir()):
+            d.rmdir()
+        return n

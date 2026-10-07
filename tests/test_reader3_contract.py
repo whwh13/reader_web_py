@@ -177,11 +177,28 @@ def test_plugin_journey(client):
     assert body["isSuccess"]
     assert "lastIndex" in body["data"] and isinstance(body["data"]["list"], list)
 
-    # 12. 删除书籍
+    # 12. 删除书籍（同时清理章节缓存目录）
+    from reader.store.chapter_cache import ChapterCache
+    from reader.config import settings as _settings
+
+    cache = ChapterCache(_settings.data_dir)
+    shelf = rd(client.get("/reader3/getBookshelf?v=1&refresh=0"))["data"] or []
+    # 删书前正文缓存已存在（第 8 步拉过正文）
+    book_obj = cache.load_toc.__self__ if False else None  # 占位，下面直接构造
+    from reader.models.book import Book as BookModel
+
+    book_model = BookModel.model_validate(shelf[0]) if shelf else None
+    if book_model is not None:
+        assert cache.toc_path(book_model).exists() or cache.content_path(book_model, 0).exists()
     body = rd(client.post("/reader3/deleteBook", json={**payload, "v": 1}))
     assert body["isSuccess"]
     body = rd(client.get("/reader3/getBookshelf?v=1&refresh=0"))
     assert body["data"] == []
+    # 缓存目录一并清掉
+    if book_model is not None:
+        assert not (cache.root / book_model.get_folder_name()).exists() or not any(
+            (cache.root / book_model.get_folder_name()).rglob("*")
+        )
 
 
 def test_login_stub(client):
