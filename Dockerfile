@@ -7,8 +7,8 @@
 FROM node:22-alpine AS frontend-build
 WORKDIR /build
 COPY frontend/package.json frontend/package-lock.json* ./
-# npmmirror 仅在 CI 网络不佳时使用；默认官方源
-RUN npm ci --registry=https://registry.npmmirror.com
+# CI runner 在境外：使用 npm 官方源（本地调试用 Dockerfile.local，走国内源）
+RUN npm ci
 COPY frontend/ ./
 RUN npm run build
 
@@ -19,9 +19,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends gcc libc6-dev \
     && rm -rf /var/lib/apt/lists/*
 COPY pyproject.toml README.md ./
 COPY reader/ ./reader/
-RUN pip install --no-cache-dir --prefix=/install \
-    --index-url https://pypi.tuna.tsinghua.edu.cn/simple \
-    .
+# PyPI 官方源（CI runner 在境外）
+RUN pip install --no-cache-dir --prefix=/install .
 
 # ---- 阶段 3：运行时 ----
 FROM python:3.12-slim
