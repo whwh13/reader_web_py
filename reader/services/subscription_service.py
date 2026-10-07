@@ -26,8 +26,15 @@ class SubscriptionService:
             self.db.save_sub(link, name or link, 0, 0, result["error"])
         return result
 
-    def remove_sub(self, link: str) -> None:
+    def remove_sub(self, link: str, delete_sources: bool = False) -> int:
+        """删除订阅；delete_sources 时级联删除该订阅导入的书源，返回删除数。"""
+        removed = 0
+        if delete_sources:
+            keys = self.db.list_source_keys_by_sub(link)
+            self.db.delete_sources(keys)
+            removed = len(keys)
         self.db.delete_sub(link)
+        return removed
 
     def refresh_all(self) -> list[dict]:
         return [self._refresh_one(sub["link"], sub["name"]) for sub in self.db.list_subs()]
@@ -40,7 +47,7 @@ class SubscriptionService:
         started = time.time()
         try:
             sources = self._fetch_and_parse(link)
-            self.db.save_sources(sources)
+            self.db.save_sources(sources, sub_link=link)
             count = len(sources)
             self.db.save_sub(link, name or link, int(time.time() * 1000), count, None)
             return {"link": link, "ok": True, "count": count, "elapsed": round(time.time() - started, 1)}

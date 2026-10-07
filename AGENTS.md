@@ -43,13 +43,25 @@ cd frontend && npm run build    # 产物 frontend/dist
 
 ## Docker / 发版工作流（container.exe + GHCR）
 
-- **本地调试**：`container.exe build -t reader-web-py:<版本>-dev -f Dockerfile.local .`（Dockerfile.local 基础镜像指向 daocloud 镜像源，不进 git）→ `container.exe run -d -p 8082:8081 -v <数据目录>:/data reader-web-py:<版本>-dev` 调试。
+- **本地调试**：`container.exe build -t reader-web-py:<版本>-dev -f Dockerfile.local .`（Dockerfile.local 基础镜像指向 daocloud 镜像源，不进 git）→ `container.exe run -d --name reader-web-py -p 127.0.0.1:8082:8081 -v <数据目录>:/data reader-web-py:<版本>-dev` 调试。**注意改 version.py 后再构建**（构建上下文在启动时快照，先改版本再 build 才进镜像）。
 - **正式发版**：改 `reader/version.py` 的 `__version__`（与 pyproject.toml 同步）→ 镜内调试通过 → `git commit && git tag v<版本> && git push --tags` → GitHub Actions（`.github/workflows/ci.yml`）测试 + 双平台（amd64/arm64）构建，发布 `ghcr.io/whwh13/reader_web_py:<版本>` 与 `:latest`。
-- **wslc**：`C:\Program Files\WSL\container.exe`（WSL 3.0 自带，用法与 docker 几乎一样）。需要虚拟机平台特性 + 重启；docker.io 直连拉不到基础镜像（走 daocloud 镜像源）。
+- **wslc**：`C:\Program Files\WSL\container.exe`（WSL 3.0 自带，用法与 docker 几乎一样）。需要虚拟机平台特性 + 重启；docker.io 直连拉不到基础镜像（走 daocloud 镜像源）。inspect 的 `--format` 只支持 `json`（不支持 Go template）。
 - **持久化**：容器数据全部在 `/data`（挂载宿主目录）——reader.db、章节缓存、cookie、封面；删容器数据不丢，已实测。
 - **已知坑**：wslc 的 buildx 对全局 ARG + 多个 FROM 引用报 "base name blank"（本地版写死镜像名）；版本号统一从 `version.py` 读取——勿在 `__init__.py`/路由里硬编码（曾出 1.0.1 镜像报 1.0.0 的事故）。
+
+## 书源管理语义（1.0.7+）
+
+- **来源追溯**：`sources` 表 `sub_link` 列记录书源来自哪个订阅（导入/刷新时写入，`COALESCE` 保留已有标记）。存量数据无标记，点一次"刷新全部订阅"即回填。
+- **enabled 双存储以列为准**：`enabled` 同时存在于 JSON data 与 SQLite 列，批量启停只改列——`get_source`/`list_sources` 读取时必须用列值覆盖 JSON 值（踩过的坑：只改列不覆盖读取，开关切换后刷新即还原）。
+- **仅删订阅不清标记**：`remove_sub(delete_sources=False)` 保留书源的 sub_link（可追溯，重新订阅自动对上）；`delete_sources=True` 级联删除。
+- **SSE 选中校验**：`validateBookSourcesSSE` 支持 `keys`（逗号分隔）只校验选中源，含停用源（`validate_one_sync` 的 `skip_enabled_check`）；全量校验仍跳过停用源。
+- **订阅名称展示**：前端来源列显示订阅名（无名称显示去协议主机名）；分组 tag 筛选条含"全部/失效/各分组"，失效 tag 数据来自最近校验结果。
 
 ## 修改后同步
 
 改动 API 或管线行为 → 重跑全部 pytest；影响用法/架构 → 更新根 `README.md` 与本文件、
 工作区根 `AGENTS.md` 登记表。
+
+## 最后更新
+
+- 2026-10-08：书源管理大改（1.0.7）：来源追溯（sub_link 列）、删除订阅可选级联删书源、书源多选批量操作（启用/停用/校验/删除）、启停开关（enabled 列为准）、分组 tag 筛选+失效 tag、SSE 选中校验。

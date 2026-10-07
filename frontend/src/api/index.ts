@@ -54,6 +54,14 @@ export const sourcesApi = {
   saveFromRemoteSource: (url: string) => post<number>("/saveFromRemoteSource", { url }),
   deleteBookSource: (bookSourceUrl: string) =>
     post<unknown>("/deleteBookSources", { bookSourceUrls: [bookSourceUrl] }),
+  deleteBookSources: (urls: string[]) =>
+    post<unknown>("/deleteBookSources", { bookSourceUrls: urls }),
+  /** 单源/批量启停，返回 {enabled, updated} */
+  enableBookSources: (urls: string[], enabled: boolean) =>
+    post<{ enabled: boolean; updated: number }>("/enableBookSources", {
+      bookSourceUrls: urls,
+      enabled,
+    }),
   /** 一键移除失效书源（最近一次校验失败者），返回删除数 */
   removeInvalidSources: () => post<{ removed: number }>("/removeInvalidBookSources"),
 };
@@ -69,7 +77,8 @@ export interface BookSourceSub {
 export const subsApi = {
   list: () => get<BookSourceSub[]>("/getBookSourceSubs"),
   add: (link: string, name = "") => post<{ count: number }>("/saveBookSourceSub", { link, name }),
-  remove: (link: string) => post<unknown>("/deleteBookSourceSub", { link }),
+  remove: (link: string, deleteSources = false) =>
+    post<{ removed: number }>("/deleteBookSourceSub", { link, deleteSources }),
   refresh: (link?: string) => post<unknown>("/refreshBookSourceSub", link ? { link } : {}),
 };
 
@@ -91,15 +100,18 @@ export interface ValidateSummary {
   rate: number;
 }
 
-/** 批量校验 SSE：逐源回调，end 时 resolve 汇总。 */
+/** 批量校验 SSE：逐源回调，end 时 resolve 汇总。keys 非空时只校验选中源。 */
 export function validateSources(
-  opts: { keyword?: string; concurrency?: number },
+  opts: { keyword?: string; concurrency?: number; keys?: string[] },
   onFrame: (frame: ValidateFrame) => void
 ): Promise<ValidateSummary | null> {
   return new Promise((resolve) => {
-    const qs = new URLSearchParams(
-      Object.entries({ keyword: opts.keyword || "我的", concurrency: String(opts.concurrency || 12) })
-    ).toString();
+    const params: Record<string, string> = {
+      keyword: opts.keyword || "我的",
+      concurrency: String(opts.concurrency || 12),
+    };
+    if (opts.keys && opts.keys.length) params.keys = opts.keys.join(",");
+    const qs = new URLSearchParams(Object.entries(params)).toString();
     const es = new EventSource(`/reader3/validateBookSourcesSSE?${qs}`);
     es.addEventListener("end", (ev) => {
       es.close();

@@ -44,6 +44,7 @@ export interface BookSourceSimple {
   bookSourceGroup?: string | null;
   enabled: boolean;
   customOrder: number;
+  subLink?: string | null;
 }
 
 export interface SearchResult extends Book {

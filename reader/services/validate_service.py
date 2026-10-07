@@ -43,10 +43,11 @@ class CheckResult:
         return d
 
 
-def validate_one_sync(source: BookSource, keyword: str, http, engine) -> CheckResult:
+def validate_one_sync(source: BookSource, keyword: str, http, engine, skip_enabled_check: bool = False) -> CheckResult:
     started = time.time()
     try:
-        if not source.enabled:
+        # skip_enabled_check：only_keys 选中校验场景含停用源，不做启停短路
+        if not source.enabled and not skip_enabled_check:
             return CheckResult(source.bookSourceUrl, source.bookSourceName, False, error="已停用")
         if not source.searchUrl:
             return CheckResult(source.bookSourceUrl, source.bookSourceName, False, error="无搜索规则")
@@ -67,12 +68,20 @@ async def validate_all_sse(
     keyword: str = DEFAULT_KEYWORD,
     concurrency: int = 12,
     only_enabled: bool = True,
+    only_keys: list[str] | None = None,
 ) -> AsyncIterator[str]:
-    """SSE 逐源推送校验结果，event: end 汇总 {total, ok, failed, rate}。"""
-    sources = [
-        s for s in service.list_sources()
-        if (s.enabled or not only_enabled) and s.searchUrl
-    ]
+    """SSE 逐源推送校验结果，event: end 汇总 {total, ok, failed, rate}。
+
+    only_keys 优先：给定 key 列表时只校验这些源（含停用源）。
+    """
+    if only_keys is not None:
+        wanted = set(only_keys)
+        sources = [s for s in service.list_sources() if s.bookSourceUrl in wanted]
+    else:
+        sources = [
+            s for s in service.list_sources()
+            if (s.enabled or not only_enabled) and s.searchUrl
+        ]
     total = len(sources)
     yield f"event: start\ndata: {json.dumps({'total': total}, ensure_ascii=False)}\n\n"
 
@@ -87,7 +96,8 @@ async def validate_all_sse(
             try:
                 result = await asyncio.wait_for(
                     loop.run_in_executor(
-                        executor, validate_one_sync, source, keyword, service.http, service.engine
+                        executor, validate_one_sync, source, keyword, service.http, service.engine,
+                        only_keys is not None,  # 选中校验场景含停用源，跳过启停短路
                     ),
                     timeout=VALIDATE_TIMEOUT,
                 )

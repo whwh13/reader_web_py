@@ -134,3 +134,89 @@ def test_validate_marks_invalid(service, fixture_server):
     service.db.set_check_result(bad.bookSourceUrl, r_bad.ok, r_bad.error)
     invalid = service.db.list_invalid_sources()
     assert invalid == [bad.bookSourceUrl]
+
+
+def test_sub_link_tracking_and_cascade(service, fixture_server):
+    """订阅导入打来源标记；级联删除按标记删除；手动导入不打标记。"""
+    sub = SubscriptionService(service.db)
+    sub.add_sub(fixture_server["sub_url"], "测试订阅")
+
+    keys = [s.bookSourceUrl for s in service.list_sources()]
+    # 全部书源都带订阅来源标记
+    by_sub = service.db.list_source_keys_by_sub(fixture_server["sub_url"])
+    assert set(by_sub) == set(keys)
+    for k in keys:
+        assert service.db.get_source_sub_link(k) == fixture_server["sub_url"]
+
+    # 手动导入（不带订阅）不打标记
+    manual = {
+        "bookSourceUrl": "http://manual.example/src",
+        "bookSourceName": "手动源",
+        "searchUrl": "http://manual.example/s?key={{key}}",
+    }
+    from reader.models.book_source import parse_book_sources
+
+    service.save_sources(parse_book_sources([manual]))
+    assert service.db.get_source_sub_link("http://manual.example/src") is None
+
+    # 仅删除订阅：书源保留，来源标记也保留（可追溯；重新订阅可对上）
+    sub.remove_sub(fixture_server["sub_url"], delete_sources=False)
+    assert len(service.list_sources()) == 3
+    assert sub.list_subs() == []
+    for k in keys:
+        assert service.db.get_source_sub_link(k) == fixture_server["sub_url"]
+
+    # 重新订阅后级联删除：书源与订阅一起删
+    sub.add_sub(fixture_server["sub_url"], "测试订阅")
+    removed = sub.remove_sub(fixture_server["sub_url"], delete_sources=True)
+    assert removed == 2
+    remaining = [s.bookSourceUrl for s in service.list_sources()]
+    assert remaining == ["http://manual.example/src"]
+    assert sub.list_subs() == []
+
+
+def test_batch_enable_and_selected_validate(service, fixture_server):
+    """批量启停端点语义（db 层）+ SSE 只校验选中源（含停用源）。"""
+    import asyncio
+
+    from reader.services.validate_service import validate_all_sse
+
+    sub = SubscriptionService(service.db)
+    sub.add_sub(fixture_server["sub_url"], "测试订阅")
+    keys = [s.bookSourceUrl for s in service.list_sources()]
+    good_key = next(k for k in keys if k.endswith("/good"))
+    bad_key = next(k for k in keys if k.endswith("/bad"))
+
+    # 停用全部 → 只校验选中（停用源也校验）仍能跑
+    updated = service.db.set_sources_enabled(keys, False)
+    assert updated == 2
+    assert all(not s.enabled for s in service.list_sources())
+
+    async def collect():
+        frames = []
+        summary = None
+        async for frame in validate_all_sse(
+            service, keyword="差分", concurrency=2, only_keys=[good_key, bad_key]
+        ):
+            # 帧形如 'event: X\ndata: {...}\n\n'，取 data 行解析
+            for line in frame.splitlines():
+                if line.startswith("data: "):
+                    payload = json.loads(line.removeprefix("data: "))
+                    if "rate" in payload:
+                        summary = payload
+                    else:
+                        frames.append(payload)
+        return frames, summary
+
+    frames, summary = asyncio.run(collect())
+    assert {f["bookSourceUrl"] for f in frames if "bookSourceUrl" in f} == {good_key, bad_key}
+    assert summary is not None and summary["total"] == 2
+    # 停用的源也真实校验：good 应通过（校验不看 enabled，only_keys 场景含停用源）
+    ok_map = {f["bookSourceUrl"]: f["ok"] for f in frames if "bookSourceUrl" in f}
+    assert ok_map[good_key] is True
+
+    # 重新启用
+    updated = service.db.set_sources_enabled([good_key], True)
+    assert updated == 1
+    enabled_map = {s.bookSourceUrl: s.enabled for s in service.list_sources()}
+    assert enabled_map[good_key] is True and enabled_map[bad_key] is False

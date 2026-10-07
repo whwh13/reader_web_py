@@ -44,11 +44,12 @@ CREATE TABLE IF NOT EXISTS book_source_subs (
 );
 """
 
-# sources 表的校验结果列（增量迁移）
+# sources 表的校验结果列与订阅来源列（增量迁移）
 _SOURCE_CHECK_COLUMNS = """
 ALTER TABLE sources ADD COLUMN last_check_time INTEGER NOT NULL DEFAULT 0;
 ALTER TABLE sources ADD COLUMN last_check_ok INTEGER;
 ALTER TABLE sources ADD COLUMN last_check_error TEXT;
+ALTER TABLE sources ADD COLUMN sub_link TEXT;
 """
 
 
@@ -77,24 +78,63 @@ class Database:
 
     # ---- 书源 ----
 
-    def save_sources(self, sources: list[BookSource]) -> None:
+    def save_sources(self, sources: list[BookSource], sub_link: str | None = None) -> None:
         for s in sources:
             self._exec(
-                "INSERT INTO sources(key, data, custom_order, enabled) VALUES(?,?,?,?) "
+                "INSERT INTO sources(key, data, custom_order, enabled, sub_link) VALUES(?,?,?,?,?) "
                 "ON CONFLICT(key) DO UPDATE SET data=excluded.data, "
-                "custom_order=excluded.custom_order, enabled=excluded.enabled",
-                (s.bookSourceUrl, s.model_dump_json(), s.customOrder, int(s.enabled)),
+                "custom_order=excluded.custom_order, enabled=excluded.enabled, "
+                "sub_link=COALESCE(excluded.sub_link, sources.sub_link)",
+                (s.bookSourceUrl, s.model_dump_json(), s.customOrder, int(s.enabled), sub_link),
             )
 
+    def set_sources_sub_link(self, keys: list[str], sub_link: str | None) -> None:
+        """批量改写书源的订阅来源标记（sub_link=None 表示清除）。"""
+        if not keys:
+            return
+        placeholders = ",".join("?" * len(keys))
+        self._exec(
+            f"UPDATE sources SET sub_link=? WHERE key IN ({placeholders})",
+            (sub_link, *keys),
+        )
+
+    def list_source_keys_by_sub(self, link: str) -> list[str]:
+        rows = self._query("SELECT key FROM sources WHERE sub_link=?", (link,))
+        return [r[0] for r in rows]
+
+    def get_source_sub_link(self, key: str) -> str | None:
+        rows = self._query("SELECT sub_link FROM sources WHERE key=?", (key,))
+        return rows[0][0] if rows and rows[0][0] else None
+
+    def set_sources_enabled(self, keys: list[str], enabled: bool) -> int:
+        """批量启停书源，返回实际更新的行数。"""
+        if not keys:
+            return 0
+        placeholders = ",".join("?" * len(keys))
+        with self._lock:
+            cur = self._conn.execute(
+                f"UPDATE sources SET enabled=? WHERE key IN ({placeholders})",
+                (int(enabled), *keys),
+            )
+            self._conn.commit()
+            return cur.rowcount
+
     def get_source(self, key: str) -> BookSource | None:
-        rows = self._query("SELECT data FROM sources WHERE key=?", (key,))
+        rows = self._query("SELECT data, enabled FROM sources WHERE key=?", (key,))
         if not rows:
             return None
-        return BookSource.model_validate(json.loads(rows[0][0]))
+        source = BookSource.model_validate(json.loads(rows[0][0]))
+        source.enabled = bool(rows[0][1])  # enabled 列为准（批量启停只改列）
+        return source
 
     def list_sources(self) -> list[BookSource]:
-        rows = self._query("SELECT data FROM sources ORDER BY custom_order DESC")
-        return [BookSource.model_validate(json.loads(r[0])) for r in rows]
+        rows = self._query("SELECT data, enabled FROM sources ORDER BY custom_order DESC")
+        out = []
+        for r in rows:
+            source = BookSource.model_validate(json.loads(r[0]))
+            source.enabled = bool(r[1])  # enabled 列为准（批量启停只改列）
+            out.append(source)
+        return out
 
     def delete_sources(self, keys: list[str]) -> None:
         for key in keys:

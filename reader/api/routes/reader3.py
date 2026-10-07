@@ -310,6 +310,7 @@ async def get_book_sources(request: Request):
                     "bookSourceGroup": s.bookSourceGroup,
                     "enabled": s.enabled,
                     "customOrder": s.customOrder,
+                    "subLink": svc.db.get_source_sub_link(s.bookSourceUrl),
                 }
                 for s in sources
             ]
@@ -322,6 +323,9 @@ async def get_book_sources(request: Request):
             item["lastCheckOk"] = bool(check_ok)
             if check_err:
                 item["error"] = check_err
+        sub_link = svc.db.get_source_sub_link(s.bookSourceUrl)
+        if sub_link:
+            item["subLink"] = sub_link
         out.append(item)
     return ok(out)
 
@@ -389,6 +393,20 @@ async def delete_book_sources(request: Request):
     keys = raw if isinstance(raw, list) else [str(raw)]
     get_service().delete_sources(keys)
     return ok(True)
+
+
+@router.post("/enableBookSource")
+@router.post("/enableBookSources")
+async def enable_book_sources(request: Request):
+    """单源/批量启停书源：bookSourceUrl(s) + enabled(true/false)，返回 {enabled, updated}。"""
+    p = await read_params(request)
+    raw = p.get("bookSourceUrl") or p.get("bookSourceUrls") or p.get("keys")
+    if raw is None:
+        return fail("缺少 bookSourceUrl")
+    keys = raw if isinstance(raw, list) else [str(raw)]
+    enabled = p.get_bool("enabled", True)
+    updated = get_service().db.set_sources_enabled(keys, enabled)
+    return ok({"enabled": enabled, "updated": updated})
 
 
 # ---- 兼容桩 ----
@@ -463,14 +481,17 @@ async def save_book_source_sub(request: Request):
 
 @router.post("/deleteBookSourceSub")
 async def delete_book_source_sub(request: Request):
+    """删除订阅；deleteSources=1 时级联删除该订阅导入的全部书源。"""
     p = await read_params(request)
     link = p.get_str("link") or p.get_str("url")
     if not link:
         return fail("缺少订阅链接")
     from reader.services.subscription_service import SubscriptionService
 
-    SubscriptionService(get_service().db).remove_sub(link)
-    return ok(True)
+    removed = SubscriptionService(get_service().db).remove_sub(
+        link, delete_sources=p.get_bool("deleteSources")
+    )
+    return ok({"removed": removed})
 
 
 @router.post("/refreshBookSourceSub")
@@ -510,16 +531,25 @@ async def remove_invalid_book_sources():
 
 @router.get("/validateBookSourcesSSE")
 async def validate_book_sources_sse(request: Request):
-    """SSE 逐源校验：data 帧 {bookSourceUrl, ok, count, error, done, total}，end 帧汇总。"""
+    """SSE 逐源校验：data 帧 {bookSourceUrl, ok, count, error, done, total}，end 帧汇总。
+
+    传 keys/bookSourceUrls（逗号分隔或重复参数）时只校验选中源（含停用源）。
+    """
     from reader.services.validate_service import validate_all_sse
 
     p = await read_params(request)
     keyword = p.get_str("keyword") or "我的"
     concurrency = min(max(p.get_int("concurrency", 12), 1), 24)
+    raw_keys = p.get("keys") or p.get("bookSourceUrls")
+    only_keys: list[str] | None = None
+    if isinstance(raw_keys, list):
+        only_keys = [str(k) for k in raw_keys if str(k)]
+    elif raw_keys:
+        only_keys = [k.strip() for k in str(raw_keys).split(",") if k.strip()]
 
     async def gen():
         async for frame in validate_all_sse(
-            get_service(), keyword=keyword, concurrency=concurrency
+            get_service(), keyword=keyword, concurrency=concurrency, only_keys=only_keys
         ):
             yield frame
 
