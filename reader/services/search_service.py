@@ -125,10 +125,15 @@ class MultiSearch:
 
 
 def _rank_results(books: list[SearchBook], keyword: str) -> list[SearchBook]:
-    """按与关键词的相关性排序：精确同名 > 名以前缀 > 名含词 > 其他（保持同档内插入序）。"""
+    """按与关键词的相关性排序：精确同名 > 名以前缀 > 名含词 > 其他 > 垃圾条目。
+
+    同档内保持聚合顺序（稳定排序）。
+    """
 
     def rank(b: SearchBook) -> int:
-        name = b.name or ""
+        name = (b.name or "").strip()
+        if not name or any(k in name for k in ("访问受限", "安全检测", "人机验证")):
+            return 9
         if name == keyword:
             return 0
         if name.startswith(keyword):
@@ -138,8 +143,6 @@ def _rank_results(books: list[SearchBook], keyword: str) -> list[SearchBook]:
         # 作者名命中也算高相关
         if b.author and keyword in b.author:
             return 3
-        return 9
+        return 4
 
-    ranked = sorted(books, key=rank)
-    # 稳定排序下同档保持聚合顺序；把"访问受限/安全检测"之类的垃圾条目沉底
-    return [b for b in ranked]
+    return sorted(books, key=rank)

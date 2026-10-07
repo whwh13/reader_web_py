@@ -7,7 +7,7 @@
     <el-empty v-if="!loading && books.length === 0" description="书架空空如也，去搜索添加吧" />
     <el-row :gutter="16">
       <el-col v-for="b in books" :key="b.bookUrl" :span="4" style="margin-bottom: 16px">
-        <el-card shadow="hover" class="book-card" @click="openReader(b)">
+        <el-card shadow="hover" class="book-card" @click="showDetail(b)">
           <el-image :src="b.coverUrl || ''" fit="cover" class="book-cover" lazy>
             <template #error>
               <div class="book-cover fallback">{{ b.name.slice(0, 1) }}</div>
@@ -18,50 +18,51 @@
           </el-image>
           <div class="book-name" :title="b.name">{{ b.name }}</div>
           <div class="book-author">{{ b.author }}</div>
-          <div class="book-foot">
-            <span v-if="b.durChapterTitle" class="book-progress">读到:{{ b.durChapterTitle }}</span>
-            <span class="book-foot-btns">
-              <el-button
-                link
-                type="primary"
-                size="small"
-                class="intro-btn"
-                @click.stop="introBook = b; introVisible = true"
-              >简介</el-button>
-              <el-button
-                link
-                type="danger"
-                size="small"
-                class="intro-btn"
-                :loading="deleting === b.bookUrl"
-                @click.stop="removeBook(b)"
-              >删除</el-button>
-            </span>
-          </div>
+          <div v-if="b.durChapterTitle" class="book-progress">读到:{{ b.durChapterTitle }}</div>
         </el-card>
       </el-col>
     </el-row>
 
-    <!-- 简介弹层：点书名旁的 ⓘ 或长按卡片 -->
-    <el-dialog v-model="introVisible" :title="introBook?.name" width="520px">
-      <div class="intro-meta">
+    <!-- 书籍详情弹层：点卡片弹出，右上角叉号关闭 -->
+    <el-dialog
+      v-model="detailVisible"
+      :title="detailBook?.name"
+      width="560px"
+      :show-close="true"
+      :close-on-click-modal="false"
+    >
+      <div v-if="detailBook" class="detail-meta">
         <el-image
-          v-if="introBook?.coverUrl"
-          :src="introBook.coverUrl"
+          v-if="detailBook.coverUrl"
+          :src="detailBook.coverUrl"
           fit="cover"
-          class="intro-cover"
+          class="detail-cover"
         />
-        <div class="intro-text">
-          <p class="intro-author">{{ introBook?.author }} {{ introBook?.kind ? "· " + introBook.kind : "" }}</p>
-          <p class="intro-body">{{ introBook?.intro || "暂无简介" }}</p>
-          <p class="intro-chapters" v-if="introBook?.totalChapterNum">
-            共 {{ introBook.totalChapterNum }} 章
+        <div v-else class="detail-cover fallback">{{ detailBook.name.slice(0, 1) }}</div>
+        <div class="detail-text">
+          <p class="detail-author">✍ {{ detailBook.author || "未知作者" }}</p>
+          <p class="detail-origin">📚 来源：{{ detailBook.originName || detailBook.origin }}</p>
+          <p v-if="detailBook.kind" class="detail-kind">🏷 {{ detailBook.kind }}</p>
+          <p v-if="detailBook.totalChapterNum" class="detail-chapters">
+            📄 共 {{ detailBook.totalChapterNum }} 章
+          </p>
+          <p v-if="detailBook.latestChapterTitle" class="detail-latest">
+            ⏱ 最新：{{ detailBook.latestChapterTitle }}
+          </p>
+          <p v-if="detailBook.durChapterTitle" class="detail-progress">
+            📍 读到：{{ detailBook.durChapterTitle }}
           </p>
         </div>
       </div>
+      <div v-if="detailBook" class="detail-intro">
+        <p class="detail-intro-title">简介</p>
+        <p class="detail-intro-body">{{ detailBook.intro || "暂无简介" }}</p>
+      </div>
       <template #footer>
-        <el-button @click="introVisible = false">关闭</el-button>
-        <el-button type="primary" @click="introBook && openReader(introBook)">开始阅读</el-button>
+        <el-button :loading="deleting === detailBook?.bookUrl" @click="removeBook(detailBook!)">
+          删除书籍
+        </el-button>
+        <el-button type="primary" @click="detailBook && openReader(detailBook)">继续阅读</el-button>
       </template>
     </el-dialog>
   </div>
@@ -79,8 +80,8 @@ const books = ref<Book[]>([]);
 const loading = ref(false);
 const refreshing = ref(false);
 const deleting = ref("");
-const introVisible = ref(false);
-const introBook = ref<Book | null>(null);
+const detailVisible = ref(false);
+const detailBook = ref<Book | null>(null);
 
 async function load() {
   loading.value = true;
@@ -94,6 +95,11 @@ async function refreshShelf() {
   const r = await shelfApi.getBookshelf(true);
   if (r.isSuccess) books.value = r.data;
   refreshing.value = false;
+}
+
+function showDetail(b: Book) {
+  detailBook.value = b;
+  detailVisible.value = true;
 }
 
 function openReader(b: Book) {
@@ -113,6 +119,7 @@ async function removeBook(b: Book) {
   const r = await shelfApi.deleteBook({ bookUrl: b.bookUrl });
   deleting.value = "";
   if (r.isSuccess) {
+    detailVisible.value = false;
     ElMessage.success(`已删除《${b.name}》`);
     await load();
   } else {
@@ -137,12 +144,23 @@ onMounted(load);
 .book-author { color: var(--el-text-color-secondary); font-size: 12px; }
 .book-progress { color: var(--el-color-primary); font-size: 12px; margin-top: 4px;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.book-foot { display: flex; align-items: center; justify-content: space-between; }
-.book-foot-btns { display: flex; align-items: center; }
-.intro-btn { padding: 0 4px; }
-.intro-meta { display: flex; gap: 16px; }
-.intro-cover { width: 100px; height: 136px; border-radius: 6px; flex-shrink: 0; }
-.intro-body { line-height: 1.8; white-space: pre-wrap; color: var(--el-text-color-regular); }
-.intro-author { color: var(--el-text-color-secondary); margin-top: 0; }
-.intro-chapters { color: var(--el-color-primary); font-size: 12px; }
+.detail-meta { display: flex; gap: 16px; }
+.detail-cover { width: 100px; height: 136px; border-radius: 6px; flex-shrink: 0; }
+.detail-cover.fallback {
+  background: linear-gradient(135deg, #5b8def, #7c4dff);
+  color: #fff; font-size: 32px; line-height: 136px; text-align: center; font-weight: 700;
+}
+.detail-text { flex: 1; min-width: 0; }
+.detail-text p { margin: 0 0 6px; }
+.detail-author { font-weight: 600; }
+.detail-origin, .detail-kind, .detail-chapters, .detail-latest, .detail-progress {
+  color: var(--el-text-color-regular); font-size: 13px;
+}
+.detail-progress { color: var(--el-color-primary); }
+.detail-latest {
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.detail-intro { margin-top: 12px; border-top: 1px solid var(--el-border-color-lighter); padding-top: 10px; }
+.detail-intro-title { font-weight: 600; margin: 0 0 6px; }
+.detail-intro-body { line-height: 1.8; white-space: pre-wrap; color: var(--el-text-color-regular); margin: 0; }
 </style>

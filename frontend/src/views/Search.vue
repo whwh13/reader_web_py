@@ -95,6 +95,30 @@ function groupKey(g: GroupedSearchResult) {
   return g.book.name;
 }
 
+/** 相关性档位：精确同名 > 名以前缀 > 名含词 > 垃圾条目（访问受限/安全检测）。 */
+function relevanceRank(g: GroupedSearchResult, key: string): number {
+  const name = (g.book.name || "").trim();
+  const clean = name.replace(/[\s*r]</g, "");
+  if (!name || /访问受限|安全检测|人机验证/.test(name)) return 9;
+  if (name === key) return 0;
+  if (name.startsWith(key)) return 1;
+  if (name.includes(key)) return 2;
+  return 3;
+}
+
+/** 每帧到达后重排：相关性升序为主，同档内多来源优先（更多人收录的书更可能是对的），再按最早出现序。 */
+function sortGroups() {
+  const key = lastKeyword.value;
+  const order = new Map(groups.value.map((g, i) => [groupKey(g), i]));
+  groups.value.sort((a, b) => {
+    const ra = relevanceRank(a, key);
+    const rb = relevanceRank(b, key);
+    if (ra !== rb) return ra - rb;
+    if (b.sourceCount !== a.sourceCount) return b.sourceCount - a.sourceCount;
+    return (order.get(groupKey(a)) ?? 0) - (order.get(groupKey(b)) ?? 0);
+  });
+}
+
 function toggleExpand(g: GroupedSearchResult) {
   const k = groupKey(g);
   if (expandedKey.value === k) {
@@ -149,6 +173,7 @@ async function runSearch(key: string, from: number) {
           groups.value.push(g);
         }
       }
+      sortGroups();
     }
   );
   searching.value = false;
@@ -159,6 +184,7 @@ async function runSearch(key: string, from: number) {
   if (final.totalSources) totalSources.value = final.totalSources;
   // isEnd=false 说明因条数上限截断，允许续搜
   canContinue.value = !final.isEnd && final.lastIndex > 0;
+  sortGroups();
 }
 
 async function addToShelf(b: Book) {
