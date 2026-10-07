@@ -1,6 +1,6 @@
 [project]
 name = "reader-py"
-version = "1.0.4"
+version = "1.0.6"
 description = "「阅读」小说服务的 Python 重写（本地单用户版，/reader3 API 兼容 legado.koplugin）"
 requires-python = ">=3.12,<3.13"
 dependencies = [
