@@ -1,7 +1,7 @@
 # 部署示例：docker compose
 #
 # 持久化：宿主 ./reader-data 挂载到容器 /data（书源、书架、章节缓存、cookie 都在这）
-# 镜像：ghcr.io/whwh13/reader_web_py（GitHub Actions 构建发布）
+# 镜像：docker.io/repave7/reader_py（国内拉取快）或 ghcr.io/whwh13/reader_web_py
 #
 #   docker compose up -d
 #   界面: http://<设备IP>:8081
@@ -9,7 +9,7 @@
 
 services:
   reader:
-    image: ghcr.io/whwh13/reader_web_py:latest
+    image: repave7/reader_py:latest
     container_name: reader-web-py
     restart: unless-stopped
     ports:

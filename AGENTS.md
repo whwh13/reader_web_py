@@ -44,7 +44,7 @@ cd frontend && npm run build    # 产物 frontend/dist
 ## Docker / 发版工作流（container.exe + GHCR）
 
 - **本地调试**：`container.exe build -t reader-web-py:<版本>-dev -f Dockerfile.local .`（Dockerfile.local 基础镜像指向 daocloud 镜像源，不进 git）→ `container.exe run -d --name reader-web-py -p 127.0.0.1:8082:8081 -v <数据目录>:/data reader-web-py:<版本>-dev` 调试。**注意改 version.py 后再构建**（构建上下文在启动时快照，先改版本再 build 才进镜像）。
-- **正式发版**：改 `reader/version.py` 的 `__version__`（与 pyproject.toml 同步）→ 镜内调试通过 → `git commit && git tag v<版本> && git push --tags` → GitHub Actions（`.github/workflows/ci.yml`）测试 + 双平台（amd64/arm64）构建，发布 `ghcr.io/whwh13/reader_web_py:<版本>` 与 `:latest`。
+- **正式发版**：改 `reader/version.py` 的 `__version__`（与 pyproject.toml 同步）→ 镜内调试通过 → `git commit && git tag v<版本> && git push --tags` → GitHub Actions（`.github/workflows/ci.yml`）测试 + 双平台（amd64/arm64）构建，同时发布 `ghcr.io/whwh13/reader_web_py:<版本>` 与 `docker.io/repave7/reader_py:<版本>`（及各自 `:latest`；Docker Hub 凭证走仓库 Secrets `DOCKERHUB_USERNAME`/`DOCKERHUB_TOKEN`）。
 - **wslc**：`C:\Program Files\WSL\container.exe`（WSL 3.0 自带，用法与 docker 几乎一样）。需要虚拟机平台特性 + 重启；docker.io 直连拉不到基础镜像（走 daocloud 镜像源）。inspect 的 `--format` 只支持 `json`（不支持 Go template）。
 - **持久化**：容器数据全部在 `/data`（挂载宿主目录）——reader.db、章节缓存、cookie、封面；删容器数据不丢，已实测。
 - **已知坑**：wslc 的 buildx 对全局 ARG + 多个 FROM 引用报 "base name blank"（本地版写死镜像名）；版本号统一从 `version.py` 读取——勿在 `__init__.py`/路由里硬编码（曾出 1.0.1 镜像报 1.0.0 的事故）。
@@ -72,7 +72,7 @@ cd frontend && npm run build    # 产物 frontend/dist
 
 ## 最后更新
 
-- 2026-10-08：打开源站空白页修复（1.0.7，wslc 实测）：部分源 bookUrl 是 API 接口（返回 JSON）→ 新增 /probeSourcePage 探测（网页开书籍页/接口退化开源站主页/打不开提示）；修复 origin 无协议 bug（书源元数据常缺 scheme，补 https:// 依次试）。同日换源候选改流式 SSE、书架详情窗目录/红色删除按钮、搜索选来源弹窗、搜索排序打磨、搜索全源流式+聚合、书源管理大改、书架删除修复。
+- 2026-10-08：书源筛选 tag 加订阅来源筛选（1.0.7）：每个订阅一条 tag（订阅名+书源数）+ "无订阅来源" tag，点选即筛。同日打开源站空白页修复（/probeSourcePage 探测 + origin 无协议补 scheme）、换源候选流式 SSE、书架详情窗目录/红色删除按钮、搜索选来源弹窗、搜索排序打磨、搜索全源流式+聚合、书源管理大改、书架删除修复。
 - 2026-10-08：搜索选来源改弹窗（1.0.7）：来源列表原为表格下方卡片，结果多时（380+ 行）在页尾视口外看似无反应——改为 el-dialog 弹窗，点"选来源"立即弹出。
 - 2026-10-08：交互与排序打磨（1.0.7）：书架改点书弹详情窗（作者/来源/章节/简介 + 右上角叉号 + 底部删除书籍），卡片不再放删除按钮（防误触）；搜索结果每帧重排（精确同名 > 前缀 > 含词 > 无关，同档多来源优先，"访问受限"垃圾条目沉底）。
 - 2026-10-08：搜索优化（1.0.7）：Web 搜索改走 searchBookMultiSSE aggregate=1 全源流式（原串行只搜前 12 源）；同名书聚合展示+展开选来源入架（聚合键为书名）；修复 SSE 丢帧（Queue.put 未 await）/进度与 isEnd 硬编码 bug。

@@ -25,9 +25,16 @@ KOReader 设备上直接阅读。
 
 ## Docker 部署（NAS / 服务器 / Kindle 配套设备）
 
-镜像由 GitHub Actions 自动构建发布到 GHCR（amd64 + arm64，覆盖 x86 服务器与 ARM 设备）：
+镜像由 GitHub Actions 自动构建，**同时发布到 GHCR 与 Docker Hub**（amd64 + arm64，覆盖 x86 服务器与 ARM 设备）：
 
 ```bash
+# Docker Hub（国内拉取快）
+docker run -d --name reader-web-py \
+  -p 8081:8081 \
+  -v /你的路径/reader-data:/data \
+  repave7/reader_py:latest
+
+# GHCR
 docker run -d --name reader-web-py \
   -p 8081:8081 \
   -v /你的路径/reader-data:/data \

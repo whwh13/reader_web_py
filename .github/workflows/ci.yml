@@ -1,10 +1,11 @@
-# reader-py CI：测试 + Docker 镜像构建发布（GHCR）
+# reader-py CI：测试 + Docker 镜像构建发布（GHCR + Docker Hub）
 #
 # 触发：
-# - push tag v*（如 v1.0.0）→ 测试通过后构建镜像，发布 ghcr.io/whwh13/reader_web_py:v1.0.0 和 :latest
+# - push tag v*（如 v1.0.0）→ 测试通过后构建镜像，发布
+#   ghcr.io/whwh13/reader_web_py:<tag>/:latest 与 docker.io/repave7/reader_py:<tag>/:latest
 # - push main / PR → 仅跑测试
 #
-# 发布流程：改 src/reader/version.py 的 __version__ → 提交 → git tag v1.0.0 && git push --tags
+# 发布流程：改 reader/version.py 的 __version__ → 提交 → git tag v1.0.0 && git push --tags
 
 name: ci
 
@@ -18,6 +19,8 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  DH_REGISTRY: docker.io
+  DH_IMAGE: repave7/reader_py
 
 jobs:
   test:
@@ -60,11 +63,20 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.DH_REGISTRY }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
       - name: Extract metadata
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+            ${{ env.DH_REGISTRY }}/${{ env.DH_IMAGE }}
           tags: |
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
