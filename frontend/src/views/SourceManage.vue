@@ -74,6 +74,20 @@
           @click="toggleFilter('invalid')"
         >失效 {{ invalidCount }}</el-tag>
         <el-tag
+          class="f-tag"
+          :type="filterMode === 'nosub' ? 'primary' : 'info'"
+          effect="plain"
+          @click="toggleFilter('nosub')"
+        >无订阅来源 {{ noSubCount }}</el-tag>
+        <el-tag
+          v-for="sub in subFilters"
+          :key="sub.link"
+          class="f-tag"
+          :type="filterMode === `sub:${sub.link}` ? 'primary' : 'info'"
+          effect="plain"
+          @click="toggleFilter(`sub:${sub.link}`)"
+        >{{ sub.name }} {{ sub.count }}</el-tag>
+        <el-tag
           v-for="g in groups"
           :key="g.name"
           class="f-tag"
@@ -189,6 +203,21 @@ const filterMode = ref<string>("all");
 const invalidCount = computed(
   () => Object.values(checkMap.value).filter((v) => v === false).length
 );
+const noSubCount = computed(
+  () => sources.value.filter((s) => !s.subLink).length
+);
+/** 订阅来源筛选：每个订阅一条 tag（显示订阅名+该订阅的书源数） */
+const subFilters = computed(() => {
+  const counter = new Map<string, number>();
+  for (const s of sources.value) {
+    if (s.subLink) counter.set(s.subLink, (counter.get(s.subLink) || 0) + 1);
+  }
+  return [...counter.entries()].map(([link, count]) => ({
+    link,
+    name: subDisplayName(link),
+    count,
+  }));
+});
 const groups = computed(() => {
   const counter = new Map<string, number>();
   for (const s of sources.value) {
@@ -202,6 +231,13 @@ const groups = computed(() => {
 const filteredSources = computed(() => {
   if (filterMode.value === "invalid") {
     return sources.value.filter((s) => checkMap.value[s.bookSourceUrl] === false);
+  }
+  if (filterMode.value === "nosub") {
+    return sources.value.filter((s) => !s.subLink);
+  }
+  if (filterMode.value.startsWith("sub:")) {
+    const link = filterMode.value.slice(4);
+    return sources.value.filter((s) => s.subLink === link);
   }
   if (filterMode.value === "all") return sources.value;
   return sources.value.filter((s) => (s.bookSourceGroup || "").trim() === filterMode.value);
