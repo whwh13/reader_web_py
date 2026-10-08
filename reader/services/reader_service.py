@@ -66,9 +66,15 @@ class ReaderService:
         ms = MultiSearch(sources, searcher, concurrent_count, search_size, dedup=dedup)
         return await ms.run(key, last_index, page, on_batch, max_rounds=max_rounds)
 
-    async def search_accurate_all(self, name: str, author: str, concurrent_count: int = 48):
+    async def search_accurate_all(
+        self, name: str, author: str, concurrent_count: int = 48, on_hit=None, on_progress=None
+    ):
         """换源候选：全源精搜，**不做跨源去重**——同名同作者的书每个源各留一条
-        （MultiSearch 的 (name,author) 去重会吞掉其他源的条目，恰好是换源要的对象）。"""
+        （MultiSearch 的 (name,author) 去重会吞掉其他源的条目，恰好是换源要的对象）。
+
+        on_hit(book)：每源命中即回调（SSE 流式场景边搜边推）；
+        on_progress(done, total)：每源完成即回调（不管命中与否）。
+        """
         import asyncio as _asyncio
         from concurrent.futures import ThreadPoolExecutor
 
@@ -76,19 +82,36 @@ class ReaderService:
         loop = _asyncio.get_running_loop()
         semaphore = _asyncio.Semaphore(concurrent_count)
         pool = ThreadPoolExecutor(max_workers=concurrent_count, thread_name_prefix="accsearch")
+        total = len(sources)
+        done_count = 0
 
         async def search_one(src) -> Book | None:
+            nonlocal done_count
             async with semaphore:
                 try:
                     books = await loop.run_in_executor(
                         pool, lambda: WebBook(src, self.http, self.engine).search_book(name, 1)
                     )
                 except Exception:
-                    return None
-                for b in books:
-                    if b.name == name and (not author or b.author == author):
-                        return b
-                return None
+                    books = None
+                done_count += 1
+                hit = None
+                if books:
+                    for b in books:
+                        if b.name == name and (not author or b.author == author):
+                            hit = b
+                            break
+                if on_progress:
+                    try:
+                        on_progress(done_count, total)
+                    except Exception:
+                        pass
+                if hit and on_hit:
+                    try:
+                        on_hit(hit)
+                    except Exception:
+                        pass
+                return hit
 
         try:
             results = await _asyncio.gather(*(search_one(s) for s in sources))

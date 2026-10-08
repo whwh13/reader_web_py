@@ -1,14 +1,19 @@
 <template>
   <el-dialog v-model="visible" title="换源" width="560px" @open="loadSources">
-    <div v-loading="loading" element-loading-text="全源精搜中…">
+    <div>
       <el-alert
         v-if="loading"
         type="info"
         :closable="false"
         class="wait-alert"
-        title="正在扫描全部启用书源查找候选，慢源较多时需要 3-7 分钟，完成后自动显示"
+        :title="`正在扫描全部启用书源（${done}/${total}）… 命中的候选会实时显示在下方`"
       />
-      <el-empty v-if="!loading && candidates.length === 0" description="没有找到其他书源" />
+      <el-progress
+        v-if="loading && total > 0"
+        :percentage="Math.round((done / total) * 100)"
+        :stroke-width="6"
+        class="scan-progress"
+      />
       <el-table
         v-if="candidates.length"
         :data="candidates"
@@ -26,14 +31,18 @@
         </el-table-column>
         <el-table-column prop="latestChapterTitle" label="最新章节" min-width="130" show-overflow-tooltip />
       </el-table>
+      <el-empty
+        v-if="!loading && candidates.length === 0"
+        description="没有找到其他书源"
+      />
     </div>
     <template #footer>
       <span v-if="switching" class="switching-tip">正在换源并迁移进度…</span>
       <span v-else-if="isSelectedCurrent" class="switching-tip">已选中当前源</span>
-      <el-button @click="visible = false">取消</el-button>
+      <el-button @click="cancelScan">取消</el-button>
       <el-button
         type="primary"
-        :disabled="!selected || switching || isSelectedCurrent"
+        :disabled="!selected || switching"
         @click="doSwitch"
       >切换到选中源</el-button>
     </template>
@@ -63,6 +72,9 @@ const loading = ref(false);
 const switching = ref(false);
 const candidates = ref<Book[]>([]);
 const selected = ref<Book | null>(null);
+const done = ref(0);
+const total = ref(0);
+let es: EventSource | null = null;
 
 function isCurrent(b: Book): boolean {
   if (props.currentOrigin) return b.origin === props.currentOrigin;
@@ -75,18 +87,39 @@ function open() {
   visible.value = true;
 }
 
-async function loadSources() {
+function cancelScan() {
+  es?.close();
+  es = null;
+  loading.value = false;
+  visible.value = false;
+}
+
+function loadSources() {
   loading.value = true;
   candidates.value = [];
   selected.value = null;
-  const r = await booksApi.getAvailableBookSource(props.bookUrl);
-  if (r.isSuccess) {
-    // 当前源也保留在列表中（标记"当前源"，选中时禁用切换）
-    candidates.value = (r.data.list || []).filter((b) => b.bookUrl);
+  done.value = 0;
+  total.value = 0;
+  const promise = booksApi.getAvailableBookSourceSSE(
+    { url: props.bookUrl },
+    (frame) => {
+      done.value = frame.done;
+      total.value = frame.total;
+      if (frame.book) {
+        // 命中即追加（同源去重：bookUrl 相同不重复加）
+        if (frame.book.bookUrl && !candidates.value.some((b) => b.bookUrl === frame.book!.bookUrl)) {
+          candidates.value.push(frame.book);
+        }
+      }
+    }
+  );
+  promise.then((r) => {
+    loading.value = false;
+    es = null;
+    if (r === null) ElMessage.warning("换源扫描中断");
     // 当前源排到最前面，方便一眼确认
     candidates.value.sort((a, b) => Number(isCurrent(b)) - Number(isCurrent(a)));
-  }
-  loading.value = false;
+  });
 }
 
 async function doSwitch() {
@@ -128,4 +161,5 @@ defineExpose({ open });
 .switching-tip { color: var(--el-text-color-secondary); margin-right: 12px; font-size: 12px; }
 .current-tag { margin-left: 6px; }
 .wait-alert { margin-bottom: 10px; }
+.scan-progress { margin-bottom: 10px; }
 </style>

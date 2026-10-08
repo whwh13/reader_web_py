@@ -38,6 +38,42 @@ export const booksApi = {
       undefined,
       300000
     ),
+  /** 流式换源候选 SSE：逐帧 {book, done, total}（命中即推），end 帧汇总。 */
+  getAvailableBookSourceSSE: (
+    opts: { url?: string; name?: string; author?: string },
+    onFrame: (frame: { book?: Book; done: number; total: number }) => void
+  ): Promise<{ count: number } | null> =>
+    new Promise((resolve) => {
+      const params: Record<string, string> = {};
+      if (opts.url) params.url = opts.url;
+      if (opts.name) params.name = opts.name;
+      if (opts.author) params.author = opts.author;
+      const es = new EventSource(
+        `/reader3/getAvailableBookSourceSSE?${new URLSearchParams(params).toString()}`
+      );
+      es.addEventListener("start", () => {
+        /* start 帧带 total，onmessage 不触发（非命名事件默认不走 onmessage） */
+      });
+      es.addEventListener("end", (ev) => {
+        es.close();
+        try {
+          resolve({ count: JSON.parse((ev as MessageEvent).data).count ?? 0 });
+        } catch {
+          resolve(null);
+        }
+      });
+      es.addEventListener("error", () => {
+        es.close();
+        resolve(null);
+      });
+      es.onmessage = (ev) => {
+        try {
+          onFrame(JSON.parse(ev.data));
+        } catch {
+          /* 忽略坏帧 */
+        }
+      };
+    }),
   setBookSource: (bookUrl: string, bookSourceUrl: string, newUrl: string) =>
     post<unknown>("/setBookSource", { bookUrl, bookSourceUrl, newUrl }),
 };

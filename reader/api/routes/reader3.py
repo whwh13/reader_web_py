@@ -280,6 +280,58 @@ async def get_available_book_source(request: Request):
         return _err(e)
 
 
+@router.get("/getAvailableBookSourceSSE")
+async def get_available_book_source_sse(request: Request):
+    """SSE 流式换源候选：data 帧 {book, done, total}（命中即推），event: end 结束。
+
+    name/author 走 query；也接受 url（书架书籍 URL，后端取其 name/author）。
+    """
+    p = await read_params(request)
+    svc = get_service()
+    shelf = svc.get_shelf_book(p.get_str("url"))
+    name = p.get_str("name") or (shelf.name if shelf else "")
+    author = p.get_str("author") or (shelf.author if shelf else "")
+
+    async def gen():
+        queue: asyncio.Queue = asyncio.Queue()
+        done_state: dict = {}
+
+        def on_hit(book):
+            queue.put_nowait(("hit", book))
+
+        def on_progress(done, total):
+            done_state["done"] = done
+            done_state["total"] = total
+            queue.put_nowait(("progress", done, total))
+
+        async def run():
+            try:
+                books = await svc.search_accurate_all(
+                    name, author, on_hit=on_hit, on_progress=on_progress
+                )
+                await queue.put(("end", len(books)))
+            except Exception as e:
+                await queue.put(("error", str(e)))
+
+        task = asyncio.create_task(run())
+        yield f"event: start\ndata: {json.dumps({'total': len([s for s in svc.list_sources() if s.enabled and s.searchUrl])}, ensure_ascii=False)}\n\n"
+        while True:
+            item = await queue.get()
+            kind = item[0]
+            if kind == "hit":
+                yield f"data: {json.dumps({'book': item[1].model_dump(exclude_none=True), 'done': done_state.get('done', 0), 'total': done_state.get('total', 0)}, ensure_ascii=False)}\n\n"
+            elif kind == "progress":
+                yield f"data: {json.dumps({'done': item[1], 'total': item[2]}, ensure_ascii=False)}\n\n"
+            elif kind == "end":
+                yield f"event: end\ndata: {json.dumps({'count': item[1]}, ensure_ascii=False)}\n\n"
+                break
+            else:  # error
+                yield f"event: error\ndata: {json.dumps(fail(item[1]), ensure_ascii=False)}\n\n"
+                break
+
+    return StreamingResponse(gen(), media_type="text/event-stream")
+
+
 @router.get("/searchBookSource")
 async def search_book_source(request: Request):
     p = await read_params(request)
