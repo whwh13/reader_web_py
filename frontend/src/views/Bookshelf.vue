@@ -66,7 +66,7 @@
           @click="removeBook(detailBook!)"
         >删除书籍</el-button>
         <el-button @click="showToc(detailBook!)">目录</el-button>
-        <el-button @click="changeSourceRef?.open()">换源</el-button>
+        <el-button @click="openSourceSite(detailBook!)">打开源站</el-button>
         <el-button type="primary" @click="detailBook && openReader(detailBook)">继续阅读</el-button>
       </template>
     </el-dialog>
@@ -92,18 +92,6 @@
         </div>
       </div>
     </el-dialog>
-
-    <!-- 换源弹层（复用阅读器组件） -->
-    <ChangeSourceDialog
-      v-if="detailBook"
-      ref="changeSourceRef"
-      :book-url="detailBook.bookUrl"
-      :current-index="detailBook.durChapterIndex ?? 0"
-      :current-title="detailBook.durChapterTitle"
-      :current-origin="detailBook.origin"
-      :current-origin-name="detailBook.originName"
-      @switched="onSourceSwitched"
-    />
   </div>
 </template>
 
@@ -113,7 +101,6 @@ import { useRouter } from "vue-router";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { booksApi, shelfApi } from "../api";
 import type { Book, BookChapter } from "../api/types";
-import ChangeSourceDialog from "../components/ChangeSourceDialog.vue";
 
 const router = useRouter();
 const books = ref<Book[]>([]);
@@ -125,7 +112,6 @@ const detailBook = ref<Book | null>(null);
 const tocVisible = ref(false);
 const tocLoading = ref(false);
 const toc = ref<BookChapter[]>([]);
-const changeSourceRef = ref<InstanceType<typeof ChangeSourceDialog> | null>(null);
 
 async function load() {
   loading.value = true;
@@ -164,14 +150,13 @@ async function showToc(b: Book) {
   if (r.isSuccess) toc.value = r.data;
 }
 
-async function onSourceSwitched(p: { newBookUrl: string; index: number; newSourceName: string }) {
-  ElMessage.success(`已换源到「${p.newSourceName}」`);
-  // 书架数据已由后端 setBookSource 同步，重取并刷新详情窗显示
-  const r = await shelfApi.getShelfBook(p.newBookUrl);
-  if (r.isSuccess && r.data) {
-    detailBook.value = r.data;
+function openSourceSite(b: Book) {
+  // bookUrl 就是源站的这本书页面（部分源是接口 URL，打开后由源站自行处理）
+  if (!b.bookUrl) {
+    ElMessage.warning("该书没有可打开的源站地址");
+    return;
   }
-  await load();
+  window.open(b.bookUrl, "_blank", "noopener");
 }
 
 async function removeBook(b: Book) {
