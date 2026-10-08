@@ -332,6 +332,62 @@ async def get_available_book_source_sse(request: Request):
     return StreamingResponse(gen(), media_type="text/event-stream")
 
 
+@router.get("/probeSourcePage")
+async def probe_source_page(request: Request):
+    """探测 bookUrl 是否为可打开的网页（供 Web 端'打开源站'按钮）。
+
+    返回 {ok, url, kind, bookUrlKind?}：kind=page（HTML 网页）/ api（JSON 等接口）/ unreachable。
+    bookUrl 非网页时退化试 origin 主页（scheme+host），命中则返回主页 URL（kind=home）。
+    """
+    p = await read_params(request)
+    url = p.get_str("url")
+    if not url:
+        return fail("缺少 url")
+    origin = p.get_str("origin")
+
+    async def probe(u: str) -> str | None:
+        try:
+            async with httpx.AsyncClient(
+                follow_redirects=True, timeout=10, verify=False,
+                headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"},
+            ) as client:
+                resp = await client.get(u)
+            ctype = resp.headers.get("content-type", "")
+            body_head = resp.content[:200].lstrip()
+            if "text/html" in ctype or body_head[:1] == b"<":
+                return "page"
+            return "api"
+        except Exception:
+            return None
+
+    try:
+        kind = await probe(url) if url else None
+        if kind == "page":
+            return ok({"ok": True, "url": url, "kind": "page"})
+        # bookUrl 非网页：退化试源站主页（scheme+host）
+        if origin:
+            from urllib.parse import urlsplit
+
+            # origin 可能无协议（书源元数据常缺 scheme，如 "novel.html5.qq.com"）
+            raw_origin = origin if "://" in origin else f"https://{origin}"
+            parts = urlsplit(raw_origin)
+            host = parts.netloc or raw_origin
+            # 依次试 https / http 主页
+            home_kind = None
+            home = None
+            for scheme in ("https", "http"):
+                candidate = f"{scheme}://{host}/"
+                home_kind = await probe(candidate)
+                if home_kind == "page":
+                    home = candidate
+                    break
+            if home_kind == "page" and home:
+                return ok({"ok": True, "url": home, "kind": "home", "bookUrlKind": kind})
+        return ok({"ok": False, "url": url, "kind": kind or "unreachable"})
+    except Exception as e:
+        return _err(e)
+
+
 @router.get("/searchBookSource")
 async def search_book_source(request: Request):
     p = await read_params(request)

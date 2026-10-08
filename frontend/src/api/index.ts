@@ -74,6 +74,12 @@ export const booksApi = {
         }
       };
     }),
+  /** 探测 bookUrl 是否为可打开的网页（bookUrl 是接口 URL 时退化返回源站主页） */
+  probeSourcePage: (url: string, origin: string) =>
+    get<{ ok: boolean; url: string; kind: string; bookUrlKind?: string }>("/probeSourcePage", {
+      url,
+      origin,
+    }),
   setBookSource: (bookUrl: string, bookSourceUrl: string, newUrl: string) =>
     post<unknown>("/setBookSource", { bookUrl, bookSourceUrl, newUrl }),
 };

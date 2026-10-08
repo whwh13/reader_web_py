@@ -66,7 +66,7 @@
           @click="removeBook(detailBook!)"
         >删除书籍</el-button>
         <el-button @click="showToc(detailBook!)">目录</el-button>
-        <el-button @click="openSourceSite(detailBook!)">打开源站</el-button>
+        <el-button :loading="openingSite" @click="openSourceSite(detailBook!)">打开源站</el-button>
         <el-button type="primary" @click="detailBook && openReader(detailBook)">继续阅读</el-button>
       </template>
     </el-dialog>
@@ -107,6 +107,7 @@ const books = ref<Book[]>([]);
 const loading = ref(false);
 const refreshing = ref(false);
 const deleting = ref("");
+const openingSite = ref(false);
 const detailVisible = ref(false);
 const detailBook = ref<Book | null>(null);
 const tocVisible = ref(false);
@@ -150,13 +151,27 @@ async function showToc(b: Book) {
   if (r.isSuccess) toc.value = r.data;
 }
 
-function openSourceSite(b: Book) {
-  // bookUrl 就是源站的这本书页面（部分源是接口 URL，打开后由源站自行处理）
+async function openSourceSite(b: Book) {
+  // bookUrl 可能是 API 接口 URL（部分源返回 JSON 而非网页，直接开会空白）
+  // 先探测：是网页开 bookUrl；接口 URL 退化开源站主页；打不开则提示
   if (!b.bookUrl) {
     ElMessage.warning("该书没有可打开的源站地址");
     return;
   }
-  window.open(b.bookUrl, "_blank", "noopener");
+  openingSite.value = true;
+  try {
+    const r = await booksApi.probeSourcePage(b.bookUrl, b.origin || "");
+    if (r.isSuccess && r.data.ok) {
+      window.open(r.data.url, "_blank", "noopener");
+      if (r.data.kind === "home") {
+        ElMessage.info("该源的书籍页是接口地址，已打开源站主页");
+      }
+    } else {
+      ElMessage.warning("该源的页面打不开（可能需要登录或已失效）");
+    }
+  } finally {
+    openingSite.value = false;
+  }
 }
 
 async function removeBook(b: Book) {
