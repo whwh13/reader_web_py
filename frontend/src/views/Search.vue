@@ -40,20 +40,20 @@
             v-if="row.sourceCount > 1"
             size="small"
             @click.stop="toggleExpand(row)"
-          >{{ expandedKey === groupKey(row) ? "收起来源" : "选来源" }}</el-button>
+          >选来源</el-button>
         </template>
       </el-table-column>
     </el-table>
-    <!-- 展开同书的多来源选择 -->
-    <el-card v-if="expandedGroup" shadow="never" class="expand-card">
-      <template #header>
-        <div class="panel-head">
-          <span>《{{ expandedGroup.book.name }}》的 {{ expandedGroup.sourceCount }} 个来源</span>
-          <el-button link @click="expandedGroup = null">关闭</el-button>
-        </div>
-      </template>
-      <el-table :data="expandedGroup.sources" size="small" max-height="320">
-        <el-table-column prop="originName" label="来源" width="160" show-overflow-tooltip />
+    <!-- 同书的多来源选择弹窗（点"选来源"弹出，右上角叉号关闭） -->
+    <el-dialog
+      v-model="expandVisible"
+      :title="expandedGroup ? `《${expandedGroup.book.name}》的 ${expandedGroup.sourceCount} 个来源` : ''"
+      width="640px"
+      :show-close="true"
+      :close-on-click-modal="false"
+    >
+      <el-table v-if="expandedGroup" :data="expandedGroup.sources" size="small" max-height="420">
+        <el-table-column prop="originName" label="来源" width="150" show-overflow-tooltip />
         <el-table-column prop="author" label="作者" width="120" show-overflow-tooltip />
         <el-table-column prop="latestChapterTitle" label="最新章节" min-width="160" show-overflow-tooltip />
         <el-table-column label="操作" width="100">
@@ -62,7 +62,7 @@
           </template>
         </el-table-column>
       </el-table>
-    </el-card>
+    </el-dialog>
     <el-empty
       v-if="!searching && searched && groups.length === 0"
       :description="`全部 ${totalSources} 个启用源均未搜到「${lastKeyword}」`"
@@ -85,7 +85,7 @@ const searchedSources = ref(0);
 const totalSources = ref(0);
 const lastIndex = ref(0);
 const canContinue = ref(false);
-const expandedKey = ref("");
+const expandVisible = ref(false);
 const expandedGroup = ref<GroupedSearchResult | null>(null);
 const added = new Set<string>();
 
@@ -120,14 +120,8 @@ function sortGroups() {
 }
 
 function toggleExpand(g: GroupedSearchResult) {
-  const k = groupKey(g);
-  if (expandedKey.value === k) {
-    expandedKey.value = "";
-    expandedGroup.value = null;
-  } else {
-    expandedKey.value = k;
-    expandedGroup.value = g;
-  }
+  expandedGroup.value = g;
+  expandVisible.value = true;
 }
 
 async function doSearch() {
@@ -141,7 +135,7 @@ async function doSearch() {
   searchedSources.value = 0;
   lastIndex.value = 0;
   canContinue.value = false;
-  expandedKey.value = "";
+  expandVisible.value = false;
   expandedGroup.value = null;
   await runSearch(key, 0);
 }
@@ -209,7 +203,5 @@ async function addToShelf(b: Book) {
 .search-bar { display: flex; gap: 12px; margin-bottom: 16px; }
 .search-tip { color: var(--el-text-color-secondary); margin-bottom: 8px; }
 .src-count { margin-left: 6px; }
-.expand-card { margin-top: 12px; }
-.panel-head { display: flex; justify-content: space-between; align-items: center; }
 :deep(.el-table__row) { cursor: default; }
 </style>
