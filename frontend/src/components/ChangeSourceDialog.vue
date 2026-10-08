@@ -1,9 +1,16 @@
 <template>
   <el-dialog v-model="visible" title="换源" width="560px" @open="loadSources">
-    <div v-loading="loading">
+    <div v-loading="loading" element-loading-text="全源精搜中…">
+      <el-alert
+        v-if="loading"
+        type="info"
+        :closable="false"
+        class="wait-alert"
+        title="正在扫描全部启用书源查找候选，慢源较多时需要 3-7 分钟，完成后自动显示"
+      />
       <el-empty v-if="!loading && candidates.length === 0" description="没有找到其他书源" />
       <el-table
-        v-else
+        v-if="candidates.length"
         :data="candidates"
         size="small"
         max-height="380"
@@ -120,4 +127,5 @@ defineExpose({ open });
 <style scoped>
 .switching-tip { color: var(--el-text-color-secondary); margin-right: 12px; font-size: 12px; }
 .current-tag { margin-left: 6px; }
+.wait-alert { margin-bottom: 10px; }
 </style>

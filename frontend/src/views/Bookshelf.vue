@@ -59,12 +59,51 @@
         <p class="detail-intro-body">{{ detailBook.intro || "暂无简介" }}</p>
       </div>
       <template #footer>
-        <el-button :loading="deleting === detailBook?.bookUrl" @click="removeBook(detailBook!)">
-          删除书籍
-        </el-button>
+        <el-button
+          type="danger"
+          plain
+          :loading="deleting === detailBook?.bookUrl"
+          @click="removeBook(detailBook!)"
+        >删除书籍</el-button>
+        <el-button @click="showToc(detailBook!)">目录</el-button>
+        <el-button @click="changeSourceRef?.open()">换源</el-button>
         <el-button type="primary" @click="detailBook && openReader(detailBook)">继续阅读</el-button>
       </template>
     </el-dialog>
+
+    <!-- 目录弹层 -->
+    <el-dialog
+      v-model="tocVisible"
+      :title="detailBook ? `《${detailBook.name}》目录${toc.length ? `（${toc.length} 章）` : ''}` : '目录'"
+      width="480px"
+      :show-close="true"
+    >
+      <div v-loading="tocLoading" class="toc-list">
+        <el-empty v-if="!tocLoading && toc.length === 0" description="目录为空（未缓存，进阅读器后加载）" />
+        <div
+          v-for="c in toc"
+          :key="c.index"
+          class="toc-item"
+          :class="{ current: c.index === detailBook?.durChapterIndex }"
+          @click="toc.length && openReaderAt(detailBook!, c.index)"
+        >
+          <span class="toc-title">{{ c.isVolume ? "▸ " : "" }}{{ c.title }}</span>
+          <el-tag v-if="c.index === detailBook?.durChapterIndex" size="small" type="primary">当前</el-tag>
+        </div>
+      </div>
+    </el-dialog>
+
+    <!-- 换源弹层（复用阅读器组件） -->
+    <ChangeSourceDialog
+      v-if="detailBook"
+      ref="changeSourceRef"
+      :book-url="detailBook.bookUrl"
+      :current-index="detailBook.durChapterIndex ?? 0"
+      :current-title="detailBook.durChapterTitle"
+      :current-origin="detailBook.origin"
+      :current-origin-name="detailBook.originName"
+      @switched="onSourceSwitched"
+    />
   </div>
 </template>
 
@@ -72,8 +111,9 @@
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { ElMessage, ElMessageBox } from "element-plus";
-import { shelfApi } from "../api";
-import type { Book } from "../api/types";
+import { booksApi, shelfApi } from "../api";
+import type { Book, BookChapter } from "../api/types";
+import ChangeSourceDialog from "../components/ChangeSourceDialog.vue";
 
 const router = useRouter();
 const books = ref<Book[]>([]);
@@ -82,6 +122,10 @@ const refreshing = ref(false);
 const deleting = ref("");
 const detailVisible = ref(false);
 const detailBook = ref<Book | null>(null);
+const tocVisible = ref(false);
+const tocLoading = ref(false);
+const toc = ref<BookChapter[]>([]);
+const changeSourceRef = ref<InstanceType<typeof ChangeSourceDialog> | null>(null);
 
 async function load() {
   loading.value = true;
@@ -104,6 +148,30 @@ function showDetail(b: Book) {
 
 function openReader(b: Book) {
   router.push({ path: "/reader", query: { url: b.bookUrl } });
+}
+
+function openReaderAt(b: Book, index: number) {
+  router.push({ path: "/reader", query: { url: b.bookUrl, jump: String(index) } });
+}
+
+async function showToc(b: Book) {
+  tocVisible.value = true;
+  tocLoading.value = true;
+  toc.value = [];
+  // refresh=0：只读缓存目录（不真请求；未缓存则提示进阅读器加载）
+  const r = await booksApi.getChapterList(b.bookUrl, false, b.origin);
+  tocLoading.value = false;
+  if (r.isSuccess) toc.value = r.data;
+}
+
+async function onSourceSwitched(p: { newBookUrl: string; index: number; newSourceName: string }) {
+  ElMessage.success(`已换源到「${p.newSourceName}」`);
+  // 书架数据已由后端 setBookSource 同步，重取并刷新详情窗显示
+  const r = await shelfApi.getShelfBook(p.newBookUrl);
+  if (r.isSuccess && r.data) {
+    detailBook.value = r.data;
+  }
+  await load();
 }
 
 async function removeBook(b: Book) {
@@ -163,4 +231,12 @@ onMounted(load);
 .detail-intro { margin-top: 12px; border-top: 1px solid var(--el-border-color-lighter); padding-top: 10px; }
 .detail-intro-title { font-weight: 600; margin: 0 0 6px; }
 .detail-intro-body { line-height: 1.8; white-space: pre-wrap; color: var(--el-text-color-regular); margin: 0; }
+.toc-list { max-height: 420px; overflow-y: auto; }
+.toc-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 7px 10px; border-radius: 6px; cursor: pointer; font-size: 13px;
+}
+.toc-item:hover { background: var(--el-fill-color-light); }
+.toc-item.current { color: var(--el-color-primary); background: var(--el-color-primary-light-9); }
+.toc-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-right: 8px; }
 </style>
